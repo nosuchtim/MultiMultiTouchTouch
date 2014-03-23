@@ -1,0 +1,293 @@
+THIS IS A TEST
+THIS IS A TEST
+THIS IS A TEST
+THIS IS A TEST
+
+C:\local\python\nosuch_oscutil>c:/windows/system32/taskkill /f /im Avenue.exe 
+SUCCESS: The process "Avenue.exe" with PID 7396 has been terminated.
+
+C:\local\python\nosuch_oscutil>sleep 1 
+
+C:\local\python\nosuch_oscutil>cd C:\Program Files\Resolume Avenue 4.0.0 
+
+C:\Program Files\Resolume Avenue 4.0.0>start Avenue.exe 
+
+C:\Program Files\Resolume Avenue 4.0.0>sleep 5 
+
+C:\Program Files\Resolume Avenue 4.0.0>cd \local\python\nosuch_oscutil 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+^CTHIS IS A TEST
+
+C:\local\python\nosuch_oscutil>c:/windows/system32/taskkill /f /im Avenue.exe 
+SUCCESS: The process "Avenue.exe" with PID 884 has been terminated.
+
+C:\local\python\nosuch_oscutil>sleep 1 
+
+C:\local\python\nosuch_oscutil>cd C:\Program Files\Resolume Avenue 4.0.0 
+
+C:\Program Files\Resolume Avenue 4.0.0>start Avenue.exe 
+
+C:\Program Files\Resolume Avenue 4.0.0>sleep 5 
+
+C:\Program Files\Resolume Avenue 4.0.0>cd \local\python\nosuch_oscutil 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+\nosuch_oscutil>sleep 1 
+
+C:\local\python\nosuch_oscutil>cd C:\Program Files\Resolume Avenue 4.0.0 
+
+C:\Program Files\Resolume Avenue 4.0.0>start Avenue.exe 
+
+C:\Program Files\Resolume Avenue 4.0.0>sleep 5 
+
+C:\Program Files\Resolume Avenue 4.0.0>cd \local\python\nosuch_oscutil 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+THIS IS A TEST
+
+C:\local\python\nosuch_oscutil>c:/windows/system32/taskkill /f /im Avenue.exe 
+SUCCESS: The process "Avenue.exe" with PID 4100 has been terminated.
+
+C:\local\python\nosuch_oscutil>sleep 1 
+
+C:\local\python\nosuch_oscutil>cd C:\Program Files\Resolume Avenue 4.0.0 
+
+C:\Program Files\Resolume Avenue 4.0.0>start Avenue.exe 
+
+C:\Program Files\Resolume Avenue 4.0.0>sleep 5 
+
+C:\Program Files\Resolume Avenue 4.0.0>cd \local\python\nosuch_oscutil 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+^CTHIS IS A TEST
+
+C:\local\python\nosuch_oscutil>c:/windows/system32/taskkill /f /im Avenue.exe 
+SUCCESS: The process "Avenue.exe" with PID 6332 has been terminated.
+
+C:\local\python\nosuch_oscutil>sleep 1 
+
+C:\local\python\nosuch_oscutil>cd C:\Program Files\Resolume Avenue 4.0.0 
+
+C:\Program Files\Resolume Avenue 4.0.0>start Avenue.exe 
+
+C:\Program Files\Resolume Avenue 4.0.0>sleep 5 
+
+C:\Program Files\Resolume Avenue 4.0.0>cd \local\python\nosuch_oscutil 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+THIS IS A TEST
+
+C:\local\python\nosuch_oscutil>c:/windows/system32/taskkill /f /im Avenue.exe 
+ERROR: The process "Avenue.exe" not found.
+
+C:\local\python\nosuch_oscutil>sleep 1 
+
+C:\local\python\nosuch_oscutil>cd C:\Program Files\Resolume Avenue 4.0.0 
+
+C:\Program Files\Resolume Avenue 4.0.0>start Avenue.exe  0<nul 1>nul 2>nul 
+
+C:\Program Files\Resolume Avenue 4.0.0>sleep 5 
+
+C:\Program Files\Resolume Avenue 4.0.0>cd \local\python\nosuch_oscutil 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+
+C:\local\python\nosuch_oscutil>c:\python26\python.exe oscsend.py 7000@127.0.0.1 /layer1/clip1/connect 1 
+('porthost=', '7000@127.0.0.1')
+
+C:\local\python\nosuch_oscutil>sleep 2 
+THIS IS A TEST

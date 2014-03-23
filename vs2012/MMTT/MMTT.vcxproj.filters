@@ -1,0 +1,286 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Source Files\osc">
+      <UniqueIdentifier>{690fced3-1ea6-4b55-8835-b543717d05ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\oscpack">
+      <UniqueIdentifier>{9cf9cd6c-a211-453c-8e34-52020098dd55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\oscpack\ip">
+      <UniqueIdentifier>{cf97a120-fada-4f8c-b570-c9e4690a2fcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\oscpack\ip\win32">
+      <UniqueIdentifier>{68c09d28-3a4b-4760-9656-c9a346de31d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\oscpack\osc">
+      <UniqueIdentifier>{9e63f5eb-523b-4076-842d-0a8c7b384778}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nosuch">
+      <UniqueIdentifier>{7e585a97-bb38-4660-bb1a-4709a24f9d40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\cvblobslib">
+      <UniqueIdentifier>{ec59443d-23b1-48aa-ae9f-c37154b3b70b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\cJSON">
+      <UniqueIdentifier>{44627d0d-9e89-476a-a16f-666a9d0827ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\zlib">
+      <UniqueIdentifier>{41d2cf94-1d6f-4bc0-8266-093edd63c31f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\mmtt">
+      <UniqueIdentifier>{9626a861-d5b5-4072-a3ee-cf066579fb01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\misclib">
+      <UniqueIdentifier>{fbcdb904-380e-4eb5-a183-6e618be2a7d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\nosuch">
+      <UniqueIdentifier>{bf0bbd63-b579-4047-9283-93ffae660693}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\mmtt">
+      <UniqueIdentifier>{f1042c8d-d485-412e-9d05-c8c019659333}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\portmidi">
+      <UniqueIdentifier>{d2a94d66-5403-4492-a498-0658d4a0b3a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\portmidi\porttime">
+      <UniqueIdentifier>{ba041575-7cb6-4111-9d5f-64398d178c26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\portmidi">
+      <UniqueIdentifier>{10bad28a-9865-407e-ae48-7a4bdfe87e55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\portmidi\porttime">
+      <UniqueIdentifier>{1743b5f9-ad4e-4d7e-a749-c843edd3ea22}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\nosuch\midifile.cpp">
+      <Filter>Source Files\nosuch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nosuch\NosuchDaemon.cpp">
+      <Filter>Source Files\nosuch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nosuch\NosuchDebug.cpp">
+      <Filter>Source Files\nosuch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nosuch\NosuchException.cpp">
+      <Filter>Source Files\nosuch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nosuch\NosuchGraphics.cpp">
+      <Filter>Source Files\nosuch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nosuch\NosuchHttpServer.cpp">
+      <Filter>Source Files\nosuch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nosuch\NosuchJSON.cpp">
+      <Filter>Source Files\nosuch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nosuch\NosuchOsc.cpp">
+      <Filter>Source Files\nosuch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nosuch\NosuchOscManager.cpp">
+      <Filter>Source Files\nosuch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nosuch\NosuchSocket.cpp">
+      <Filter>Source Files\nosuch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nosuch\NosuchUtil.cpp">
+      <Filter>Source Files\nosuch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nosuch\NosuchOscInput.cpp">
+      <Filter>Source Files\nosuch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nosuch\NosuchOscTcpInput.cpp">
+      <Filter>Source Files\nosuch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\nosuch\NosuchOscUdpInput.cpp">
+      <Filter>Source Files\nosuch</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mmtt\mmtt_pcx.cpp">
+      <Filter>Source Files\mmtt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mmtt\main.cpp">
+      <Filter>Source Files\mmtt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mmtt\mmtt_camera.cpp">
+      <Filter>Source Files\mmtt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mmtt\mmtt_kinect.cpp">
+      <Filter>Source Files\mmtt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mmtt\mmtt_kinect2.cpp">
+      <Filter>Source Files\mmtt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mmtt\mmtt_sharedmem.cpp">
+      <Filter>Source Files\mmtt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mmtt\mmtt_server.cpp">
+      <Filter>Source Files\mmtt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\misclib\sha1.c">
+      <Filter>Source Files\misclib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\misclib\UT_SharedMem.cpp">
+      <Filter>Source Files\misclib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\misclib\UT_Mutex.cpp">
+      <Filter>Source Files\misclib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\cvblobslib\blob.cpp">
+      <Filter>Source Files\cvblobslib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\cvblobslib\BlobContour.cpp">
+      <Filter>Source Files\cvblobslib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\cvblobslib\BlobOperators.cpp">
+      <Filter>Source Files\cvblobslib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\cvblobslib\BlobResult.cpp">
+      <Filter>Source Files\cvblobslib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\cvblobslib\ComponentLabeling.cpp">
+      <Filter>Source Files\cvblobslib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\osc\src\OscBundle.cpp">
+      <Filter>Source Files\osc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\osc\src\OscMessage.cpp">
+      <Filter>Source Files\osc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\osc\src\OscSender.cpp">
+      <Filter>Source Files\osc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\oscpack\ip\win32\NetworkingUtils.cpp">
+      <Filter>Source Files\oscpack\ip\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\oscpack\ip\win32\UdpSocket.cpp">
+      <Filter>Source Files\oscpack\ip\win32</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\oscpack\ip\IpEndpointName.cpp">
+      <Filter>Source Files\oscpack\ip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\oscpack\osc\OscOutboundPacketStream.cpp">
+      <Filter>Source Files\oscpack\osc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\oscpack\osc\OscPrintReceivedElements.cpp">
+      <Filter>Source Files\oscpack\osc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\oscpack\osc\OscReceivedElements.cpp">
+      <Filter>Source Files\oscpack\osc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\oscpack\osc\OscTypes.cpp">
+      <Filter>Source Files\oscpack\osc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\zlib\adler32.c">
+      <Filter>Source Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\zlib\compress.c">
+      <Filter>Source Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\zlib\crc32.c">
+      <Filter>Source Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\zlib\deflate.c">
+      <Filter>Source Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\zlib\gzclose.c">
+      <Filter>Source Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\zlib\gzlib.c">
+      <Filter>Source Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\zlib\gzread.c">
+      <Filter>Source Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\zlib\gzwrite.c">
+      <Filter>Source Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\zlib\infback.c">
+      <Filter>Source Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\zlib\inffast.c">
+      <Filter>Source Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\zlib\inflate.c">
+      <Filter>Source Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\zlib\inftrees.c">
+      <Filter>Source Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\zlib\trees.c">
+      <Filter>Source Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\zlib\uncompr.c">
+      <Filter>Source Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\zlib\zutil.c">
+      <Filter>Source Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\cJSON\cJSON.cpp">
+      <Filter>Source Files\cJSON</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\other\portmidi\porttime\ptwinmm.c">
+      <Filter>Source Files\portmidi\porttime</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="mmtt.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="mmtt.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\mmtt\stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\mmtt\Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nosuch\NosuchSocket.h">
+      <Filter>Header Files\nosuch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nosuch\NosuchDebug.h">
+      <Filter>Header Files\nosuch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nosuch\NosuchException.h">
+      <Filter>Header Files\nosuch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\nosuch\NosuchJSON.h">
+      <Filter>Header Files\nosuch</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\mmtt\mmtt_kinect2.h">
+      <Filter>Header Files\mmtt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\mmtt\mmtt.h">
+      <Filter>Header Files\mmtt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\mmtt\mmtt_camera.h">
+      <Filter>Header Files\mmtt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\mmtt\mmtt_depth.h">
+      <Filter>Header Files\mmtt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\mmtt\mmtt_kinect.h">
+      <Filter>Header Files\mmtt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\mmtt\mmtt_pcx.h">
+      <Filter>Header Files\mmtt</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,26 @@
+{
+  "port": 80,
+
+  "camera": "pcx",
+  # "patch": "fullscreen320",
+  "patch": "small4",
+
+#  "camera": "kinect",
+#   "patch": "golden",
+
+#   "camera": "kinect2",
+#   "patch": "fullscreen_kinect2",
+
+# If initialalign is 1, an auto-alignment will be done at startup.
+# If you don't want auto-alignment to happen automatically
+# (e.g. if the patch is a fixed fullscreen one), then set it to 0.
+
+   "initialalign": 1,
+
+  "sharedmem": 0,
+  "tuio": 1,
+  "tuio.25d.clientlist": "127.0.0.1:3333",
+  "python": 0,
+  "debugtoconsole": 1,
+  "debugtolog": 1
+}

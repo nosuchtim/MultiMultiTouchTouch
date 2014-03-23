@@ -1,0 +1,205 @@
+28c28
+< 		i = data.find(SLIP_END,sofar)
+---
+> 		i = data.find(SLIP_END, sofar)
+31c31
+< 			return ("",data)
+---
+> 			return ("", data)
+33,34c33,34
+< 		if i>0 and data[i-1] == SLIP_ESC:
+< 			sofar = i+1
+---
+> 		if i > 0 and data[i - 1] == SLIP_ESC:
+> 			sofar = i + 1
+38c38
+< 		rest = data[i+1:]
+---
+> 		rest = data[i + 1:]
+41c41
+< 		return (b,rest)
+---
+> 		return (b, rest)
+43c43
+< 	return ("",data)
+---
+> 	return ("", data)
+58c58
+< 	def __init__(self,msg,tm=0.0,source_ip="undefined"):
+---
+> 	def __init__(self, msg, tm=0.0, source_ip="undefined"):
+67c67
+< 		return '<event time=%.3f>%s</event>' % (self.time,self.oscmsg)
+---
+> 		return '<event time=%.3f>%s</event>' % (self.time, self.oscmsg)
+73c73
+< 	def __init__(self,host,port,proto="udp",initfunc=None):
+---
+> 	def __init__(self, host, port, proto="udp", initfunc=None):
+90c90
+< 	def sendosc(self,oscaddr,oscmsg=[]):
+---
+> 	def sendosc(self, oscaddr, oscmsg=[]):
+92c92
+< 			b = createBinaryMsg(oscaddr,oscmsg)
+---
+> 			b = createBinaryMsg(oscaddr, oscmsg)
+95c95
+< 			b = createBinaryMsg(oscaddr,oscmsg)
+---
+> 			b = createBinaryMsg(oscaddr, oscmsg)
+102c102
+< 	def sendto(self,b,addrport):
+---
+> 	def sendto(self, b, addrport):
+105c105
+< 	def sendbinary(self,b):
+---
+> 	def sendbinary(self, b):
+107c107
+< 			self.osc_socket.sendto(b,(self.osc_host,self.osc_port))
+---
+> 			self.osc_socket.sendto(b, (self.osc_host, self.osc_port))
+111c111
+< 				hostport = (self.osc_host,self.osc_port)
+---
+> 				hostport = (self.osc_host, self.osc_port)
+118c118
+< 					raise RuntimeError, "Unable to connect to %s:%d - %s" % (self.osc_host,self.osc_port,format_exc())
+---
+> 					raise RuntimeError, "Unable to connect to %s:%d - %s" % (self.osc_host, self.osc_port, format_exc())
+124c124
+<         def send_stream(self,msg):
+---
+>         def send_stream(self, msg):
+135,136c135,136
+< 	def __init__(self,addr,port,proto,initfunc):
+< 		OscRecipient.__init__(self,addr,port,proto=proto,initfunc=initfunc)
+---
+> 	def __init__(self, addr, port, proto, initfunc):
+> 		OscRecipient.__init__(self, addr, port, proto=proto, initfunc=initfunc)
+141c141
+< 			OscRecipient.sendosc(self,msg_addr,msg_data)
+---
+> 			OscRecipient.sendosc(self, msg_addr, msg_data)
+144,145c144,145
+< 				raise RuntimeError, "Exception: "+format_exc()
+< 			print "Retrying TCP connection to %d@%s" % (self.osc_port,self.osc_host)
+---
+> 				raise RuntimeError, "Exception: " + format_exc()
+> 			print "Retrying TCP connection to %d@%s" % (self.osc_port, self.osc_host)
+148c148
+< 				OscRecipient.sendosc(self,msg_addr,msg_data)
+---
+> 				OscRecipient.sendosc(self, msg_addr, msg_data)
+152c152
+< 				raise RuntimeError, "Exception: "+format_exc()
+---
+> 				raise RuntimeError, "Exception: " + format_exc()
+156c156
+< 	def __init__(self,addr,port,proto="udp"):
+---
+> 	def __init__(self, addr, port, proto="udp"):
+160c160
+< 		self.thread = OscThread(addr,port,proto=proto)
+---
+> 		self.thread = OscThread(addr, port, proto=proto)
+169,170c169,170
+< 	def callback(self,f,data=None):
+< 		return self.thread.callback(f,data)
+---
+> 	def setcallback(self, f, data=None):
+> 		return self.thread.setcallback(f, data)
+174c174
+< 	def __init__(self,host,port,proto):
+---
+> 	def __init__(self, host, port, proto):
+185c185
+< 			self.sock.bind((self.host,self.port))
+---
+> 			self.sock.bind((self.host, self.port))
+188c188,189
+< 			self.sock.bind((self.host,self.port))
+---
+> 			self.sock.bind((self.host, self.port))
+> 			print "CALLING listen(5) on sock for host=",self.host," port=",self.port
+202c203
+< 	def callback(self,f,data):
+---
+> 	def setcallback(self, f, data):
+206c207
+< 	def docallback(self,t,fromhost):
+---
+> 	def docallback(self, t, fromhost):
+209,210c210,211
+< 				e = OscEvent(t,source_ip=fromhost)
+< 				self.callback_func(e,self.callback_data)
+---
+> 				e = OscEvent(t, source_ip=fromhost)
+> 				self.callback_func(e, self.callback_data)
+212c213
+< 			print "Error in callback on OSC message - %s"%(format_exc())
+---
+> 			print "Error in callback on OSC message - %s" % (format_exc())
+215c216
+< 		print "Listening for OSC on host =",self.host," port =",self.port," proto = ",self.proto
+---
+> 		print "Listening for OSC on host =", self.host, " port =", self.port, " proto = ", self.proto
+222c223
+< 				self.docallback(t,fromhost)
+---
+> 				self.docallback(t, fromhost)
+223a225
+> 				print "CALLING self.sock.accept!!"
+225c227
+< 				# print "ACCEPTED!! fromhost=",fromhost
+---
+> 				print "ACCEPTED!! fromhost=",fromhost
+228c230
+< 					self.handle_tcp_connection(conn,fromhost,recvsize)
+---
+> 					self.handle_tcp_connection(conn, fromhost, recvsize)
+230c232
+< 					print "Error in handle_tcp_connection - %s"%(format_exc())
+---
+> 					print "Error in handle_tcp_connection - %s" % (format_exc())
+234c236
+< 	def findnextstart(self,buff):
+---
+> 	def findnextstart(self, buff):
+236,240c238,242
+< 		for n in range(1,buffleng):
+< 			if buff[n]==SLIP_END and buff[n-1]!=SLIP_ESC:
+< 				print "FOUND SLIP_END (next start) at n=",n
+< 				if n < (buffleng-1) and buff[n+1] == SLIP_END:
+< 					buff = buff[n+1:]
+---
+> 		for n in range(1, buffleng):
+> 			if buff[n] == SLIP_END and buff[n - 1] != SLIP_ESC:
+> 				print "FOUND SLIP_END (next start) at n=", n
+> 				if n < (buffleng - 1) and buff[n + 1] == SLIP_END:
+> 					buff = buff[n + 1:]
+246c248
+< 	def handle_tcp_connection(self,conn,fromhost,recvsize):
+---
+> 	def handle_tcp_connection(self, conn, fromhost, recvsize):
+248c250
+< 		# print "HANDLE_TCP_CONNECTION fromhost=",fromhost
+---
+> 		print "HANDLE_TCP_CONNECTION fromhost=",fromhost
+260,261c262,263
+< 			while len(buff)>2 and buff[0]==SLIP_END:
+< 				(b,buff) = nextSLIPMsg(buff)
+---
+> 			while len(buff) > 2 and buff[0] == SLIP_END:
+> 				(b, buff) = nextSLIPMsg(buff)
+264,265c266,267
+< 				b = b.replace(SLIP_ESC+SLIP_END,SLIP_END)
+< 				b = b.replace(SLIP_ESC+SLIP_ESC2,SLIP_ESC)
+---
+> 				b = b.replace(SLIP_ESC + SLIP_END, SLIP_END)
+> 				b = b.replace(SLIP_ESC + SLIP_ESC2, SLIP_ESC)
+268c270
+< 				self.docallback(t,fromhost)
+---
+> 				self.docallback(t, fromhost)
