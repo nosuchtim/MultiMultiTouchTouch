@@ -36,6 +36,7 @@
 #include "cJSON.h"
 
 #include <list>
+#include "NosuchDebug.h"
 
 using namespace std;
 
@@ -301,15 +302,22 @@ NosuchForwardSlash(std::string filepath) {
 std::string
 MmttPath(std::string fn)
 {
-	static char* dir = NULL;
+	static std::string savedroot = "";
 	
-	if ( dir == NULL ) {
-		dir = getenv("MMTT");
-		if ( dir == NULL ) {
-			dir = ".";
+	if ( savedroot == "" ) {
+		char* dir = getenv("MMTT");
+		if ( dir != NULL ) {
+			savedroot = std::string(dir);
+		} else {
+			char* pubdir = getenv("PUBLIC");
+			if ( pubdir == NULL ) {
+				pubdir = "c:\\Users\\Public";
+			}
+			savedroot = NosuchSnprintf("%s\\Documents\\Nosuch Media\\MultiMultiTouchTouch",pubdir);
 		}
+		DEBUGPRINT(("In MmttPath, savedroot=%s!!?",savedroot.c_str()));
 	}
-	return NosuchSnprintf("%s/%s",dir,fn.c_str());
+	return NosuchSnprintf("%s/%s",savedroot.c_str(),fn.c_str());
 }
 
 std::string

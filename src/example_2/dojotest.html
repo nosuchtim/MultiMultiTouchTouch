@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html dir="ltr">
+    
+<head>
+<style type="text/css">
+	body, html { font-family:helvetica,arial,sans-serif; font-size:90%; }
+</style>
+<style type="text/css">
+    html, body { width: 100%; height: 100%; margin: 0; }
+</style>
+
+<script src="dojo/dojo.js" djConfig="parseOnLoad: true"> </script>
+<script type="text/javascript">
+
+dojo.require("dijit.form.Button");
+dojo.require("dijit.form.TextBox");
+dojo.require("dijit.form.Slider");
+dojo.require("dojo.data.ItemFileReadStore");
+dojo.require("dijit.form.ComboBox");
+dojo.require("dijit.layout.BorderContainer");
+dojo.require("dijit.layout.ContentPane");
+
+var stateStore = new dojo.data.ItemFileReadStore({
+	url: "particle_params.json"
+});
+var shapeStore = new dojo.data.ItemFileReadStore({
+	url: "particle_shapes.json"
+});
+
+function SpriteChan(chan) {
+	this.chan = chan;
+	this.shape = "square";
+}
+
+function dopost() {
+	var id = "12345";
+	var def = dojo.xhrPost( {
+		url: "dojo.txt",
+		handleAs: "json",
+		postData: "{ \"jsonrpc\": \"2.0\", \"method\": \"_echo\", \"params\":{\"value\":\"fooey\"}, \"id\":\""+id+"\" }\n"
+	});
+	def.then( function(r) {
+			if ( r.error ) {
+				alert("Error! id:" + r.id + " msg="+r.error.message);
+			} else {
+				alert("Success! id:" + r.id + " result="+r.result);
+			}
+			// console.log(result,typeof result);
+
+		},
+		function(err) {
+			alert("Error: " + err);
+	});
+}
+
+function setparamtype(ptype) {
+	var arr = ["pvalG", "pval1", "pval2", "pval3", "pval4", "pval5", "pval6", "pval7"]
+	var obj;
+	for ( i in arr ) {
+		obj = dojo.byId(arr[i]);
+		obj.innerHTML = ptype;
+		var filteringSelect = new dijit.form.ComboBox({
+		    id: arr[i],
+		    name: arr[i],
+		    value: "Square",
+		    store: shapeStore,
+		    searchAttr: "name"
+		},
+		arr[i]);
+	}
+}
+function setup() {
+		// Create a button programmatically:
+                var button = new dijit.form.Button({
+                    label: "Click me!",
+                    onClick: function() {
+                        // Do something:
+                        dojo.byId("result1").innerHTML += "Thank you! ";
+			dopost();
+                    }
+                }, "progButtonNode");
+
+        var filteringSelect = new dijit.form.ComboBox({
+            id: "paramSelect",
+            name: "param",
+            value: "Shape",
+            store: stateStore,
+            searchAttr: "name"
+        },
+        "paramSelect");
+		
+       var slider = new dijit.form.HorizontalSlider({
+            name: "slider",
+            value: 5,
+            minimum: -10,
+            maximum: 10,
+            intermediateChanges: true,
+            style: "width:300px;",
+            onChange: function(value) {
+                dojo.byId("sliderValue").value = value;
+            }
+        },
+        "slider");
+       setparamtype("Shape");
+}
+
+dojo.addOnLoad(setup);
+</script>
+<link rel="stylesheet" type="text/css" href="dijit/themes/claro/claro.css" />
+</head>
+    
+<body class="claro">
+
+<div dojoType="dijit.layout.BorderContainer" style="width: 100%; height: 100%">
+    <div dojoType="dijit.layout.ContentPane" region="top">
+	    <div id="paramSelect"></div>
+    </div>
+    <div dojoType="dijit.layout.ContentPane" region="center">
+	    <table>
+		    <tr><td>G</td><td><div id="pvalG">foo</div></td></tr>
+		    <tr><td>1</td><td><div id="pval1">foo</div></td></tr>
+		    <tr><td>2</td><td><div id="pval2">foo</div></td></tr>
+		    <tr><td>3</td><td><div id="pval3">foo</div></td></tr>
+		    <tr><td>4</td><td><div id="pval4">foo</div></td></tr>
+		    <tr><td>5</td><td><div id="pval5">foo</div></td></tr>
+		    <tr><td>6</td><td><div id="pval6">foo</div></td></tr>
+		    <tr><td>7</td><td><div id="pval7">foo</div></td></tr>
+	    </table>
+        <button id="progButtonNode" type="button">
+        </button>
+        <div id="result1">
+        </div>
+	<div id="slider"></div>
+	<input type="text" id="sliderValue" dojoType="dijit.form.TextBox" />
+    </div>
+    <div dojoType="dijit.layout.ContentPane" region="bottom">
+        Bottom pane
+    </div>
+</div>
+
+	
+</body>
+
+</html>
+

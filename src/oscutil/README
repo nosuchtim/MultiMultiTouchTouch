@@ -1,0 +1,4 @@
+To compile oscutil.exe, set environment variables (PATH, etc.)
+to access Visual Studio programs, and then execute:
+
+    nmake

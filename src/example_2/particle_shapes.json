@@ -1,0 +1,8 @@
+{
+  "identifier": "name",
+  "items": [
+    { "name": "Square" },
+    { "name": "Circle" },
+    { "name": "Triangle" },
+  ]
+}

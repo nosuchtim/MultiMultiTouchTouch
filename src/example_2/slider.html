@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>MMTT - Graphics</title>
+    <script src="js/jquery-1.5.2.js" type="text/javascript"></script>
+    <script src="js/ui/jquery.ui.core.js" type="text/javascript"></script>
+    <script src="js/ui/jquery.ui.widget.js" type="text/javascript"></script>
+    <script src="js/ui/jquery.ui.mouse.js" type="text/javascript"></script>
+    <script src="js/ui/jquery.ui.button.js" type="text/javascript"></script>
+    <script src="js/ui/jquery.ui.slider.js" type="text/javascript"></script>
+    <script src="js/ui/jquery.ui.selectable.js" type="text/javascript"></script>
+    <script src="js/ui/jquery.ui.autocomplete.js" type="text/javascript"></script>
+    <script src="js/ui/jquery.ui.autocomplete.js" type="text/javascript"></script>
+    <script src="js/ui/jquery.ui.datepicker.js" type="text/javascript"></script>
+    <link href="css/demos.css" rel="stylesheet" type="text/css" />
+<script>
+
+function buttonNewest(event) {
+	alert("Newest! row="+event.data.row);
+}
+    $(document).ready(function () {
+	$('#slider').slider();
+	$('#last').text("LAST");
+	$('#speed').selectToUISlider();
+    });
+</script>
+</head>
+<body>
+First
+<br>
+<div id="slider"></div>
+<br>
+<div id="last">Last</div>
+
+<select name="speed" id="speed">
+  <option value="Slower">Slower</option>
+  <option value="Slow">Slow</option>
+  <option value="Med" selected="selected">Med</option>
+  <option value="Fast">Fast</option>
+  <option value="Faster">Faster</option>
+</select>
+
+
+</body>
+</html>

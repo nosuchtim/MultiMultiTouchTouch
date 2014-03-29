@@ -1,0 +1,275 @@
+[24.113,T647391488] Loading config=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt.json
+[45.480,T647391488] Loading patch=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt/fullscreen320.json
+[88.242,T647391488] Loading patch=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt/fullscreen320.json
+[88.246,T647391488] Listening for HTTP on TCP port 80
+[88.248,T647391488] NOT listening for OSC because oscport<0 or missing
+[88.567,T647391488] InitializeCamera for Creative
+[90.361,T647391488] Failed to locate depth stream(s) for capture[0]!!
+[0.005,T1631086848] Loading config=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt.json
+[53.276,T1631086848] Loading patch=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt/fullscreen320.json
+[0.007,T1880254720] Loading config=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt.json
+[2.855,T1880254720] Loading patch=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt/fullscreen320.json
+[2.859,T1880254720] Listening for HTTP on TCP port 80
+[2.861,T1880254720] NOT listening for OSC because oscport<0 or missing
+[3.095,T1880254720] InitializeCamera for Creative
+[4.891,T1880254720] Failed to locate depth stream(s) for capture[0]!!
+[0.007,T-469538560] Loading config=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt.json
+[0.025,T-469538560] Loading patch=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt/fullscreen320.json
+[0.028,T-469538560] Listening for HTTP on TCP port 80
+[0.031,T-469538560] NOT listening for OSC because oscport<0 or missing
+[0.311,T-469538560] InitializeCamera for Creative
+[2.102,T-469538560] Failed to locate depth stream(s) for capture[0]!!
+[0.007,T-1034983168] Loading config=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt.json
+[0.024,T-1034983168] Loading patch=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt/fullscreen320.json
+[0.026,T-1034983168] Loading patch=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt/fullscreen320.json
+[0.030,T-1034983168] Listening for HTTP on TCP port 80
+[0.033,T-1034983168] NOT listening for OSC because oscport<0 or missing
+[0.368,T-1034983168] InitializeCamera for Creative
+[2.163,T-1034983168] Failed to locate depth stream(s) for capture[0]!!
+[0.006,T-896636672] Loading config=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt.json
+[0.023,T-896636672] Loading patch=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt/fullscreen320.json
+[0.026,T-896636672] Loading patch=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt/fullscreen320.json
+[0.031,T-896636672] Listening for HTTP on TCP port 80
+[0.033,T-896636672] NOT listening for OSC because oscport<0 or missing
+[0.286,T-896636672] InitializeCamera for Creative
+[4.321,T-896636672] InitializeCamera doing queryvideostream for idx=0
+[4.324,T-896636672] queryvideostream for idx=0 FOUND ONE!
+[4.326,T-896636672] InitializeCamera doing queryvideostream for idx=1
+[4.328,T-896636672] No stream for capture=-851348672 idx=1
+[4.330,T-896636672] _nstreams = 1
+[63.042,T-896636192] GET request for /index.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/index.html
+[63.336,T-896636192] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[65.224,T-896636192] GET request for /mmtt/calibration_direct.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/calibration_direct.html
+[65.278,T-896636192] GET request for /mmtt/dojo/dojo.js, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/dojo/dojo.js
+[65.559,T-896636192] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[126.555,T-896636192] GET request for /mmtt/calibration_direct.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/calibration_direct.html
+[126.644,T-896636192] GET request for /mmtt/dojo/dojo.js, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/dojo/dojo.js
+[126.965,T-896636192] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[134.648,T-896636192] executeJson, method=mmtt_toggle
+[135.329,T-896636192] executeJson, method=mmtt_toggle
+[140.796,T-896636192] GET request for /mmtt/draw.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/draw.html
+[140.854,T-896636192] GET request for /mmtt/drawfade.js, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/drawfade.js
+[141.005,T-896636192] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[198.344,T-896636192] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[248.673,T-896636192] GET request for /mmtt/advanced_direct.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/advanced_direct.html
+[248.736,T-896636192] GET request for /mmtt/dojo/dojo.js, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/dojo/dojo.js
+[249.224,T-896636192] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[254.538,T-896636192] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[257.054,T-896636192] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[269.851,T-896636192] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[308.787,T-896636192] executeJson, method=stop
+[332.037,T-896636192] executeJson, method=mmtt_increment
+[332.477,T-896636192] executeJson, method=mmtt_increment
+[334.149,T-896636192] executeJson, method=mmtt_decrement
+[334.374,T-896636192] executeJson, method=mmtt_decrement
+[335.088,T-896636192] executeJson, method=mmtt_decrement
+[335.257,T-896636192] executeJson, method=mmtt_decrement
+[335.463,T-896636192] executeJson, method=mmtt_decrement
+[336.986,T-896636192] executeJson, method=mmtt_increment
+[337.164,T-896636192] executeJson, method=mmtt_increment
+[337.349,T-896636192] executeJson, method=mmtt_increment
+[337.524,T-896636192] executeJson, method=mmtt_increment
+[337.900,T-896636192] executeJson, method=mmtt_increment
+[339.369,T-896636192] executeJson, method=mmtt_decrement
+[352.071,T-896636192] executeJson, method=mmtt_increment
+[352.590,T-896636192] executeJson, method=mmtt_increment
+[353.985,T-896636192] executeJson, method=mmtt_decrement
+[354.185,T-896636192] executeJson, method=mmtt_decrement
+[354.354,T-896636192] executeJson, method=mmtt_decrement
+[354.530,T-896636192] executeJson, method=mmtt_decrement
+[354.754,T-896636192] executeJson, method=mmtt_decrement
+[355.485,T-896636192] executeJson, method=mmtt_decrement
+[355.964,T-896636192] executeJson, method=mmtt_decrement
+[357.511,T-896636192] executeJson, method=mmtt_decrement
+[357.952,T-896636192] executeJson, method=mmtt_decrement
+[358.528,T-896636192] executeJson, method=mmtt_decrement
+[366.158,T-896636192] executeJson, method=start
+[370.613,T-896636192] executeJson, method=mmtt_increment
+[371.760,T-896636192] executeJson, method=mmtt_increment
+[372.682,T-896636192] executeJson, method=mmtt_increment
+[372.867,T-896636192] executeJson, method=mmtt_increment
+[373.058,T-896636192] executeJson, method=mmtt_increment
+[373.449,T-896636192] executeJson, method=mmtt_increment
+[375.270,T-896636192] executeJson, method=mmtt_increment
+[375.776,T-896636192] executeJson, method=mmtt_increment
+[376.650,T-896636192] executeJson, method=mmtt_increment
+[377.595,T-896636192] executeJson, method=mmtt_increment
+[818.313,T-896636192] GET request for /mmtt/calibration_direct.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/calibration_direct.html
+[818.406,T-896636192] GET request for /mmtt/dojo/dojo.js, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/dojo/dojo.js
+[818.721,T-896636192] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[0.006,T-1373345536] Loading config=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt.json
+[0.024,T-1373345536] Loading patch=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt/fullscreen320.json
+[0.027,T-1373345536] Loading patch=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt/fullscreen320.json
+[0.032,T-1373345536] Listening for HTTP on TCP port 4444
+[0.035,T-1373345536] NOT listening for OSC because oscport<0 or missing
+[0.241,T-1373345536] InitializeCamera for Creative
+[3.984,T-1373345536] InitializeCamera doing queryvideostream for idx=0
+[3.987,T-1373345536] queryvideostream for idx=0 FOUND ONE!
+[3.989,T-1373345536] InitializeCamera doing queryvideostream for idx=1
+[3.992,T-1373345536] No stream for capture=-1327803312 idx=1
+[3.994,T-1373345536] _nstreams = 1
+[7.727,T-1373345056] GET request for /index.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/index.html
+[8.007,T-1373345056] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[9.897,T-1373345056] GET request for /mmtt/calibration_direct.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/calibration_direct.html
+[9.951,T-1373345056] GET request for /mmtt/dojo/dojo.js, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/dojo/dojo.js
+[10.211,T-1373345056] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[11.918,T-1373345056] GET request for /mmtt/calibration_direct.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/calibration_direct.html
+[11.968,T-1373345056] GET request for /mmtt/dojo/dojo.js, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/dojo/dojo.js
+[12.198,T-1373345056] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[13.351,T-1373345056] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[14.391,T-1373345056] GET request for /mmtt/advanced_direct.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/advanced_direct.html
+[14.436,T-1373345056] GET request for /mmtt/dojo/dojo.js, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/dojo/dojo.js
+[14.909,T-1373345056] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[16.210,T-1373345056] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[16.931,T-1373345056] GET request for /mmtt/calibration_direct.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/calibration_direct.html
+[16.973,T-1373345056] GET request for /mmtt/dojo/dojo.js, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/dojo/dojo.js
+[17.208,T-1373345056] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[0.007,T-274110208] Loading config=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt.json
+[44.498,T-274110208] Loading patch=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt/fullscreen320.json
+[44.501,T-274110208] Loading patch=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt/fullscreen320.json
+[44.506,T-274110208] Listening for HTTP on TCP port 4444
+[44.509,T-274110208] NOT listening for OSC because oscport<0 or missing
+[44.715,T-274110208] InitializeCamera for Creative
+[48.459,T-274110208] InitializeCamera doing queryvideostream for idx=0
+[48.462,T-274110208] queryvideostream for idx=0 FOUND ONE!
+[48.465,T-274110208] InitializeCamera doing queryvideostream for idx=1
+[48.467,T-274110208] No stream for capture=-229350016 idx=1
+[48.470,T-274110208] _nstreams = 1
+[76.920,T-274109728] GET request for /mmtt/calibration_direct.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/calibration_direct.html
+[112.189,T-274109728] GET request for /mmtt/dojo/dojo.js, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/dojo/dojo.js
+[112.510,T-274109728] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[115.754,T-274109728] GET request for /mmtt/calibration_direct.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/calibration_direct.html
+[115.825,T-274109728] GET request for /mmtt/dojo/dojo.js, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/dojo/dojo.js
+[116.047,T-274109728] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[119.029,T-274109728] GET request for /mmtt/calibration_direct.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/calibration_direct.html
+[119.077,T-274109728] GET request for /mmtt/dojo/dojo.js, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/dojo/dojo.js
+[119.302,T-274109728] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[120.901,T-274109728] GET request for /mmtt/calibration_direct.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/calibration_direct.html
+[120.949,T-274109728] GET request for /mmtt/dojo/dojo.js, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/dojo/dojo.js
+[121.182,T-274109728] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[123.956,T-274109728] GET request for /mmtt/calibration_direct.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/calibration_direct.html
+[123.999,T-274109728] GET request for /mmtt/dojo/dojo.js, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/dojo/dojo.js
+[124.226,T-274109728] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[240.601,T-274109728] GET request for /mmtt/calibration_direct.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/calibration_direct.html
+[240.683,T-274109728] GET request for /mmtt/dojo/dojo.js, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/dojo/dojo.js
+[241.005,T-274109728] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[242.315,T-274109728] GET request for /mmtt/calibration_direct.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/calibration_direct.html
+[242.373,T-274109728] GET request for /mmtt/dojo/dojo.js, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/dojo/dojo.js
+[242.607,T-274109728] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[0.007,T1152936192] Loading config=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt.json
+[0.028,T1152936192] Loading patch=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt/fullscreen320.json
+[0.032,T1152936192] Loading patch=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt/fullscreen320.json
+[0.036,T1152936192] Listening for HTTP on TCP port 4444
+[0.039,T1152936192] NOT listening for OSC because oscport<0 or missing
+[0.359,T1152936192] InitializeCamera for Creative
+[4.109,T1152936192] InitializeCamera doing queryvideostream for idx=0
+[4.112,T1152936192] queryvideostream for idx=0 FOUND ONE!
+[4.114,T1152936192] InitializeCamera doing queryvideostream for idx=1
+[4.117,T1152936192] No stream for capture=1181570320 idx=1
+[4.119,T1152936192] _nstreams = 1
+[10.818,T1152936672] GET request for /index.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/index.html
+[11.131,T1152936672] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[13.237,T1152936672] GET request for /mmtt/calibration_direct.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/calibration_direct.html
+[13.285,T1152936672] GET request for /mmtt/dojo/dojo.js, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/dojo/dojo.js
+[13.548,T1152936672] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[54.505,T1152936672] GET request for /mmtt/calibration_direct.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/calibration_direct.html
+[54.784,T1152936672] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[88.099,T1152936672] GET request for /mmtt/calibration_direct.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/calibration_direct.html
+[88.178,T1152936672] GET request for /mmtt/dojo/dojo.js, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/dojo/dojo.js
+[88.481,T1152936672] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[150.158,T1152936672] GET request for /mmtt/calibration_direct.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/calibration_direct.html
+[150.213,T1152936672] GET request for /mmtt/dojo/dojo.js, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/dojo/dojo.js
+[150.441,T1152936672] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[154.539,T1152936672] executeJson, method=stop
+[155.868,T1152936672] executeJson, method=start
+[158.196,T1152936672] executeJson, method=stop
+[164.760,T1152936672] executeJson, method=start
+[169.887,T1152936672] executeJson, method=stop
+[174.969,T1152936672] executeJson, method=mmtt_toggle
+[175.737,T1152936672] executeJson, method=mmtt_toggle
+[176.363,T1152936672] executeJson, method=mmtt_toggle
+[177.148,T1152936672] executeJson, method=mmtt_toggle
+[178.486,T1152936672] executeJson, method=mmtt_toggle
+[180.347,T1152936672] executeJson, method=mmtt_toggle
+[180.954,T1152936672] executeJson, method=mmtt_toggle
+[182.135,T1152936672] executeJson, method=mmtt_toggle
+[182.631,T1152936672] executeJson, method=mmtt_toggle
+[183.915,T1152936672] executeJson, method=mmtt_toggle
+[184.747,T1152936672] executeJson, method=mmtt_toggle
+[188.272,T1152936672] executeJson, method=start
+[189.915,T1152936672] executeJson, method=mmtt_toggle
+[195.917,T1152936672] executeJson, method=mmtt_toggle
+[199.442,T1152936672] executeJson, method=mmtt_toggle
+[201.301,T1152936672] executeJson, method=mmtt_toggle
+[203.776,T1152936672] executeJson, method=mmtt_toggle
+[204.777,T1152936672] executeJson, method=mmtt_toggle
+[207.077,T1152936672] executeJson, method=start
+[209.321,T1152936672] executeJson, method=mmtt_toggle
+[214.908,T1152936672] executeJson, method=mmtt_toggle
+[216.284,T1152936672] executeJson, method=mmtt_toggle
+[217.150,T1152936672] executeJson, method=mmtt_toggle
+[219.737,T1152936672] executeJson, method=mmtt_toggle
+[221.197,T1152936672] executeJson, method=mmtt_toggle
+[222.013,T1152936672] executeJson, method=mmtt_toggle
+[222.688,T1152936672] executeJson, method=mmtt_toggle
+[227.816,T1152936672] GET request for /mmtt/draw.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/draw.html
+[227.868,T1152936672] GET request for /mmtt/drawfade.js, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/drawfade.js
+[228.037,T1152936672] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[237.594,T1152936672] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[0.005,T-463372272] Loading config=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt.json
+[0.013,T-463372272] Loading patch=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt/fullscreen320.json
+[0.016,T-463372272] Loading patch=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt/fullscreen320.json
+[0.019,T-463372272] Listening for HTTP on TCP port 4444
+[0.021,T-463372272] NOT listening for OSC because oscport<0 or missing
+[0.217,T-463372272] InitializeCamera for Creative
+[3.791,T-463372272] InitializeCamera doing queryvideostream for idx=0
+[3.794,T-463372272] queryvideostream for idx=0 FOUND ONE!
+[3.796,T-463372272] InitializeCamera doing queryvideostream for idx=1
+[3.798,T-463372272] No stream for capture=-415579392 idx=1
+[3.800,T-463372272] _nstreams = 1
+[20.026,T-463371824] GET request for /mmtt/calibration_direct.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/calibration_direct.html
+[20.105,T-463371824] GET request for /mmtt/dojo/dojo.js, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/dojo/dojo.js
+[20.407,T-463371824] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[25.101,T-463371824] executeJson, method=mmtt_toggle
+[25.766,T-463371824] executeJson, method=mmtt_toggle
+[26.310,T-463371824] executeJson, method=mmtt_toggle
+[26.510,T-463371824] executeJson, method=mmtt_toggle
+[49.178,T-463371824] GET request for /index.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/index.html
+[49.499,T-463371824] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[52.603,T-463371824] GET request for /mmtt/calibration_direct.html, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/calibration_direct.html
+[52.647,T-463371824] GET request for /mmtt/dojo/dojo.js, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/mmtt/dojo/dojo.js
+[52.892,T-463371824] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[54.263,T-463371824] GET request for /favicon.ico, reading c:\users\tjt\documents\github\MultiMultiTouchTouch/html/favicon.ico
+[0.004,T1116766224] Loading config=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt.json
+[0.011,T1116766224] Loading patch=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt/fullscreen320.json
+[0.014,T1116766224] Loading patch=c:\users\tjt\documents\github\MultiMultiTouchTouch/config/mmtt/fullscreen320.json
+[0.017,T1116766224] Listening for HTTP on TCP port 4444
+[0.019,T1116766224] NOT listening for OSC because oscport<0 or missing
+[0.213,T1116766224] InitializeCamera for Creative
+[3.813,T1116766224] InitializeCamera doing queryvideostream for idx=0
+[3.815,T1116766224] queryvideostream for idx=0 FOUND ONE!
+[3.817,T1116766224] InitializeCamera doing queryvideostream for idx=1
+[3.819,T1116766224] No stream for capture=1163952864 idx=1
+[3.821,T1116766224] _nstreams = 1
+[0.007,T-1705285392] Loading config=C:\Users\tjt\Documents\GitHub\MultiMultiTouchTouch\vs2012\MMTT\..\../config/mmtt.json
+[0.027,T-1705285392] Loading patch=C:\Users\tjt\Documents\GitHub\MultiMultiTouchTouch\vs2012\MMTT\..\../config/mmtt/fullscreen320.json
+[0.031,T-1705285392] Loading patch=C:\Users\tjt\Documents\GitHub\MultiMultiTouchTouch\vs2012\MMTT\..\../config/mmtt/fullscreen320.json
+[0.037,T-1705285392] Listening for HTTP on TCP port 4444
+[0.040,T-1705285392] NOT listening for OSC because oscport<0 or missing
+[0.247,T-1705285392] InitializeCamera for Creative
+[3.989,T-1705285392] InitializeCamera doing queryvideostream for idx=0
+[3.992,T-1705285392] queryvideostream for idx=0 FOUND ONE!
+[3.995,T-1705285392] InitializeCamera doing queryvideostream for idx=1
+[3.997,T-1705285392] No stream for capture=-1658100176 idx=1
+[4.000,T-1705285392] _nstreams = 1
+[0.007,T-2052167440] Loading config=C:\Users\tjt\Documents\GitHub\MultiMultiTouchTouch\vs2012\MMTT\..\../config/mmtt.json
+[0.024,T-2052167440] Loading patch=C:\Users\tjt\Documents\GitHub\MultiMultiTouchTouch\vs2012\MMTT\..\../config/mmtt/fullscreen320.json
+[0.028,T-2052167440] Loading patch=C:\Users\tjt\Documents\GitHub\MultiMultiTouchTouch\vs2012\MMTT\..\../config/mmtt/fullscreen320.json
+[0.032,T-2052167440] Listening for HTTP on TCP port 4444
+[0.034,T-2052167440] NOT listening for OSC because oscport<0 or missing
+[0.253,T-2052167440] InitializeCamera for Creative
+[4.002,T-2052167440] InitializeCamera doing queryvideostream for idx=0
+[4.005,T-2052167440] queryvideostream for idx=0 FOUND ONE!
+[4.008,T-2052167440] InitializeCamera doing queryvideostream for idx=1
+[4.011,T-2052167440] No stream for capture=-2007275984 idx=1
+[4.013,T-2052167440] _nstreams = 1

@@ -1,0 +1,8 @@
+{
+  "identifier": "name",
+  "items": [
+    { "name": "Size", "type": "number", "min":1, "max":32 },
+    { "name": "NumLimit", "type": "number", "min":1, "max":100 },
+    { "name": "Shape", "type": "string", "values":["square","circle","triangle"]},
+  ]
+}

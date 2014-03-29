@@ -21,7 +21,7 @@
 <script type="text/javascript">
 
 var ValNames = [
-		["Tilt","tilt","number"],
+		["Tilt (Kinect)","tilt","number"],
 		["Threshold Top","backtop","number"],
 		["Threshold Bottom","backbottom","number"],
 		["Max Blob Size","blob_maxsize","number"],
@@ -357,8 +357,6 @@ dojo.addOnLoad(setup);
 <input type="button" name="butt_stop" value="STOP sending TUIO (Shows Raw Depth)" onClick="doaction('stop');">
 <p>
 <input type="button" name="butt_autopoke" value="ReAlign" onClick="doaction('align_start');">
-<input type="button" name="butt_loadconfig" value="Load Config" onClick="doconfig('load');">
-<input type="text" id="text_configname" name="text_configname" value="default">
 <br>
 <div id="status">&nbsp;</div>
 </center>

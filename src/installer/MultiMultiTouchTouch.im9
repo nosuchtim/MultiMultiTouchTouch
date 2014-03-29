@@ -282,13 +282,13 @@ project Flags=0x20 {
 			str Value: Default="<$shpath(26)=@<ShellFoldersCU>\\AppData=_LocAppDataFolder>";
 		}
 		var BuildBase: Flags=0x5, Type=0, Description="Build target base name" {
-			str Value: Default=".._.._.._nosuchproducts_MultiMultiTouchTouch-Setup";
+			str Value: Default="MultiMultiTouchTouch-Setup";
 		}
 		var BuildDate: Flags=0x5, Type=0, Description="Build date as YYYYMMDD" {
-			str Value: Default=20140322;
+			str Value: Default=20140325;
 		}
 		var BuildDayNo: Flags=0x5, Type=0, Description="Build day number, starting from 1 January 2000" {
-			str Value: Default=5195;
+			str Value: Default=5198;
 		}
 		var BuildFolder: Flags=0x5, Type=1, Description="Folder containing the build target" {
 			str Value: Default="C:\\Users\\tjt\\Documents\\GitHub\\MultiMultiTouchTouch\\src\\installer\\MultiMultiTouchTouch\\mmtt";
@@ -300,10 +300,10 @@ project Flags=0x20 {
 			str Value: Default="Serial# 79688709040314E2-04000108";
 		}
 		var BuildTarget: Flags=0x5, Type=1, Description="Build target file path" {
-			str Value: Default="C:\\Users\\tjt\\Documents\\GitHub\\MultiMultiTouchTouch\\src\\installer\\MultiMultiTouchTouch\\mmtt\\.._.._.._nosuchproducts_MultiMultiTouchTouch-Setup.exe";
+			str Value: Default="C:\\Users\\tjt\\Documents\\GitHub\\MultiMultiTouchTouch\\src\\installer\\MultiMultiTouchTouch\\mmtt\\MultiMultiTouchTouch-Setup.exe";
 		}
 		var BuildTime: Flags=0x5, Type=0, Description="Build time as HHMMSS" {
-			str Value: Default=225221;
+			str Value: Default=211531;
 		}
 		var BuildType: Flags=0x5, Type=0, Description="Build type: always TSU" {
 			str Value: Default=TSU;
@@ -368,7 +368,7 @@ project Flags=0x20 {
 			str Value: Default="<$syspath(6)=%ALLUSERSPROFILE=_LocCommonProfileFolder>";
 		}
 		var CommonProgramGroupFolder: Flags=0x22C, Type=1, Description="All Users Program group folder" {
-			str Value: Default="<CommonProgramMenuFolder>\\<ProductName>";
+			str Value: Default="<_Publisher__21B15868DA5944A0>\\<ProductName>";
 		}
 		var CommonProgramMenuFolder: Flags=0x244, Type=1, Description="All Users Programs menu folder" {
 			str Value: Default="<$shpath(23)=@<ShellFoldersLM>\\Common Programs=_LocCommonProgramMenuFolder>";
@@ -398,7 +398,7 @@ project Flags=0x20 {
 			str Value: Default="<$shpath(33)=@<ShellFoldersCU>\\Cookies=_LocCookiesFolder>";
 		}
 		var Copyright: Flags=0x204, Type=0, Description="Copyright notice" {
-			str Value: Default="Copyright © 2014 <Publisher>";
+			str Value: Default="Copyright © 2014 Tim Thompson";
 		}
 		var Date: Flags=0x204, Type=0, Description="Session start date formatted according to regional preferences" {
 			str Value: Default="<$sysval(26,2)>";
@@ -601,7 +601,7 @@ project Flags=0x20 {
 			str Value: Default="<MSOfficeDir14=MSOfficeDir12=MSOfficeDir11=MSOfficeDir10=MSOfficeDir9=MSOfficeDir8=!<ProgramFilesFolder>\\Microsoft Office\\Office>";
 		}
 		var PackageCode: Flags=0x205, Type=0, Description="Distribution package GUID" {
-			str Value: Default="{68817F98-3CD6-45D1-583A-C02D9EF9E81E}";
+			str Value: Default="{6EAF28BD-5FEF-4502-58E9-A31498D7BF3B}";
 		}
 		var PersonalFolder: Flags=0x244, Type=1, Description="Current User Documents folder" {
 			str Value: Default="<$shpath(5)=@<ShellFoldersCU>\\Personal=_LocPersonalFolder>";
@@ -756,7 +756,7 @@ project Flags=0x20 {
 			str Value: Default="<$sysval(4)>";
 		}
 		var SessionID: Flags=0x204, Type=0, Description="Pseudo-random 8-character session identifier" {
-			str Value: Default="57CFBD70";
+			str Value: Default=F74E2F5C;
 		}
 		var ShellFoldersCU: Flags=0x20C, Type=2, Description="Current User Shell folders registry key" {
 			str Value: Default="<HKCU>\\<WinCurVer>\\Explorer\\Shell Folders";
@@ -2163,6 +2163,14 @@ project Flags=0x20 {
 			str DisplayName: Flags=0x40000, Default=config_Files;
 			str Description: Flags=0x40000;
 		}
+		component _Publisher__33C715E8538B3CB5: Flags=0x0, Platforms=0x7FFFFFFF, Packaging=0, Languages="0=", State0=3, State1=3, ExtraSize=0, FolderAlias=_Publisher__33C715E8538B3CB5 {
+			str DisplayName: Flags=0x40000, Default="<Publisher>_Files";
+			str Description: Flags=0x40000;
+		}
+		component Folder1_A00D49FD5FFBA13D: Flags=0x0, Platforms=0x7FFFFFFF, Packaging=0, Languages="0=", State0=3, State1=3, ExtraSize=0, FolderAlias=Folder1_A00D49FD5FFBA13D {
+			str DisplayName: Flags=0x40000, Default=Folder1_Files;
+			str Description: Flags=0x40000;
+		}
 	}
 	files TARGETDIR: Flags=0x0, Traits=0x6F07, InstallAction=0, RemoveAction=0 {
 		str Name: Flags=0x10000, PhraseID=Folder.TargetSystem, Default="Target System" {
@@ -2174,39 +2182,6 @@ project Flags=0x20 {
 			}
 			folder CommonCompanyAppDataFolder: Flags=0x0, Traits=0x80000000, InstallAction=0, RemoveAction=1 {
 				str Name: Default="<Publisher>";
-				folder CommonProductAppDataFolder: Flags=0x0, Traits=0x80000000, InstallAction=0, RemoveAction=1 {
-					str Name: Default="<ProductName>";
-					folder config_A1EBBC7E6C02D007: Flags=0x0, Component=config_A1EBBC7E6C02D007, Traits=0x80000000, InstallAction=0, RemoveAction=1 {
-						str Name: Default=config;
-						file mmtt.json_C197C2DB7D4C2F9D: Flags=0x0, Component=DROPPED_20140322222304, Path="..\\..\\config\\mmtt.json", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
-							str Name: Default=mmtt.json;
-						}
-						folder mmtt_99A8B249BF306A3E: Flags=0x0, Component=config_A1EBBC7E6C02D007, Traits=0x80000000, InstallAction=0, RemoveAction=1 {
-							str Name: Default=mmtt;
-							file fullscreen320.json_E4BF4EE1DCD7DAB4: Flags=0x0, Component=config_A1EBBC7E6C02D007, Path="..\\..\\config\\mmtt\\fullscreen320.json", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
-								str Name: Default=fullscreen320.json;
-							}
-							file fullscreen_kinect2.json_CEAEB14D86BC412B: Flags=0x0, Component=config_A1EBBC7E6C02D007, Path="..\\..\\config\\mmtt\\fullscreen_kinect2.json", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
-								str Name: Default=fullscreen_kinect2.json;
-							}
-							file small4.json_40F4CF967B77238E: Flags=0x0, Component=config_A1EBBC7E6C02D007, Path="..\\..\\config\\mmtt\\small4.json", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
-								str Name: Default=small4.json;
-							}
-							file small4.ppm_21A617B8EDB88B37: Flags=0x0, Component=config_A1EBBC7E6C02D007, Path="..\\..\\config\\mmtt\\small4.ppm", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
-								str Name: Default=small4.ppm;
-							}
-						}
-					}
-					folder Folder1_419118276212BB7E: Flags=0x0, Component=Folder1_419118276212BB7E, Traits=0x80000000, InstallAction=0, RemoveAction=1 {
-						str Name: Default=html;
-						wlist WatchList_E26569799CB1BF19: Flags=0xC000003F, Path="..\\Public\\Documents\\Nosuch Media\\MultiMultiTouchTouch\\html", Filter="*.*", Exclude="*.bak;*.tmp;*.lnk;*.log;*.acl;*.gid;*.fts;*.pnf;*.oca;*.scc;*.$*;*.~*;.svn;*.*~;old*";
-					}
-					folder Folder3_40A4408E767AAAA1: Flags=0x0, Component=Folder3_40A4408E767AAAA1, Traits=0x80000000, InstallAction=0, RemoveAction=1 {
-						str Name: Default=patches;
-						wlist WatchList_FB8DB92C93148BB1: Flags=0xC000003E, Path="..\\Public\\Documents\\Nosuch Media\\MultiMultiTouchTouch\\patches", Filter="*.json", Exclude="*.bak;*.tmp;*.lnk;*.log;*.acl;*.gid;*.fts;*.pnf;*.oca;*.scc;*.$*;*.~*;.svn;*.*~";
-						wlist WatchList_90540F20C5ABBF17: Flags=0xC000003E, Path="..\\Public\\Documents\\Nosuch Media\\MultiMultiTouchTouch\\patches", Filter="*.ppm", Exclude="*.bak;*.tmp;*.lnk;*.log;*.acl;*.gid;*.fts;*.pnf;*.oca;*.scc;*.$*;*.~*;.svn;*.*~";
-					}
-				}
 			}
 			folder TinFolder: Flags=0x0, Traits=0x80000000, InstallAction=0, RemoveAction=1 {
 				str Name: Default=InstallMate;
@@ -2229,33 +2204,27 @@ project Flags=0x20 {
 					}
 					folder _Publisher__21B15868DA5944A0: Flags=0x0, Component=_Publisher__21B15868DA5944A0, Traits=0x80000000, InstallAction=0, RemoveAction=1 {
 						str Name: Default="<Publisher>";
+						folder CommonProgramGroupFolder: Flags=0x0, Traits=0x80000000, InstallAction=0, RemoveAction=0 {
+							str Name: Default="<ProductName>";
+							shlink Shortcut5_BFBC40DE86B7E40D: Flags=0x0, TargetPath="http://127.0.0.1:4444", IconIndex=0, ShowCmd=0 {
+								str Title: Default="Browser-based Config (MMTT must be running)";
+							}
+							shlink Shortcut_to_Mmtt_kinect.exe_4DD5E706893D5CE7: Flags=0x0, Component=Product, TargetPath="<#MMTT.exe_3F1C2A8184FE717A>", WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=0 {
+								str Title: Default=MMTT;
+							}
+							shlink Shortcut_to_osclisten.bat_F5FC72ABC040B770: Flags=0x0, Component=Product, TargetPath="<#oscutil.exe_EAEE736D582545BA>", WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=0 {
+								str Title: Default="OSC TEST - Listen on port 3333";
+								str Arguments: Default="listen 3333";
+							}
+							shlink Shortcut_to_taildebug.bat_76A53AB756AF850B: Flags=0x0, Component=Product, TargetPath="<#tail.exe_FE421BFFCF0D2977>", WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=0 {
+								str Title: Default="Monitor debug output";
+								str Arguments: Default="-f \"<CommonDocumentsFolder>\\Nosuch Media\\MultiMultiTouchTouch\\log\\mmtt.debug\"";
+							}
+						}
 					}
 					folder CommonAdminToolsFolder: Flags=0x0, Traits=0x80000000, InstallAction=0, RemoveAction=0 {
 						str Name: Flags=0x10000, PhraseID=Folder.AdminTools.Common, Default="Administrative Tools" {
 							xlat ID=1033 {"Administrative Tools"}
-						}
-					}
-					folder CommonProgramGroupFolder: Flags=0x0, Traits=0x80000000, InstallAction=0, RemoveAction=0 {
-						str Name: Default="<ProductName>";
-						shlink Shortcut5_BFBC40DE86B7E40D: Flags=0x0, TargetPath="http://127.0.0.1:4444", IconIndex=0, ShowCmd=0 {
-							str Title: Default="Browser-based Config (MMTT must be running)";
-						}
-						shlink Shortcut_to_Mmtt_freenect.exe_24DA25718FD4D430: Flags=0x0, Component=Product, WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=0 {
-							str Title: Default="MMTT - libfreenect drivers";
-						}
-						shlink Shortcut_to_Mmtt_kinect.exe_4DD5E706893D5CE7: Flags=0x0, Component=Product, WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=0 {
-							str Title: Default="MMTT - Microsoft drivers";
-						}
-						shlink Shortcut_to_osclisten.bat_F5FC72ABC040B770: Flags=0x0, Component=Product, WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=0 {
-							str Title: Default="OSC TEST - Playback on port 3333";
-							str Arguments: Default="3333 fourcircles.osc";
-						}
-						shlink Shortcut_to_osclisten.bat_F5FC72ABC040B770: Flags=0x0, Component=Product, WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=0 {
-							str Title: Default="OSC TEST - Listen on port 3333";
-							str Arguments: Default=3333;
-						}
-						shlink Shortcut_to_taildebug.bat_76A53AB756AF850B: Flags=0x0, Component=Product, WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=0 {
-							str Title: Default="Monitor debug output";
 						}
 					}
 					folder CommonStartupFolder: Flags=0x0, Traits=0x80000000, InstallAction=0, RemoveAction=0 {
@@ -2450,6 +2419,76 @@ project Flags=0x20 {
 					str Name: Flags=0x10000, PhraseID=Folder.Documents.Common.NT6, Default="Public Documents" {
 						xlat ID=1033 {"Public Documents"}
 					}
+					folder _Publisher__33C715E8538B3CB5: Flags=0x0, Component=_Publisher__33C715E8538B3CB5, Traits=0x80000000, InstallAction=0, RemoveAction=1 {
+						str Name: Default="<Publisher>";
+						folder CommonProductAppDataFolder: Flags=0x0, Traits=0x80000000, InstallAction=0, RemoveAction=1 {
+							str Name: Default="<ProductName>";
+							folder config_A1EBBC7E6C02D007: Flags=0x0, Component=config_A1EBBC7E6C02D007, Traits=0x80000000, InstallAction=0, RemoveAction=1 {
+								str Name: Default=config;
+								file mmtt.json_C197C2DB7D4C2F9D: Flags=0x0, Component=DROPPED_20140322222304, Path="..\\..\\config\\mmtt.json", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+									str Name: Default=mmtt.json;
+								}
+								folder mmtt_99A8B249BF306A3E: Flags=0x0, Component=config_A1EBBC7E6C02D007, Traits=0x80000000, InstallAction=0, RemoveAction=1 {
+									str Name: Default=mmtt;
+									file fullscreen320.json_E4BF4EE1DCD7DAB4: Flags=0x0, Component=config_A1EBBC7E6C02D007, Path="..\\..\\config\\mmtt\\fullscreen320.json", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+										str Name: Default=fullscreen320.json;
+									}
+									file fullscreen_kinect2.json_CEAEB14D86BC412B: Flags=0x0, Component=config_A1EBBC7E6C02D007, Path="..\\..\\config\\mmtt\\fullscreen_kinect2.json", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+										str Name: Default=fullscreen_kinect2.json;
+									}
+									file small4.json_40F4CF967B77238E: Flags=0x0, Component=config_A1EBBC7E6C02D007, Path="..\\..\\config\\mmtt\\small4.json", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+										str Name: Default=small4.json;
+									}
+									file small4.ppm_21A617B8EDB88B37: Flags=0x0, Component=config_A1EBBC7E6C02D007, Path="..\\..\\config\\mmtt\\small4.ppm", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+										str Name: Default=small4.ppm;
+									}
+								}
+							}
+							folder Folder1_419118276212BB7E: Flags=0x0, Component=Folder1_419118276212BB7E, Traits=0x80000000, InstallAction=0, RemoveAction=1 {
+								str Name: Default=html;
+								wlist WatchList_E26569799CB1BF19: Flags=0xC000003F, Path="..\\Public\\Documents\\Nosuch Media\\MultiMultiTouchTouch\\html", Filter="*.*", Exclude="*.bak;*.tmp;*.lnk;*.log;*.acl;*.gid;*.fts;*.pnf;*.oca;*.scc;*.$*;*.~*;.svn;*.*~;old*";
+								file index.html_534D577A34933957: Flags=0x0, Component=Folder1_419118276212BB7E, Path="..\\..\\html\\index.html", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+									str Name: Default=index.html;
+								}
+								folder mmtt_EF1FB3F9FA2F3729: Flags=0x0, Component=Folder1_419118276212BB7E, Traits=0x80000000, InstallAction=0, RemoveAction=1 {
+									str Name: Default=mmtt;
+									file advanced.html_71689C885F036130: Flags=0x0, Component=Folder1_419118276212BB7E, Path="..\\..\\html\\mmtt\\advanced.html", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+										str Name: Default=advanced.html;
+									}
+									file advanced_direct.html_7EB8BF0F0B2D2840: Flags=0x0, Component=Folder1_419118276212BB7E, Path="..\\..\\html\\mmtt\\advanced_direct.html", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+										str Name: Default=advanced_direct.html;
+									}
+									file calibration.html_3634077F90D9E53F: Flags=0x0, Component=Folder1_419118276212BB7E, Path="..\\..\\html\\mmtt\\calibration.html", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+										str Name: Default=calibration.html;
+									}
+									file calibration_direct.html_20CDA7E9ACC3504B: Flags=0x0, Component=Folder1_419118276212BB7E, Path="..\\..\\html\\mmtt\\calibration_direct.html", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+										str Name: Default=calibration_direct.html;
+									}
+									file colors.html_B0ECB85EE5E7017E: Flags=0x0, Component=Folder1_419118276212BB7E, Path="..\\..\\html\\mmtt\\colors.html", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+										str Name: Default=colors.html;
+									}
+									file draw.html_AA85A2E20667FD50: Flags=0x0, Component=Folder1_419118276212BB7E, Path="..\\..\\html\\mmtt\\draw.html", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+										str Name: Default=draw.html;
+									}
+									file drawfade.js_2A63C07845FB036E: Flags=0x0, Component=Folder1_419118276212BB7E, Path="..\\..\\html\\mmtt\\drawfade.js", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+										str Name: Default=drawfade.js;
+									}
+									file index.html_4E7903BAC5425652: Flags=0x0, Component=Folder1_419118276212BB7E, Path="..\\..\\html\\mmtt\\index.html", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+										str Name: Default=index.html;
+									}
+									file readme.html_746669D8C8BE666A: Flags=0x0, Component=Folder1_419118276212BB7E, Path="..\\..\\html\\mmtt\\readme.html", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+										str Name: Default=readme.html;
+									}
+									file test.html_B86D5DA0878FE435: Flags=0x0, Component=Folder1_419118276212BB7E, Path="..\\..\\html\\mmtt\\test.html", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+										str Name: Default=test.html;
+									}
+								}
+							}
+							folder Folder1_A00D49FD5FFBA13D: Flags=0x10000, Component=Folder1_A00D49FD5FFBA13D, Traits=0x80000000, InstallAction=1, RemoveAction=3 {
+								str Name: Default=log;
+							}
+						}
+					}
 				}
 				folder CommonDownloadsFolder: Flags=0x0, Traits=0x80000000, InstallAction=0, RemoveAction=0 {
 					str Name: Flags=0x10000, PhraseID=Folder.Downloads.Common.NT6, Default="Public Downloads" {
@@ -2492,26 +2531,56 @@ project Flags=0x20 {
 				folder INSTALLDIR: Flags=0x0, Component=Product, Traits=0x80000000, InstallAction=0, RemoveAction=1 {
 					str Name: Default="<ProductName>";
 					wlist WatchList_72614AF49AB8FDDD: Flags=0xC000003E, Path="..\\bin", Filter="*.*", Exclude="*.pdb;loopycam.exe;SpaceManifold.exe;MmttDll.dll;debug.txt;*.orig;mmttbefore.bat;mmttafter.bat;profbefore.bat;profafter.bat;*.bak;*.tmp;*.lnk;*.log;*.acl;*.gid;*.fts;*.pnf;*.oca;*.scc;*.$*;*.~*;.svn;";
-					file KinectRuntime_v1.7_Setup.exe_FB31D84276CDD456: Flags=0x0, Component=Product, Path="..\\..\\kinect\\KinectRuntime-v1.7-Setup.exe", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=2000, Packaging=0 {
+					file _hashlib.pyd_E373DB5F59C249EC: Flags=0x0, Component=Product, Path="..\\oscutil\\dist\\_hashlib.pyd", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
+						str Name: Default=_hashlib.pyd;
+					}
+					file _socket.pyd_2522AE823D6A1879: Flags=0x0, Component=Product, Path="..\\oscutil\\dist\\_socket.pyd", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
+						str Name: Default=_socket.pyd;
+					}
+					file _ssl.pyd_A4E5011B2957F31F: Flags=0x0, Component=Product, Path="..\\oscutil\\dist\\_ssl.pyd", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
+						str Name: Default=_ssl.pyd;
+					}
+					file bz2.pyd_D1F659531785CDDF: Flags=0x0, Component=Product, Path="..\\oscutil\\dist\\bz2.pyd", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
+						str Name: Default=bz2.pyd;
+					}
+					file KinectRuntime_v1.7_Setup.exe_FB31D84276CDD456: Flags=0x0, Component=Product, Path="..\\..\\other\\kinect\\KinectRuntime-v1.7-Setup.exe", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=2000, Packaging=0 {
 						str Name: Default="KinectRuntime-v1.7-Setup.exe";
 					}
-					file MMTT.exe_3F1C2A8184FE717A: Flags=0x0, Component=Product, Path="..\\..\\vs2012\\x64\\Debug\\MMTT.exe", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=2000, Packaging=0 {
+					file library.zip_008492B6DCBAC022: Flags=0x0, Component=Product, Path="..\\oscutil\\dist\\library.zip", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+						str Name: Default=library.zip;
+					}
+					file MMTT.exe_3F1C2A8184FE717A: Flags=0x0, Component=Product, Path="..\\..\\bin\\MMTT.exe", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=2000, Packaging=0 {
 						str Name: Default=MMTT.exe;
 					}
-					file msvcp100d.dll_394CB0D6005B85DA: Flags=0x0, Component=Product, Path="..\\..\\vs2012\\x64\\Debug\\msvcp100d.dll", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=400, Packaging=0 {
+					file msvcp100d.dll_394CB0D6005B85DA: Flags=0x0, Component=Product, Path="..\\..\\bin\\msvcp100d.dll", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=400, Packaging=0 {
 						str Name: Default=msvcp100d.dll;
 					}
-					file msvcr100d.dll_6FFB97FC49145691: Flags=0x0, Component=Product, Path="..\\..\\vs2012\\x64\\Debug\\msvcr100d.dll", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=400, Packaging=0 {
+					file msvcr100d.dll_6FFB97FC49145691: Flags=0x0, Component=Product, Path="..\\..\\bin\\msvcr100d.dll", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=400, Packaging=0 {
 						str Name: Default=msvcr100d.dll;
 					}
-					file pthreadVC2.dll_7681FD2AAC2E3100: Flags=0x0, Component=Product, Path="..\\..\\vs2012\\x64\\Debug\\pthreadVC2.dll", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
+					file oscutil.exe_EAEE736D582545BA: Flags=0x0, Component=Product, Path="..\\oscutil\\dist\\oscutil.exe", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=2000, Packaging=0 {
+						str Name: Default=oscutil.exe;
+					}
+					file pthreadVC2.dll_7681FD2AAC2E3100: Flags=0x0, Component=Product, Path="..\\..\\bin\\pthreadVC2.dll", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
 						str Name: Default=pthreadVC2.dll;
+					}
+					file python27.dll_86F84A204B90FE6D: Flags=0x0, Component=Product, Path="..\\oscutil\\dist\\python27.dll", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
+						str Name: Default=python27.dll;
+					}
+					file select.pyd_9FE282DD799B1BA6: Flags=0x0, Component=Product, Path="..\\oscutil\\dist\\select.pyd", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
+						str Name: Default=select.pyd;
 					}
 					file tail.exe_FE421BFFCF0D2977: Flags=0x0, Component=Product, Path="..\\..\\..\\..\\..\\..\\..\\Program Files (x86)\\Windows Resource Kits\\Tools\\tail.exe", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=2000, Packaging=0 {
 						str Name: Default=tail.exe;
 					}
-					file taildebug.bat_179850716BB82492: Flags=0x0, Component=Product, Path="..\\..\\vs2012\\x64\\Debug\\taildebug.bat", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+					file taildebug.bat_179850716BB82492: Flags=0x0, Component=Product, Path="..\\..\\bin\\taildebug.bat", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
 						str Name: Default=taildebug.bat;
+					}
+					file unicodedata.pyd_013F5BFA8C29D589: Flags=0x0, Component=Product, Path="..\\oscutil\\dist\\unicodedata.pyd", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
+						str Name: Default=unicodedata.pyd;
+					}
+					file w9xpopen.exe_A4E057E9960F0D05: Flags=0x0, Component=Product, Path="..\\oscutil\\dist\\w9xpopen.exe", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=2000, Packaging=0 {
+						str Name: Default=w9xpopen.exe;
 					}
 				}
 			}
@@ -3109,9 +3178,9 @@ project Flags=0x20 {
 					xlat ID=1033 {"&No, I will restart Windows later"}
 				}
 			}
-			text ToFinish: Flags=0x8B, ControlID=Automatic, Position="120,65,324,81", IconSize=0, TextColor=0, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, TextType=0, Ellipsis=0, Format=0, HAlign=1 {
+			text ToFinish: Flags=0x1008B, ControlID=Automatic, Position="120,65,324,81", IconSize=0, TextColor=0, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, TextType=0, Ellipsis=0, Format=0, HAlign=1 {
 				str Caption: Flags=0x50000, PhraseID=Dlg.Any.FinishToClose, Default="Click Finish to close <UIWizardName>." {
-					xlat ID=1033 {"Click Finish to close <UIWizardName>."}
+					xlat ID=1033 {"Click Finish to close this window."}
 				}
 			}
 			frame BottomLine: Flags=0xB, ControlID=Automatic, Position="0,194,331,195", IconSize=0, TextColor=0, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, FrameType=7, BackEndColor=0, CustomBackEndColor=0x0;
@@ -3715,55 +3784,55 @@ project Flags=0x20 {
 				enddlg EndDialog: Flags=0x0, Platforms=0x73FFFFFF, Target=".", TargetPath="\\WelcomeDlg", Result=6;
 			}
 			str Caption: Default="<ProductName> <ProductVersion>";
-			bitmap Graphic: Flags=0xB, ControlID=Automatic, Position="0,0,110,193", IconSize=0, TextColor=0, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, ResizeType=1 {
+			bitmap Graphic: Flags=0xB, ControlID=Automatic, Position="0,3,108,183", IconSize=0, TextColor=0, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, ResizeType=1 {
 				str Caption: Default=WizWelcome;
 			}
 			frame WhiteBack: Flags=0xB, ControlID=Automatic, Position="110,0,334,193", IconSize=0, TextColor=0, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, FrameType=5, BackEndColor=0, CustomBackEndColor=0x0;
 			text PageTitle: Flags=0x1008B, ControlID=Automatic, Position="91,12,334,51", FontStyle=TitleFont, IconSize=0, TextColor=0, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, TextType=0, Ellipsis=0, Format=0, HAlign=1 {
-				str Caption: Default="<ProductName> <ProductVersion>\r\n\r\nA Kinect-based 3D TUIO/OSC generator.";
+				str Caption: Default="<ProductName> <ProductVersion>\r\n\r\nA 3D TUIO/OSC generator for depth cameras.";
 			}
-			text PublisherLabel: Flags=0x8B, ControlID=Automatic, Position="120,59,180,67", IconSize=0, TextColor=0, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, TextType=0, Ellipsis=0, Format=0, HAlign=1 {
+			text PublisherLabel: Flags=0x8B, ControlID=Automatic, Position="120,61,180,69", IconSize=0, TextColor=0, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, TextType=0, Ellipsis=0, Format=0, HAlign=1 {
 				str Caption: Flags=0x50000, PhraseID=Dlg.Welcome.Publisher, Default="Publisher:" {
 					xlat ID=1033 {"Publisher:"}
 				}
 			}
-			text Publisher: Flags=0x8B, ControlID=Automatic, Position="180,59,324,67", IconSize=0, TextColor=0, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, TextType=0, Ellipsis=0, Format=0, HAlign=1 {
+			text Publisher: Flags=0x8B, ControlID=Automatic, Position="180,61,324,69", IconSize=0, TextColor=0, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, TextType=0, Ellipsis=0, Format=0, HAlign=1 {
 				str Caption: Default="<Publisher>";
 			}
-			text WebSiteLabel: Flags=0x8B, ControlID=Automatic, Position="120,69,180,77", IconSize=0, TextColor=0, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, TextType=0, Ellipsis=0, Format=0, HAlign=1 {
+			text WebSiteLabel: Flags=0x8B, ControlID=Automatic, Position="120,71,180,79", IconSize=0, TextColor=0, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, TextType=0, Ellipsis=0, Format=0, HAlign=1 {
 				str Caption: Flags=0x50000, PhraseID=Dlg.Welcome.WebSite, Default="Web site:" {
 					xlat ID=1033 {"Web site:"}
 				}
 			}
-			text WebSite: Flags=0x8B, ControlID=Automatic, Position="180,69,324,77", FontStyle=UnderlineFont, IconSize=0, TextColor=3, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, TextType=1, Ellipsis=0, Format=0, HAlign=1 {
+			text WebSite: Flags=0x8B, ControlID=Automatic, Position="180,71,324,79", FontStyle=UnderlineFont, IconSize=0, TextColor=3, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, TextType=1, Ellipsis=0, Format=0, HAlign=1 {
 				str URL: Default="<WebSite>";
 				str Caption: Default="<WebSite>";
 			}
-			text EmailLabel: Flags=0x8B, ControlID=Automatic, Position="120,79,180,87", IconSize=0, TextColor=0, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, TextType=0, Ellipsis=0, Format=0, HAlign=1 {
+			text EmailLabel: Flags=0x8B, ControlID=Automatic, Position="120,81,180,89", IconSize=0, TextColor=0, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, TextType=0, Ellipsis=0, Format=0, HAlign=1 {
 				str Caption: Flags=0x50000, PhraseID=Dlg.Welcome.Email, Default="Email address:" {
 					xlat ID=1033 {"Email address:"}
 				}
 			}
-			text Email: Flags=0x8B, ControlID=Automatic, Position="180,79,324,87", FontStyle=UnderlineFont, IconSize=0, TextColor=3, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, TextType=1, Ellipsis=0, Format=0, HAlign=1 {
+			text Email: Flags=0x8B, ControlID=Automatic, Position="180,81,324,89", FontStyle=UnderlineFont, IconSize=0, TextColor=3, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, TextType=1, Ellipsis=0, Format=0, HAlign=1 {
 				str URL: Default="mailto:<Email>";
 				str Caption: Default="<Email>";
 			}
-			text Intro: Flags=0x1008B, ControlID=Automatic, Position="120,101,324,120", IconSize=0, TextColor=0, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, TextType=0, Ellipsis=0, Format=0, HAlign=1 {
+			text Intro: Flags=0x1008B, ControlID=Automatic, Position="120,107,324,122", IconSize=0, TextColor=0, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, TextType=0, Ellipsis=0, Format=0, HAlign=1 {
 				str Caption: Flags=0x50000, PhraseID=Dlg.Welcome.Intro, Default="<UIWizardName> will install or upgrade <ProductName> on your computer." {
-					xlat ID=1033 {"<UIWizardName> will install or upgrade <ProductName> on your computer."}
+					xlat ID=1033 {"This will install or upgrade <ProductName> on your computer."}
 				}
 			}
-			text ToContinue: Flags=0x8B, ControlID=Automatic, Position="120,125,324,133", IconSize=0, TextColor=0, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, TextType=0, Ellipsis=0, Format=0, HAlign=1 {
+			text ToContinue: Flags=0x8B, ControlID=Automatic, Position="120,131,324,139", IconSize=0, TextColor=0, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, TextType=0, Ellipsis=0, Format=0, HAlign=1 {
 				str Caption: Flags=0x50000, PhraseID=Dlg.Any.NextToContinue, Default="Click Next to continue." {
 					xlat ID=1033 {"Click Next to continue."}
 				}
 			}
-			text Copyright: Flags=0x8B, ControlID=Automatic, Position="120,142,324,150", FontStyle=BoldFont, IconSize=0, TextColor=0, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, TextType=0, Ellipsis=0, Format=0, HAlign=1 {
+			text Copyright: Flags=0x8B, ControlID=Automatic, Position="121,156,325,164", FontStyle=BoldFont, IconSize=0, TextColor=0, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, TextType=0, Ellipsis=0, Format=0, HAlign=1 {
 				str Caption: Default="<Copyright>";
 			}
 			text LegalNotice: Flags=0x8B, ControlID=Automatic, Position="120,154,324,186", IconSize=0, TextColor=0, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, TextType=0, Ellipsis=0, Format=0, HAlign=1 {
 				str Caption: Flags=0x50000, PhraseID=Dlg.Any.LegalCopyright, Default="This program is protected by copyright law and international treaties. Unauthorized reproduction or distribution of this program, or any portion of it, is a violation of applicable laws." {
-					xlat ID=1033 {"This program is protected by copyright law and international treaties. Unauthorized reproduction or distribution of this program, or any portion of it, is a violation of applicable laws."}
+					xlat ID=1033;
 				}
 			}
 			frame BottomLine: Flags=0xB, ControlID=Automatic, Position="0,194,331,195", IconSize=0, TextColor=0, BackColor=0, CustomTextColor=0x0, CustomBackColor=0x0, FrameType=7, BackEndColor=0, CustomBackEndColor=0x0;

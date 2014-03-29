@@ -276,7 +276,9 @@ MmttServer::MmttServer(std::string configpath)
 			ErrorPopup(msg.c_str());
 			exit(1);
 		}
-		// Do it again?  There's a bug where it doesn't get completely initialized unless you do it twice!?  HACK!!
+		// Do it again?  There's a bug somewhere where it doesn't get completely initialized
+		// unless you do it twice!?  HACK!!  Do not remove this unless you really test everything (including
+		// registration on a new frame) to make sure everything still works.
 		LoadPatch(_patchFile);
 	}
 
