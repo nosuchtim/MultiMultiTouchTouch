@@ -215,4 +215,11 @@ pip-log.txt
 .mr.developer.cfg
 
 other/
+other.7z
 src/installer/MultiMultiTouchTouch/
+src/installer/MultiMultiTouchTouch_32bit/
+src/example_1/application.windows64/
+src/example_1/output/
+src/example_2/application.windows64/
+src/example_2/output/
+log/mmtt.debug

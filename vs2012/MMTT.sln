@@ -36,9 +36,10 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{303F81B0-4C85-4F40-8CFC-54D85EA83F9B}.Debug|Mixed Platforms.ActiveCfg = Debug|x64
 		{303F81B0-4C85-4F40-8CFC-54D85EA83F9B}.Debug|Mixed Platforms.Build.0 = Debug|x64
-		{303F81B0-4C85-4F40-8CFC-54D85EA83F9B}.Debug|Win32.ActiveCfg = Debug|x64
-		{303F81B0-4C85-4F40-8CFC-54D85EA83F9B}.Debug|Win32.Build.0 = Debug|x64
+		{303F81B0-4C85-4F40-8CFC-54D85EA83F9B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{303F81B0-4C85-4F40-8CFC-54D85EA83F9B}.Debug|Win32.Build.0 = Debug|Win32
 		{303F81B0-4C85-4F40-8CFC-54D85EA83F9B}.Debug|x64.ActiveCfg = Debug|x64
+		{303F81B0-4C85-4F40-8CFC-54D85EA83F9B}.Debug|x64.Build.0 = Debug|x64
 		{303F81B0-4C85-4F40-8CFC-54D85EA83F9B}.DebugDLL|Mixed Platforms.ActiveCfg = Debug|Win32
 		{303F81B0-4C85-4F40-8CFC-54D85EA83F9B}.DebugDLL|Mixed Platforms.Build.0 = Debug|Win32
 		{303F81B0-4C85-4F40-8CFC-54D85EA83F9B}.DebugDLL|Win32.ActiveCfg = Debug|Win32

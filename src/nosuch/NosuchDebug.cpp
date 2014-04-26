@@ -308,14 +308,16 @@ MmttPath(std::string fn)
 		char* dir = getenv("MMTT");
 		if ( dir != NULL ) {
 			savedroot = std::string(dir);
+			NosuchErrorOutput("Using MMTT environment value for root directory");
 		} else {
-			char* pubdir = getenv("PUBLIC");
-			if ( pubdir == NULL ) {
-				pubdir = "c:\\Users\\Public";
+			char* userdir = getenv("USERPROFILE");
+			if ( userdir == NULL ) {
+				NosuchErrorOutput("No value for USERPROFILE!?  using c:\\Users\\Public, which is probably wrong\n");
+				userdir = "c:\\Users\\Public";
 			}
-			savedroot = NosuchSnprintf("%s\\Documents\\Nosuch Media\\MultiMultiTouchTouch",pubdir);
+			savedroot = NosuchSnprintf("%s\\Documents\\Nosuch Media\\MultiMultiTouchTouch",userdir);
 		}
-		DEBUGPRINT(("In MmttPath, savedroot=%s!!?",savedroot.c_str()));
+		NosuchErrorOutput("Using root directory: %s",savedroot.c_str());
 	}
 	return NosuchSnprintf("%s/%s",savedroot.c_str(),fn.c_str());
 }

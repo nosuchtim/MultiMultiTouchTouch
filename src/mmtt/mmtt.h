@@ -369,8 +369,6 @@ private:
 	int _framenum;
 	bool _regionsfilled;
 	bool _regionsDefinedByPatch;
-	bool _showrawdepth;
-	bool _showregionrects;
 	CvSize _camSize;
 	IplImage* _ffImage;
 	IplImage* _tmpGray;

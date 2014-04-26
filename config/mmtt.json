@@ -3,10 +3,9 @@
 
   "camera": "pcx",
   "patch": "fullscreen320",
-  # "patch": "small4",
 
-#  "camera": "kinect",
-#   "patch": "golden",
+#   "camera": "kinect",
+#   "patch": "fullscreen_kinect",
 
 #   "camera": "kinect2",
 #   "patch": "fullscreen_kinect2",

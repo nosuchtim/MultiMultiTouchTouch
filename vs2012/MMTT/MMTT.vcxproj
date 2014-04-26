@@ -81,7 +81,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(MANIFOLD)\src\space;$(MANIFOLD)\src\nosuch;$(MANIFOLD)\src\freeframe;$(MANIFOLD)\src\misclib;$(MANIFOLD)\src\mmtt;$(MANIFOLD)\src\osc\include;$(MANIFOLD)\src\cvblobslib\src;$(MANIFOLD)\src\opencv\build\include;$(MANIFOLD)\src\cJSON;$(MANIFOLD)\src\pthreads-win32-2.8.0\Pre-built.2\include;$(MANIFOLD)\src\portmidi\porttime;$(MANIFOLD)\src\portmidi\pm_common;$(PCSDK_DIR)/include;$(PCSDK_DIR)/sample/common/include;c:\Python27\include;$(KINECTSDK20_DIR)\inc;C:\Program Files\Microsoft SDKs\Kinect\v1.7\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(MMTT)\src\space;$(MMTT)\src\nosuch;$(MMTT)\src\misclib;$(MMTT)\src\mmtt;$(MMTT)\other\freeframe;$(MMTT)\other\osc\include;$(MMTT)\other\cvblobslib;$(MMTT)\other\opencv\build\include;$(MMTT)\other\cJSON;$(MMTT)\other\pthreads-w32-2-9-1-release\Pre-built.2\include;$(MMTT)\other\portmidi\porttime;$(MMTT)\other\portmidi\pm_common;$(MMTT)\other\PCSDK\include;$(MMTT)\other\PCSDK\sample\common\include;c:\Python27\include;$(MMTT)\other\kinect2\inc;$(MMTT)\other\kinect\v1.8\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>Async</ExceptionHandling>
@@ -98,9 +98,9 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>opencv_highgui246d.lib;opencv_core246d.lib;opencv_flann246d.lib;opencv_ml246d.lib;opencv_imgproc246d.lib;libjpegd.lib;libpngd.lib;libtiffd.lib;libjasperd.lib;IlmImfd.lib;pthreadVC2.lib;winmm.lib;libpxc_d.lib;libpxcutils_d.lib;misclib.lib;kinect20.lib;kinect10.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_highgui246d.lib;opencv_core246d.lib;opencv_flann246d.lib;opencv_ml246d.lib;opencv_imgproc246d.lib;libjpegd.lib;libpngd.lib;libtiffd.lib;libjasperd.lib;IlmImfd.lib;pthreadVC2.lib;winmm.lib;libpxc_d.lib;libpxcutils_d.lib;kinect10.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>Debug\Mmtt.exe</OutputFile>
-      <AdditionalLibraryDirectories>..\misclib\Debug;$(MANIFOLD)\src\opencv\build\x86\vc11\staticlib;$(MANIFOLD)\src\pthreads-win32-2.8.0\Pre-built.2\lib;$(PCSDK_DIR)/lib/$(PlatformName);$(PCSDK_DIR)/sample/common/lib/$(PlatformName)/$(PlatformToolset);C:\Python27\libs;$(KINECTSDK20_DIR)\lib\x64;C:\Program Files\Microsoft SDKs\Kinect\v1.7\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Debug;$(MMTT)\other\opencv\build\x86\vc11\staticlib;$(MMTT)\other\pthreads-w32-2-9-1-release\Pre-built.2\lib\x86;$(MMTT)\other\PCSDK\lib\$(PlatformName);$(MMTT)\other\PCSDK\sample/common/lib/$(PlatformName)/$(PlatformToolset);C:\Python27\libs;$(MMTT)\other\kinect\v1.8\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -115,7 +115,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(MMTT)\src\space;$(MMTT)\src\nosuch;$(MMTT)\src\misclib;$(MMTT)\src\mmtt;$(MMTT)\other\freeframe;$(MMTT)\other\osc\include;$(MMTT)\other\cvblobslib;$(MMTT)\other\opencv\build\include;$(MMTT)\other\cJSON;$(MMTT)\other\pthreads-w32-2-9-1-release\Pre-built.2\include;$(MMTT)\other\portmidi\porttime;$(MMTT)\other\portmidi\pm_common;$(MMTT)\other\PCSDK\include;$(MMTT)\other\PCSDK\sample\common\include;c:\Python27\include;$(MMTT)\other\kinect2\inc;$(MMTT)\other\kinect\v1.7\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(MMTT)\src\space;$(MMTT)\src\nosuch;$(MMTT)\src\misclib;$(MMTT)\src\mmtt;$(MMTT)\other\freeframe;$(MMTT)\other\osc\include;$(MMTT)\other\cvblobslib;$(MMTT)\other\opencv\build\include;$(MMTT)\other\cJSON;$(MMTT)\other\pthreads-w32-2-9-1-release\Pre-built.2\include;$(MMTT)\other\portmidi\porttime;$(MMTT)\other\portmidi\pm_common;$(MMTT)\other\PCSDK\include;$(MMTT)\other\PCSDK\sample\common\include;c:\Python27\include;$(MMTT)\other\kinect2\inc;$(MMTT)\other\kinect\v1.8\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>Async</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -132,7 +132,7 @@
     <Link>
       <AdditionalOptions>/ignore:4099</AdditionalOptions>
       <AdditionalDependencies>opencv_highgui246d.lib;opencv_core246d.lib;opencv_flann246d.lib;opencv_ml246d.lib;opencv_imgproc246d.lib;libjpegd.lib;libpngd.lib;libtiffd.lib;libjasperd.lib;IlmImfd.lib;pthreadVC2.lib;winmm.lib;libpxc_d.lib;libpxcutils_d.lib;kinect10.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\x64\Debug;$(MMTT)\other\opencv\build\x64\vc11\staticlib;$(MMTT)\other\pthreads-w32-2-9-1-release\Pre-built.2\lib\x64;$(MMTT)\other\PCSDK\lib\$(PlatformName);$(MMTT)\other\PCSDK\sample/common/lib/$(PlatformName)/$(PlatformToolset);C:\Python27\libs;$(MMTT)\other\kinect2\lib\x64;$(MMTT)\other\kinect\v1.7\lib\amd64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\x64\Debug;$(MMTT)\other\opencv\build\x64\vc11\staticlib;$(MMTT)\other\pthreads-w32-2-9-1-release\Pre-built.2\lib\x64;$(MMTT)\other\PCSDK\lib\$(PlatformName);$(MMTT)\other\PCSDK\sample/common/lib/$(PlatformName)/$(PlatformToolset);C:\Python27\libs;$(MMTT)\other\kinect2\lib\x64;$(MMTT)\other\kinect\v1.8\lib\amd64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>

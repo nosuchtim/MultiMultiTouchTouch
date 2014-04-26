@@ -128,8 +128,6 @@ MmttServer::MmttServer(std::string configpath)
 	_configpath = configpath;
 	_regionsfilled = false;
 	_regionsDefinedByPatch = false;
-	_showrawdepth = false;
-	_showregionrects = true;
 	_python_disabled = false;
 
 	registrationState = 0;
@@ -315,10 +313,10 @@ MmttServer::init_values() {
 
 	// These should NOT be persistent in a saved patch
 	val_debug = MmttValue(0,0,1,false);
-	val_showrawdepth = MmttValue(_showrawdepth,0,1,false);
-	val_showregionrects = MmttValue(_showregionrects,0,1,false);
+	val_showrawdepth = MmttValue(0,0,1,false);
+	val_showregionrects = MmttValue(1,0,1,false);
 	val_showfps = MmttValue(0,0,1,false);
-	val_showregionhits = MmttValue(0,0,1,false);
+	val_showregionhits = MmttValue(1,0,1,false);
 	val_showregionmap = MmttValue(0,0,1,false);
 	val_showmask = MmttValue(0,0,1,false);
 	val_usemask = MmttValue(1,0,1,false);
@@ -1784,8 +1782,7 @@ void MmttServer::finishNewRegions()
 		}
 	} else {
 		if ( nrsize!=0 && crsize!=0 ) {
-			DEBUGPRINT(("WARNING!! _curr_regions=%d _new_regions=%d size doesn't match! NOT UPDATING _curr_regions",crsize,nrsize));
-			return;
+			DEBUGPRINT(("WARNING!! _curr_regions=%d _new_regions=%d size doesn't match!",crsize,nrsize));
 		}
 	}
 	DEBUGPRINT1(("finishNewRegions!! _curr_regions follows"));
