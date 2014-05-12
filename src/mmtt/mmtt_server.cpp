@@ -180,19 +180,6 @@ MmttServer::MmttServer(std::string configpath)
 
 	init_values();
 
-#ifdef USE_PYTHON
-	if ( _do_python ) {
-		if ( ! python_init() ) {
-			DEBUGPRINT(("python_init failed!"));
-		} else {
-			DEBUGPRINT(("python_init succeeded!"));
-			DEBUGPRINT(("NosuchDebug python_init succeeded!"));
-		}
-	} else {
-			DEBUGPRINT(("python is not enabled."));
-	}
-#endif
-
 	_camWidth = camera->width();
 	_camHeight = camera->height();
 	_camBytesPerPixel = 3;
@@ -202,17 +189,13 @@ MmttServer::MmttServer(std::string configpath)
 	depth_mid = (uint8_t*)malloc(_camWidth*_camHeight*_camBytesPerPixel);
 	depth_front = (uint8_t*)malloc(_camWidth*_camHeight*_camBytesPerPixel);
 
-	rawdepth_back = (uint16_t*)malloc(_camWidth*_camHeight*sizeof(uint16_t));
-	rawdepth_mid = (uint16_t*)malloc(_camWidth*_camHeight*sizeof(uint16_t));
-	rawdepth_front = (uint16_t*)malloc(_camWidth*_camHeight*sizeof(uint16_t));
-
+	depthmm_plane = (uint16_t*)malloc(_camWidth*_camHeight*sizeof(uint16_t));
 	depthmm_mid = (uint16_t*)malloc(_camWidth*_camHeight*sizeof(uint16_t));
 	depthmm_front = (uint16_t*)malloc(_camWidth*_camHeight*sizeof(uint16_t));
 
 	thresh_mid = (uint8_t*)malloc(_camWidth*_camHeight);
 	thresh_front = (uint8_t*)malloc(_camWidth*_camHeight);
 
-	mmtt_values["debug"] = &val_debug;
 	mmtt_values["showrawdepth"] = &val_showrawdepth;
 	mmtt_values["showfps"] = &val_showfps;
 	mmtt_values["showregionhits"] = &val_showregionhits;
@@ -221,13 +204,14 @@ MmttServer::MmttServer(std::string configpath)
 	mmtt_values["showregionrects"] = &val_showregionrects;
 	mmtt_values["usemask"] = &val_usemask;
 	mmtt_values["tilt"] = &val_tilt;
-	mmtt_values["left"] = &val_left;
-	mmtt_values["right"] = &val_right;
-	mmtt_values["top"] = &val_top;
-	mmtt_values["bottom"] = &val_bottom;
-	mmtt_values["front"] = &val_front;
-	mmtt_values["backtop"] = &val_backtop;
-	mmtt_values["backbottom"] = &val_backbottom;
+	mmtt_values["edge_left"] = &val_edge_left;
+	mmtt_values["edge_right"] = &val_edge_right;
+	mmtt_values["edge_top"] = &val_edge_top;
+	mmtt_values["edge_bottom"] = &val_edge_bottom;
+	mmtt_values["depth_front"] = &val_depth_front;
+	mmtt_values["depth_detect_top"] = &val_depth_detect_top;
+	mmtt_values["depth_detect_bottom"] = &val_depth_detect_bottom;
+	mmtt_values["depth_align"] = &val_depth_align;
 	mmtt_values["blob_filter"] = &val_blob_filter;
 	mmtt_values["blob_param1"] = &val_blob_param1;
 	mmtt_values["blob_maxsize"] = &val_blob_maxsize;
@@ -289,7 +273,7 @@ MmttServer::MmttServer(std::string configpath)
 	}
 
 	if ( _do_initialalign ) {
-		startAlign();
+		startAlign(true);
 	}
 	_status = "";
 }
@@ -312,7 +296,6 @@ MmttServer::init_values() {
 	}
 
 	// These should NOT be persistent in a saved patch
-	val_debug = MmttValue(0,0,1,false);
 	val_showrawdepth = MmttValue(0,0,1,false);
 	val_showregionrects = MmttValue(1,0,1,false);
 	val_showfps = MmttValue(0,0,1,false);
@@ -323,13 +306,14 @@ MmttServer::init_values() {
 
 	// These should be persistent in a saved patch
 	val_tilt = MmttValue(0,-12.9,30.0);
-	val_left = MmttValue(0,0,639);
-	val_right = MmttValue(639,0,639);
-	val_top = MmttValue(0,0,479);
-	val_bottom = MmttValue(479,0,479);
-	val_front = MmttValue(0,0,3000);         // mm
-	val_backtop = MmttValue(camera->default_backtop(),0,3000);    // mm
-	val_backbottom = MmttValue(camera->default_backtop(),0,3000); // mm
+	val_edge_left = MmttValue(0,0,639);
+	val_edge_right = MmttValue(639,0,639);
+	val_edge_top = MmttValue(0,0,479);
+	val_edge_bottom = MmttValue(479,0,479);
+	val_depth_front = MmttValue(0,0,3000);         // mm
+	val_depth_detect_top = MmttValue(camera->default_depth_detect_top(),0,3000);    // mm
+	val_depth_detect_bottom = MmttValue(camera->default_depth_detect_top(),0,3000); // mm
+	val_depth_align = MmttValue(camera->default_depth_detect_top(),0,3000); // mm
 	val_auto_window = MmttValue(80,0,400); // mm
 	val_blob_filter = MmttValue(1,0,1);
 	val_blob_param1 = MmttValue(100,0,250.0);
@@ -786,15 +770,9 @@ void MmttServer::analyze_depth_images()
 	depthmm_front = depthmm_mid;
 	depthmm_mid = tmp16;
 
-	tmp16 = rawdepth_mid;
-	rawdepth_mid = rawdepth_front;
-	rawdepth_front = tmp16;
-
 	tmp = thresh_front;
 	thresh_front = thresh_mid;
 	thresh_mid = tmp;
-
-	// processRawDepth(rawdepth_front);
 
 	size_t camsz = _camWidth*_camHeight*_camBytesPerPixel;
 	unsigned char *surfdata = NULL;
@@ -816,9 +794,8 @@ void MmttServer::analyze_depth_images()
 		_tmpThresh->imageData = (char *)thresh_front;
 
 		if ( surfdata ) {
-			if ( val_debug.internal_value ) DEBUGPRINT(("  Copying surfdata to ffpixels"));
 			memcpy(_ffpixels,surfdata,camsz);
-			if ( ! val_showrawdepth.internal_value ) {
+			if ( ! val_showrawdepth.value ) {
 				analyzePixels();
 			}
 		} else {
@@ -829,31 +806,30 @@ void MmttServer::analyze_depth_images()
 
 		// Now put whatever we want to show into the _ffImage/_ffpixels image
 
-		if ( surfdata && val_showrawdepth.internal_value ) {
-			if ( val_debug.internal_value ) DEBUGPRINT(("  Copying surfdata to ffpixels (again?)"));
+		if ( surfdata && val_showrawdepth.value ) {
 			// Doesn't seem to be needed...
 			// memcpy(_ffpixels,surfdata,camsz);
 		}
 
-		if ( val_showregionrects.internal_value ) {
+		if ( val_showregionrects.value ) {
 			// When showing the region rectangles, nothing else is shown.
 			showRegionRects();
 		}
 
-		if ( val_showregionmap.internal_value ) {
+		if ( val_showregionmap.value ) {
 			if ( ! _regionsDefinedByPatch ) {
 				// When showing the colored regions, nothing else is shown.
 				copyRegionsToColorImage(_regionsImage,_ffpixels,TRUE,FALSE,FALSE);
 			}
 		} else {
-			if ( val_showregionhits.internal_value ) {
+			if ( val_showregionhits.value ) {
 				showRegionHits();
 				showBlobSessions();
 			}
 
-			if ( val_showmask.internal_value ) {
+			if ( val_showmask.value ) {
 				showMask();
-			} else if ( val_showregionmap.internal_value ) {
+			} else if ( val_showregionmap.value ) {
 				copyRegionsToColorImage(_regionsImage,_ffpixels,TRUE,FALSE,FALSE);
 			}
 		}
@@ -863,14 +839,12 @@ void MmttServer::analyze_depth_images()
 	double curFrameTime = tm / 1000.0;
 
 	if ( curFrameTime > (lastFpsTime+1.0) ) {
-		if ( val_showfps.internal_value ) {
+		if ( val_showfps.value ) {
 			DEBUGPRINT(("Analyzed FPS = %d\n",_fpscount));
 		}
 		lastFpsTime = curFrameTime;
 		_fpscount = 0;
 	}
-
-	if ( val_debug.internal_value ) DEBUGPRINT(("MmttServer::update() end\n"));
 }
 
 void MmttServer::draw_depth_image() {
@@ -1109,27 +1083,27 @@ MmttServer::AdjustValue(cJSON *params, const char *id, int direction) {
 		if ( c_amount->type != cJSON_Number ) {
 			return error_json(-32000,"Expecting number type in amount argument to mmtt_set",id);
 		}
-		kv->set_external_value(kv->external_value + direction * c_amount->valuedouble);
+		kv->set_value(kv->value + direction * c_amount->valuedouble * ( kv->maxvalue - kv->minvalue) );
 	} else {
-		kv->set_external_value(! kv->external_value);
+		kv->set_value(! kv->value);
 	}
 
 	_updateValue(nm,kv);
-	DEBUGPRINT1(("mmtt_SET name=%s external=%lf internal=%lf\n",nm.c_str(),kv->external_value,kv->internal_value));
+	DEBUGPRINT1(("mmtt_SET name=%s value=%lf\n",nm.c_str(),kv->value));
 	return NosuchSnprintf(
-			"{\"jsonrpc\": \"2.0\", \"result\": %lf, \"id\": \"%s\"}", kv->external_value, id);
+			"{\"jsonrpc\": \"2.0\", \"result\": %lf, \"id\": \"%s\"}", kv->value, id);
 }
 
 void
 MmttServer::_updateValue(std::string nm, MmttValue* v) {
 	if ( nm == "debug" ) {
-		if ( v->internal_value )
+		if ( v->value )
 			NosuchDebugLevel = 1;
 		else
 			NosuchDebugLevel = 0;
 	} else if ( nm == "tilt" ) {
-		DEBUGPRINT(("Tilt value = %f",v->internal_value));
-		if ( ! camera->Tilt((int)v->internal_value) ) {
+		DEBUGPRINT(("Tilt value = %f",v->value));
+		if ( ! camera->Tilt((int)v->value) ) {
 			DEBUGPRINT(("This camera type doesn't have the ability to Tilt!"));
 		}
 	}
@@ -1137,15 +1111,14 @@ MmttServer::_updateValue(std::string nm, MmttValue* v) {
 
 void
 MmttServer::_toggleValue(MmttValue* v) {
-		v->internal_value = !v->internal_value;
-		v->external_value = !v->external_value;
+		v->value = !v->value;
 }
 
 void
 MmttServer::_stop_registration() {
 	registrationState = 0;
 	finishNewRegions();
-	val_showregionmap.set_internal_value(0.0);
+	val_showregionmap.set_value(0.0);
 }
 
 static bool
@@ -1159,13 +1132,18 @@ has_invalid_char(const char *nm)
 }
 
 std::string
-MmttServer::startAlign() {
-	std::string err = LoadPatch(_patchFile);
-	if ( err != "" ) {
-		return NosuchSnprintf("LoadPatch failed!?  err=%s",err.c_str());
+MmttServer::startAlign(bool reload) {
+	if ( reload ) {
+		std::string err = LoadPatch(_patchFile);
+		if ( err != "" ) {
+			return NosuchSnprintf("LoadPatch failed!?  err=%s",err.c_str());
+		}
 	}
 	if ( _curr_regions.size() == 0 ) {
 		return "No regions yet - do you need to load a patch?";
+	}
+	if ( val_usemask.value == 0 ) {
+		return "Value of usemask is 0, no alignment can/should be done.";
 	}
 	registrationState = 300;
 	continuousAlign = true;
@@ -1243,13 +1221,13 @@ MmttServer::processJson(std::string meth, cJSON *params, const char *id) {
 		return ok_json(id);
 	}
 	if ( strcmp(method,"start") == 0 ) {
-		val_showrawdepth.set_internal_value(false);
-		val_showregionrects.set_internal_value(false);
+		val_showrawdepth.set_value(false);
+		val_showregionrects.set_value(false);
 		return ok_json(id);
 	}
 	if ( strcmp(method,"stop") == 0 ) {
-		val_showrawdepth.set_internal_value(true);
-		val_showregionrects.set_internal_value(true);
+		val_showrawdepth.set_value(true);
+		val_showregionrects.set_value(true);
 		return ok_json(id);
 	}
 	if ( strcmp(method,"start_registration") == 0 ) {
@@ -1265,11 +1243,22 @@ MmttServer::processJson(std::string meth, cJSON *params, const char *id) {
 		if ( _curr_regions.size() == 0 ) {
 			return error_json(-32000,"No regions yet - do you need to load a patch?",id);
 		}
+		if ( val_usemask.value == 0 ) {
+			return error_json(-32000,"Usemask value is 0 - autopoke can't be done.",id);
+		}
 		registrationState = 300;
 		return ok_json(id);
 	}
 	if ( strcmp(method,"align_start") == 0 ) {
-		std::string err = startAlign();
+		std::string err = startAlign(false);
+		if ( err != "" ) {
+			std::string msg = NosuchSnprintf("startAlign failed!?  err=%s",err.c_str());
+			return error_json(-32000,msg.c_str(),id);
+		}
+		return ok_json(id);
+	}
+	if ( strcmp(method,"reload_and_align_start") == 0 ) {
+		std::string err = startAlign(true);
 		if ( err != "" ) {
 			std::string msg = NosuchSnprintf("startAlign failed!?  err=%s",err.c_str());
 			return error_json(-32000,msg.c_str(),id);
@@ -1301,7 +1290,7 @@ MmttServer::processJson(std::string meth, cJSON *params, const char *id) {
 		_stop_registration();
 		return ok_json(id);
 	}
-	if ( strcmp(method,"config_save")==0 || strcmp(method,"patch_save")==0 ) {
+	if ( strcmp(method,"patch_save")==0 ) {
 		cJSON *c_nm = cJSON_GetObjectItem(params,"name");
 		if ( ! c_nm ) {
 			return error_json(-32000,"Missing name argument",id);
@@ -1310,9 +1299,15 @@ MmttServer::processJson(std::string meth, cJSON *params, const char *id) {
 		if ( has_invalid_char(nm) ) {
 			return error_json(-32000,"Invalid characters in name",id);
 		}
-		return SavePatch(nm,id);
+		_patchFile = nm;
+		std::string err = SavePatch(nm);
+		if ( err == "" ) {
+			return ok_json(id);
+		} else {
+			return error_json(-32700,err.c_str(),id);
+		}
 	}
-	if ( strcmp(method,"config_load")==0 || strcmp(method,"patch_load")==0 ) {
+	if ( strcmp(method,"patch_load")==0 ) {
 		cJSON *c_nm = cJSON_GetObjectItem(params,"name");
 		if ( ! c_nm ) {
 			return error_json(-32000,"Missing name argument",id);
@@ -1324,9 +1319,11 @@ MmttServer::processJson(std::string meth, cJSON *params, const char *id) {
 		_patchFile = nm;
 		std::string err = LoadPatch(_patchFile);
 		if ( err == "" ) {
+#ifdef THIS_IS_AN_OLD_HACK
 			// Not sure this is still needed - it was a bug workaround
 			DEBUGPRINT(("Loading Patch a second time")); // HACK!!
 			(void) LoadPatch(_patchFile);
+#endif
 			return ok_json(id);
 		} else {
 			return error_json(-32000,err.c_str(),id);
@@ -1369,11 +1366,11 @@ MmttServer::processJson(std::string meth, cJSON *params, const char *id) {
 			errstr = NosuchSnprintf("Invalid Mmtt parameter - name=%s value=%lf - must be between 0 and 1",nm.c_str(),f);
 			return error_json(-32000,errstr.c_str(),id);
 		}
-		kv->set_external_value(f);
+		kv->set_value(f);
 		_updateValue(nm,kv);
-		DEBUGPRINT(("mmtt_SET name=%s external=%lf internal=%lf\n",nm.c_str(),kv->external_value,kv->internal_value));
+		DEBUGPRINT(("mmtt_SET name=%s value=%lf\n",nm.c_str(),kv->value));
 		return NosuchSnprintf(
-			"{\"jsonrpc\": \"2.0\", \"result\": %lf, \"id\": \"%s\"}", kv->external_value, id);
+			"{\"jsonrpc\": \"2.0\", \"result\": %lf, \"id\": \"%s\"}", kv->value, id);
 	}
 	if ( strcmp(method,"mmtt_get") == 0 ) {
 		cJSON *c_name = cJSON_GetObjectItem(params,"name");
@@ -1385,14 +1382,21 @@ MmttServer::processJson(std::string meth, cJSON *params, const char *id) {
 		}
 		std::string nm = std::string(c_name->valuestring);
 
+		if ( nm == "patchname" ) {
+			DEBUGPRINT(("mmtt_GET name=%s value=%s\n",nm.c_str(),_patchFile.c_str()));
+			return NosuchSnprintf(
+				"{\"jsonrpc\": \"2.0\", \"result\": \"%s\", \"id\": \"%s\"}", _patchFile.c_str(), id);
+		}
+
 		map<std::string, MmttValue*>::iterator it = mmtt_values.find(nm);
 		if ( it == mmtt_values.end() ) {
 			errstr = NosuchSnprintf("No Mmtt parameter with that name - %s",nm.c_str());
 			return error_json(-32000,errstr.c_str(),id);
 		}
 		MmttValue* kv = it->second;
+		DEBUGPRINT(("mmtt_GET name=%s value=%lf\n",nm.c_str(),kv->value));
 		return NosuchSnprintf(
-			"{\"jsonrpc\": \"2.0\", \"result\": %lf, \"id\": \"%s\"}", kv->external_value, id);
+			"{\"jsonrpc\": \"2.0\", \"result\": %lf, \"id\": \"%s\"}", kv->value, id);
 	}
 
 	errstr = NosuchSnprintf("Unrecognized method name - %s",method);
@@ -1407,8 +1411,8 @@ MmttServer::doDepthRegistration()
 	else
 		doManualDepthRegistration();
 
-	DEBUGPRINT1(("After DepthRegistration, val_front=%lf  backtop_mm=%lf  backbottom_mm=%lf\n",
-		val_front.internal_value,val_backtop.internal_value,val_backbottom.internal_value));
+	DEBUGPRINT1(("After DepthRegistration, val_depth_front=%lf  depth_detect_top_mm=%lf  depth_detect_bottom_mm=%lf\n",
+		val_depth_front.value,val_depth_detect_top.value,val_depth_detect_bottom.value));
 }
 
 void
@@ -1423,7 +1427,7 @@ MmttServer::doAutoDepthRegistration()
 
 	// Using depth_mm (millimeter depth values for the image), scan the image with a distance-window (100 mm?)
 	// starting from the front, toward the back, looking for the first peak and then the first valley.
-	int dwindow = (int)val_auto_window.internal_value;
+	int dwindow = (int)val_auto_window.value;
 	int dinc = 10;
 	int max_trigger = (int)( (camera->height() * camera->width() ) / 15);
 	int min_trigger = (int)( (camera->height() * camera->width() ) / 60);
@@ -1451,9 +1455,9 @@ MmttServer::doAutoDepthRegistration()
 				break;
 		}
 	}
-	val_front.set_internal_value(mm_of_max_tot_sofar);
-	val_backtop.set_internal_value(mm_of_max_tot_sofar + dwindow);   // + dwindow?
-	val_backbottom.set_internal_value(val_backtop.internal_value);
+	val_depth_front.set_value(mm_of_max_tot_sofar);
+	val_depth_detect_top.set_value(mm_of_max_tot_sofar + dwindow);   // + dwindow?
+	val_depth_detect_bottom.set_value(val_depth_detect_top.value);
 
 	return;
 }
@@ -1492,7 +1496,7 @@ MmttServer::LoadPatchJson(std::string jstr)
 			continue;
 		}
 		DEBUGPRINT1(("Patch file value for '%s' is '%lf'\n",nm.c_str(),jval->valuedouble));
-		v->set_internal_value(jval->valuedouble);
+		v->set_value(jval->valuedouble);
 		_updateValue(nm,v);
 	}
 
@@ -1534,9 +1538,10 @@ MmttServer::LoadPatchJson(std::string jstr)
 				return("The width of a region is larger than the camera width!?");
 			}
 
-			int x = _camWidth - c_x->valueint - c_width->valueint;
+			// int x = _camWidth - c_x->valueint - c_width->valueint;
+			int x = c_x->valueint;
 			int y = c_y->valueint;
-			if ( x < 0 ) {
+			if ( (x + c_width->valueint) > _camWidth ) {
 				return("The x position + width of a region is larger than the camera width!?  Wrong config for this camera?");
 			}
 			if ( y >= _camHeight ) {
@@ -1568,7 +1573,7 @@ MmttServer::LoadGlobalDefaults()
 	_cameraType = "kinect";
 	_cameraIndex = 0;
 	_tempDir = "c:/windows/temp";
-	NosuchDebugToConsole = true;
+	NosuchDebugToConsole = false;
 	NosuchDebugToLog = true;
 	NosuchDebugSetLogDirFile(MmttLogDir(),"mmtt.debug");
 
@@ -1695,11 +1700,11 @@ MmttServer::LoadConfigDefaultsJson(cJSON* json)
 
 
 std::string
-MmttServer::LoadPatch(std::string prefix)
+MmttServer::LoadPatch(std::string patchname)
 {
 	startNewRegions();
 
-	std::string fname = MmttPath("config/mmtt/" + prefix);
+	std::string fname = MmttPath("config/mmtt/" + patchname);
 	if ( fname.find(".json") == fname.npos ) {
 		fname = fname + ".json";
 	}
@@ -1711,7 +1716,7 @@ MmttServer::LoadPatch(std::string prefix)
 		DEBUGPRINT(("%s",err.c_str()));  // avoid re-interpreting %'s and \\'s in name
 		// If it's not in the main MmttPatchDir, try the tempdir, since
 		// that's where new patches get saved
-		fname = NosuchForwardSlash(_tempDir + "/" + prefix);
+		fname = NosuchForwardSlash(_tempDir + "/" + patchname);
 		DEBUGPRINT(("Trying tempdir, fname=%s",fname.c_str()));
 		if ( fname.find(".json") == fname.npos ) {
 			fname = fname + ".json";
@@ -1741,7 +1746,9 @@ MmttServer::LoadPatch(std::string prefix)
 	}
 
 	if ( ! _regionsDefinedByPatch ) {
-		std::string fn_patch_image = _patchDir + "/" + prefix + ".ppm";
+
+		std::string patchdir = MmttPath("config/mmtt");
+		std::string fn_patch_image = patchdir + "/" + patchname + ".ppm";
 		DEBUGPRINT(("Reading mask image from %s",fn_patch_image.c_str()));
 		IplImage* img = cvLoadImage( fn_patch_image.c_str(), CV_LOAD_IMAGE_COLOR );
 		if ( ! img ) {
@@ -1756,6 +1763,21 @@ MmttServer::LoadPatch(std::string prefix)
 	}
 
 	finishNewRegions();
+
+	if ( ! _regionsDefinedByPatch ) {
+		// When we've used an image to define the regions, we resave the patch and then reload it, 
+		// in order to get everything in sync.  Note that this writes the region values into the
+		// .json file, so the image won't be used in future reloading of the patch.
+		std::string err;
+		err = SavePatch(patchname);
+		if ( err != "" ) {
+			return NosuchSnprintf("Unable to save patch: %s, err=%s",patchname.c_str(),err.c_str());
+		}
+		err = LoadPatch(patchname);
+		if ( err != "" ) {
+			return NosuchSnprintf("Unable to reload patch: %s, err=%s",patchname.c_str(),err.c_str());
+		}
+	}
 
 	return "";
 }
@@ -1775,7 +1797,7 @@ void MmttServer::finishNewRegions()
 	size_t crsize = _curr_regions.size();
 	if ( nrsize == crsize ) {
 		DEBUGPRINT1(("finishNewRegions!! copying first_sid values"));
-		for ( int i=0; i<nrsize; i++ ) {
+		for ( size_t i=0; i<nrsize; i++ ) {
 			MmttRegion* cr = _curr_regions[i];
 			MmttRegion* nr = _new_regions[i];
 			nr->_first_sid = cr->_first_sid;
@@ -1787,7 +1809,7 @@ void MmttServer::finishNewRegions()
 	}
 	DEBUGPRINT1(("finishNewRegions!! _curr_regions follows"));
 	_curr_regions = _new_regions;
-	for ( int i=0; i<nrsize; i++ ) {
+	for ( size_t i=0; i<nrsize; i++ ) {
 		MmttRegion* cr = _curr_regions[i];
 		DEBUGPRINT1(("REGION i=%d xy=%d,%d wh=%d,%d",i,cr->_rect.x,cr->_rect.y,cr->_rect.width,cr->_rect.height));
 	}
@@ -1831,6 +1853,7 @@ MmttServer::deriveRegionsFromImage()
 		}
 	}
 	// The loop here doesn't include MAX_REGION_ID, because that's the mask id
+	int first_sid = 1000;
 	for ( id=2; id<MAX_REGION_ID; id++ ) {
 		if ( region_id_maxx[id] == -1 || region_id_maxy[id] == -1 ) {
 				continue;
@@ -1840,35 +1863,45 @@ MmttServer::deriveRegionsFromImage()
 			region_id_miny[id],
 			region_id_maxx[id],
 			region_id_maxy[id]));
-		int w = region_id_maxx[id] - region_id_minx[id] + 1;
+
+		// Need to flip the x values, for some reason
+		int adjusted_minx = _camWidth - region_id_minx[id];
+		int adjusted_maxx = _camWidth - region_id_maxx[id];
+		if ( adjusted_minx > adjusted_maxx ) {
+			int t = adjusted_minx;
+			adjusted_minx = adjusted_maxx;
+			adjusted_maxx = t;
+		}
+
+		int w = adjusted_maxx - adjusted_minx + 1;
 		int h = region_id_maxy[id] - region_id_miny[id] + 1;
-		int first_sid = (id-1) * 1000;
-		_new_regions.push_back(new MmttRegion(id,first_sid,cvRect(region_id_minx[id],region_id_miny[id],w,h)));
-		DEBUGPRINT1(("derived region id=%d x,y=%d,%d width,height=%d,%d",
-				id,region_id_minx[id],region_id_miny[id],w,h));
+		_new_regions.push_back(new MmttRegion(id,first_sid,cvRect(adjusted_minx,region_id_miny[id],w,h)));
+		DEBUGPRINT(("derived region id=%d x,y=%d,%d width,height=%d,%d",
+				id,adjusted_minx,region_id_miny[id],w,h));
+		first_sid += 1000;
 	}
 }
 
 std::string
-MmttServer::SavePatch(std::string prefix, const char* id)
+MmttServer::SavePatch(std::string patchname)
 {
 	if ( ! _regionsfilled ) {
 		DEBUGPRINT(("Unable to save patch, regions are not filled yet"));
-		return error_json(-32700,"Unable to save patch, regions are not filled yet",id);
+		return "Unable to save patch, regions are not filled yet";
 	}
 	std::string patchdir = MmttPath("config/mmtt");
-	std::string fname = patchdir + "/" + prefix + ".json";
+	std::string fname = patchdir + "/" + patchname + ".json";
 	ofstream f_json(fname.c_str());
 	if ( ! f_json.is_open() ) {
 		DEBUGPRINT(("Unable to open %s!?",fname.c_str()));
-		// If we can't write in _patchDir, try the tempdir
+		// If we can't write in patchdir, try the tempdir
 		patchdir = _tempDir;
-		fname = NosuchForwardSlash(patchdir + "/" + prefix + ".json");
+		fname = NosuchForwardSlash(patchdir + "/" + patchname + ".json");
 		DEBUGPRINT(("Trying tempdir, fname=%s",fname.c_str()));
 		f_json.open(fname.c_str());
 		if ( ! f_json.is_open() ) {
 			DEBUGPRINT(("Unable to open %s!?",fname.c_str()));
-			return error_json(-32700,"Unable to open patch file",id);
+			return "Unable to open patch file";
 		}
 	}
 	f_json << "{";
@@ -1877,7 +1910,7 @@ MmttServer::SavePatch(std::string prefix, const char* id)
 	for ( map<std::string, MmttValue*>::iterator vit=mmtt_values.begin(); vit != mmtt_values.end(); vit++ ) {
 		std::string nm = vit->first;
 		MmttValue* v = vit->second;
-		f_json << sep << "  \"" << nm << "\": " << v->internal_value;
+		f_json << sep << "  \"" << nm << "\": " << v->value;
 		sep = ",\n";
 	}
 	f_json << sep << "  \"regions\": [";
@@ -1901,7 +1934,7 @@ MmttServer::SavePatch(std::string prefix, const char* id)
 	f_json.close();
 	DEBUGPRINT(("Saved patch: %s",fname.c_str()));
 
-	std::string fn_patch_image = patchdir + "/" + prefix + ".ppm";
+	std::string fn_patch_image = patchdir + "/" + patchname + ".ppm";
 
 	copyRegionsToColorImage(_regionsImage,(unsigned char *)(_tmpRegionsColor->imageData),TRUE,TRUE,TRUE);
 	if ( !cvSaveImage(fn_patch_image.c_str(),_tmpRegionsColor) ) {
@@ -1909,7 +1942,7 @@ MmttServer::SavePatch(std::string prefix, const char* id)
 	} else {
 		DEBUGPRINT(("Saved ppm: %s",fn_patch_image.c_str()));
 	}
-	return ok_json(id);
+	return "";
 }
 
 void
@@ -1922,7 +1955,7 @@ MmttServer::registrationStart()
 	if ( doSmooth ) {
 		cvSmooth( _tmpGray, _tmpGray, CV_GAUSSIAN, 9, 9);
 	}
-	cvThreshold( _tmpGray, _maskImage, val_blob_param1.internal_value, 255, CV_THRESH_BINARY );
+	cvThreshold( _tmpGray, _maskImage, val_blob_param1.value, 255, CV_THRESH_BINARY );
 	cvDilate( _maskImage, _maskImage, NULL, MaskDilateAmount );
 	DEBUGPRINT1(("GRABMASK has been done!"));
 	cvCopy(_maskImage,_regionsImage);
@@ -1968,7 +2001,7 @@ MmttServer::doRegistration()
 
 	if ( registrationState == 100 ) {
 		currentRegionValue = 1;
-		val_showregionmap.set_internal_value(1.0);
+		val_showregionmap.set_value(1.0);
 		// Figure out the depth of the Mask
 		doDepthRegistration();
 		registrationState = 110;  // Start registering right away, but wait a couple frames
@@ -2024,7 +2057,7 @@ MmttServer::doRegistration()
 
 	if ( registrationState == 320 ) {
 		DEBUGPRINT1(("State 320"));
-		val_showregionmap.set_internal_value(1.0);
+		val_showregionmap.set_value(1.0);
 
 		_savedpokes.clear();
 
@@ -2143,8 +2176,8 @@ MmttServer::registrationContinueManual()
 
 	CBlobResult blobs = CBlobResult(_tmpThresh, NULL, 0);
 
-	blobs.Filter( blobs, B_EXCLUDE, CBlobGetArea(), B_GREATER, val_blob_maxsize.internal_value );
-	blobs.Filter( blobs, B_EXCLUDE, CBlobGetArea(), B_LESS, val_blob_minsize.internal_value );
+	blobs.Filter( blobs, B_EXCLUDE, CBlobGetArea(), B_GREATER, val_blob_maxsize.value );
+	blobs.Filter( blobs, B_EXCLUDE, CBlobGetArea(), B_LESS, val_blob_minsize.value );
 
 	CvRect bigRect = cvRect(0,0,0,0);
 	int bigarea = 0;
@@ -2160,7 +2193,7 @@ MmttServer::registrationContinueManual()
 		if ( v == 0 || v < (currentRegionValue-1) ) {
 			int area = r.width*r.height;
 			// For crosshair detection, min blob size is greater than normal
-			if ( area > bigarea && area > (5*val_blob_minsize.internal_value) ) {
+			if ( area > bigarea && area > (5*val_blob_minsize.value) ) {
 				bigRect = r;
 				bigarea = area;
 			}
@@ -2233,7 +2266,6 @@ MmttServer::removeMaskFrom(uint8_t* pixels)
 void
 MmttServer::analyzePixels()
 {
-	if ( val_debug.internal_value ) DEBUGPRINT(("MmttServer::analyzePixels\n"));
 	if ( registrationState > 0 ) {
 		doRegistration();
 		return;
@@ -2243,7 +2275,7 @@ MmttServer::analyzePixels()
 		cvSmooth( _tmpGray, _tmpGray, CV_GAUSSIAN, 9, 9);
 	}
 
-	if ( val_usemask.internal_value ) {
+	if ( val_usemask.value ) {
 		removeMaskFrom(thresh_front);
 	}
 
@@ -2251,12 +2283,12 @@ MmttServer::analyzePixels()
 	_tmpThresh->imageData = (char *)thresh_front;
 	_newblobresult = new CBlobResult(_tmpThresh, NULL, 0);
 
-	if ( val_blob_filter.internal_value != 0.0 ) {
+	if ( val_blob_filter.value != 0.0 ) {
 		// If the value of blob_maxsize is 1.0 (the maximum external value), turn off max filtering
-		if ( val_blob_maxsize.external_value != 1.0 ) {
-			_newblobresult->Filter( *_newblobresult, B_EXCLUDE, CBlobGetArea(), B_GREATER, val_blob_maxsize.internal_value );
+		if ( val_blob_maxsize.value != 1.0 ) {
+			_newblobresult->Filter( *_newblobresult, B_EXCLUDE, CBlobGetArea(), B_GREATER, val_blob_maxsize.value );
 		}
-		_newblobresult->Filter( *_newblobresult, B_EXCLUDE, CBlobGetArea(), B_LESS, val_blob_minsize.internal_value );
+		_newblobresult->Filter( *_newblobresult, B_EXCLUDE, CBlobGetArea(), B_LESS, val_blob_minsize.value );
 	}
 
 	int numblobs = _newblobresult->GetNumBlobs();
@@ -2343,13 +2375,6 @@ MmttServer::analyzePixels()
 				map<int,MmttSession*>::iterator erase_it = it;
 				it++;
 
-#ifdef USE_PYTHON
-				if ( _do_python ) {
-					NosuchVector pos = NosuchVector(sess->_center.x,sess->_center.y);
-					addPyEvent(new CursorUpPyEvent(r->name,sid,pos));
-				}
-#endif
-
 				delete sess;
 				r->_sessions.erase(erase_it);
 			}
@@ -2381,13 +2406,13 @@ MmttServer::analyzePixels()
 		for ( int y=blobrect.y; y<endy; y++ ) {
 			int yi = y * _camWidth + blobrect.x;
 
-			float backval = (float)(val_backtop.internal_value
-				+ (val_backbottom.internal_value - val_backtop.internal_value)
+			float backval = (float)(val_depth_detect_top.value
+				+ (val_depth_detect_bottom.value - val_depth_detect_top.value)
 				* (float(y)/_camHeight));
 
 			for ( int dx=0; dx<blobrect.width; dx++ ) {
 				int mm = depthmm_front[yi+dx];
-				if ( mm == 0 || mm < val_front.internal_value || mm > backval )
+				if ( mm == 0 || mm < val_depth_front.value || mm > backval )
 					continue;
 				depthtotal += mm;
 				depth_adjusted_total += (backval-mm);
@@ -2442,29 +2467,6 @@ MmttServer::analyzePixels()
 			doTuio2(nactive,numblobs,blob_sid,blob_region,blob_center);
 		}
 	}
-
-#ifdef USE_PYTHON
-	if ( _do_python ) {
-		for ( int i=0; i<numblobs; i++ ) {
-			MmttRegion* r = blob_region[i];
-			if ( r == NULL ) {
-				continue;
-			}
-			int sid = blob_sid[i];
-			MmttSession* s = r->_sessions[sid];
-			CvPoint c = blob_center[i];
-			NosuchVector pos = NosuchVector(c.x,c.y);
-			if ( _framenum == s->_frame_born ) {
-				addPyEvent(new CursorDownPyEvent(r->name,sid,pos,s->_depth_normalized));
-			} else {
-				addPyEvent(new CursorDragPyEvent(r->name,sid,pos,s->_depth_normalized));
-			}
-		}
-		if ( _pyevents.size() > 0 ) {
-			std::string msg = python_draw();
-		}
-	}
-#endif
 
 	if ( _do_sharedmem ) {
 		shmem_lock_and_update_outlines(nactive,numblobs,blob_sid,blob_region,blob_center);
@@ -2522,7 +2524,7 @@ MmttServer::showRegionRects()
 {
 	std::vector<MmttRegion*>::const_iterator it;
 	size_t nregions = _curr_regions.size();
-	for ( int n=2; n<nregions; n++ ) {
+	for ( size_t n=2; n<nregions; n++ ) {
 		MmttRegion* r = _curr_regions[n];
 		CvRect arect = r->_rect;
 		CvScalar c = region2cvscalar[r->id];
@@ -2636,7 +2638,7 @@ MmttServer::doTuio2( int nactive, int numblobs, std::vector<int> &blob_sid, std:
 			int tuio_sid = tuioSessionId(r,sid);
 
 			MmttSession* sess = r->_sessions[sid];
-			// float depth = (float)(val_backtop.internal_value - sess->_depth_mm) / (float)val_backtop.internal_value;
+			// float depth = (float)(val_depth_detect_top.value - sess->_depth_mm) / (float)val_depth_detect_top.value;
 			float depth = (float)sess->_depth_normalized;
 			float f = (float)(blobrect.width*blobrect.height) / (float)(regionrect.width*regionrect.height);
 
@@ -2802,25 +2804,25 @@ MmttServer::doTuio1_25D( int nactive, int numblobs, std::vector<int> &blob_sid, 
 			float x = (float)blobcenter.x;
 			float y = (float)blobcenter.y;
 
-			float efactor = (float)(mmtt_values["expandfactor"]->internal_value);
-			float e_xmin = (float)(mmtt_values["expand_xmin"]->internal_value);
-			float e_xmax = (float)(mmtt_values["expand_xmax"]->internal_value);
-			float e_ymin = (float)(mmtt_values["expand_ymin"]->internal_value);
-			float e_ymax = (float)(mmtt_values["expand_ymax"]->internal_value);
+			float efactor = (float)(mmtt_values["expandfactor"]->value);
+			float e_xmin = (float)(mmtt_values["expand_xmin"]->value);
+			float e_xmax = (float)(mmtt_values["expand_xmax"]->value);
+			float e_ymin = (float)(mmtt_values["expand_ymin"]->value);
+			float e_ymax = (float)(mmtt_values["expand_ymax"]->value);
 			normalize_region_xy(x,y,regionrect,efactor,e_xmin,e_xmax,e_ymin,e_ymax);
 
 			int sid = blob_sid[i];
 			int tuio_sid = tuioSessionId(r,sid);
 
 			MmttSession* sess = r->_sessions[sid];
-			// float depth = (float)(val_backtop.internal_value - sess->_depth_mm) / (float)val_backtop.internal_value;
+			// float depth = (float)(val_depth_detect_top.value - sess->_depth_mm) / (float)val_depth_detect_top.value;
 			float depth = (float)sess->_depth_normalized;
 			float f = (float)(blobrect.width*blobrect.height) / (float)(regionrect.width*regionrect.height);
 
 			// Take into account some factors that can be used to adjust for differences due
 			// to different palettes (e.g. the depth value in smaller palettes is small, so depthfactor
 			// can be used to expand it.
-			float dfactor = (float)(mmtt_values["depthfactor"]->internal_value);
+			float dfactor = (float)(mmtt_values["depthfactor"]->value);
 			depth = depth * dfactor;
 
 			msg.clear();
@@ -3037,7 +3039,7 @@ MmttServer::copyRegionRectsToRegionsImage(IplImage* regions, bool reverseColor, 
 	}
 
 	size_t nregions = _curr_regions.size();
-	for (int region_id=2; region_id<nregions; region_id++ ) {
+	for (size_t region_id=2; region_id<nregions; region_id++ ) {
 		MmttRegion* r = _curr_regions[region_id];
 
 		CvScalar c = region2cvscalar[region_id];
@@ -3116,359 +3118,3 @@ MmttServer::makeMmttServer(std::string configpath)
 
 	return server;
 }
-
-#ifdef USE_PYTHON
-static PyObject* mmtt_publicpath(PyObject* self, PyObject* args)
-{
-    const char* filename;
- 
-    if (!PyArg_ParseTuple(args, "s", &filename))
-        return NULL;
- 
-	std::string path = NosuchFullPath(std::string(filename));
-	DEBUGPRINT(("(python) path= %s",path.c_str()));
-	return PyString_FromString(path.c_str());
-}
- 
-static PyObject* mmtt_debug(PyObject* self, PyObject* args)
-{
-    const char* name;
- 
-    if (!PyArg_ParseTuple(args, "s", &name))
-        return NULL;
- 
-	DEBUGPRINT(("(python) %s",name));
- 
-    Py_RETURN_NONE;
-}
-
-static PyObject* mmtt_next_event(PyObject* self, PyObject* args)
-{
-	PyEvent* ev = ThisServer->popPyEvent();
-	if ( ev == NULL ) {
-	    Py_RETURN_NONE;
-	} else {
-		PyObject* e = ev->python_object();
-		delete ev;
-		return e;
-	}
-}
-
-static PyMethodDef MmttMethods[] =
-{
-     {"publicpath", mmtt_publicpath, METH_VARARGS, "Return path to a public file."},
-     {"next_event", mmtt_next_event, METH_VARARGS, "Get next event."},
-     {"debug", mmtt_debug, METH_VARARGS, "Log debug output."},
-     {NULL, NULL, 0, NULL}
-};
-
-bool MmttServer::python_init() {
-	DEBUGPRINT1(("python_init A"));
-	if ( ! Py_IsInitialized() ) {
-		DEBUGPRINT(("Initializing python"));
-		Py_Initialize();
-		if ( ! Py_IsInitialized() ) {
-			python_disable("Unable to initialize python?");
-			return FALSE;
-		}
-	} else {
-		DEBUGPRINT(("NOT initializing python, already running!"));
-	}
-
-	DEBUGPRINT1(("python_init B"));
-    (void) Py_InitModule("mmtt.builtin", MmttMethods);
-
-	// We want to add our directory to the sys.path
-	std::string script = NosuchSnprintf(
-		"import sys\n"
-		"sys.path.insert(0,'%s')\n",
-			MmttForwardSlash(NosuchFullPath("python")).c_str()
-		);
-	DEBUGPRINT1(("python_init C"));
-	DEBUGPRINT1(("Running script=%s",script.c_str()));
-	PyRun_SimpleString(script.c_str());
-
-	/// DEBUG STUFF
-	script = NosuchSnprintf(
-		"try:\n"
-		"  import sys\n"
-		"  f = open('c:/tmp/mmtt.out','w')\n"
-		"  f.write(sys.path.__str__())\n"
-		"  f.close()\n"
-		"except:\n"
-		"  f2 = open('c:/tmp/mmtt.err','w')\n"
-		"  f2.write('ERROR!')\n"
-		"  f2.close()\n"
-		);
-	DEBUGPRINT1(("Running script=%s",script.c_str()));
-	PyRun_SimpleString(script.c_str());
-	/// END OF DEBUG
-
-	const char* mmttutil = "mmtt.util";
-
-	PyObject *pName = PyString_FromString(mmttutil);
-    _MmttUtilModule = PyImport_Import(pName);
-    Py_DECREF(pName);
-	DEBUGPRINT1(("python_init D"));
-
-	if ( _MmttUtilModule == NULL) {
-		python_disable("Unable to import "+std::string(mmttutil)+" module");
-		return FALSE;
-	}
-
-	if ( !python_getUtilValues() ) {
-		python_disable("Failed in python_getUtilValues");
-		return FALSE;
-	}
-
-	DEBUGPRINT(("Trying to recompile mmtt.util"));
-	// Note: it's always mmtt, no matter what the Plugin name is, see comment above
-	if ( python_recompileModule(mmttutil) == FALSE ) {
-		python_disable("Unable to recompile mmtt.util module");
-		return FALSE;
-	}
-	DEBUGPRINT(("recompile mmtt.util worked"));
-
-	// Not really sure this re-getting of the UtilValues is needed, or
-	// makes a difference.  There's some kind of bug that happens occasionally
-	// when there's an error (syntax or execution) in recompiling the module,
-	// and this was an attempt to figure it out.
-	if ( !python_getUtilValues() ) {
-		python_disable("Failed in python_getUtilValues (second phase)");
-		return FALSE;
-	}
-
-	DEBUGPRINT1(("python_init F"));
-	std::string nm = "Default";
-	if ( !python_change_processor(nm) ) {
-		DEBUGPRINT(("Unable to change processor to %s",nm.c_str()));
-		// No longer disable python when there's a problem in changing the processor.
-		// python_disable(NosuchSnprintf("Unable to change processor to %s",nm.c_str()));
-		return FALSE;
-	}
-	DEBUGPRINT(("python_init G"));
-
-	return TRUE;
-}
-
-static PyObject*
-getpythonfunc(PyObject *module, char *name)
-{
-	PyObject *f = PyObject_GetAttrString(module, name);
-	if (!(f && PyCallable_Check(f))) {
-		NosuchErrorOutput("Unable to find python function: %s",name);
-		return NULL;
-	}
-	return f;
-}
-
-PyObject*
-MmttServer::python_getProcessorObject(std::string btype)
-{
-	DEBUGPRINT1(("python_getProcessorObject A"));
-	const char* b = btype.c_str();
-	PyObject *pArgs = Py_BuildValue("(s)", b);
-	if ( pArgs == NULL ) {
-		DEBUGPRINT(("Cannot create python arguments to _getProcessorFunc"));
-		return NULL;
-	}            
-	DEBUGPRINT1(("python_getProcessorObject B btype=%s getProcessorFunc=%ld",b,(long)_getProcessorFunc));
-	PyObject *obj = python_lock_and_call(_getProcessorFunc, pArgs);
-	Py_DECREF(pArgs);
-	if (obj == NULL) {
-		DEBUGPRINT(("Call to _getProcessorFunc failed"));
-		return NULL;
-	}
-	DEBUGPRINT1(("python_getProcessorObject C"));
-	if (obj == Py_None) {
-		DEBUGPRINT(("Call to _getProcessorFunc returned None?"));
-		return NULL;
-	}
-	DEBUGPRINT1(("python_getProcessorObject D"));
-	return obj;
-}
-
-bool
-MmttServer::python_change_processor(std::string behavename) {
-
-	PyObject *new_processorObj;
-	PyObject *new_processorDrawFunc;
-
-	DEBUGPRINT(("python_change_processor behavename=%s",behavename.c_str()));
-	if ( !(new_processorObj = python_getProcessorObject(behavename))) {
-		DEBUGPRINT(("python_getProcessorObject returned NULL!"));
-		// _processorObj = NULL;
-		_processorDrawFunc = NULL;
-		return FALSE;
-	}
-	DEBUGPRINT(("python_change_processor after calling getProcessorObject"));
-	if ( !(new_processorDrawFunc = getpythonfunc(new_processorObj, "processOpenGL")) ) {
-		// _processorObj = NULL;
-		_processorDrawFunc = NULL;
-		return FALSE;
-	}
-
-	// _processorObj = new_processorObj;
-	_processorDrawFunc = new_processorDrawFunc;
-	return TRUE;
-}
-
-bool
-MmttServer::python_getUtilValues()
-{
-	if (!(_recompileFunc = getpythonfunc(_MmttUtilModule,"recompile"))) {
-		python_disable("Can't get recompile function from mmtt module?!");
-		return FALSE;
-	}
-
-	if (!(_callBoundFunc=getpythonfunc(_MmttUtilModule,"callboundfunc"))) {
-		python_disable("Unable to find callboundfunc func");
-		return FALSE;
-	}
-
-	if (!(_getProcessorFunc=getpythonfunc(_MmttUtilModule,"getprocessor"))) {
-		python_disable("Unable to find getprocessor func");
-		return FALSE;
-	}
-
-	return TRUE;
-}
- 
-void MmttServer::lock_python() {
-	// We don't actually need this, right now, since FreeFrame plugins should never
-	// be running simultaneously.
-#ifdef PYFFLE_LOCK
-	PyffleLock(&python_mutex,"python");
-#endif
-}
-
-void MmttServer::unlock_python() {
-#ifdef PYFFLE_LOCK
-	PyffleUnlock(&python_mutex,"python");
-#endif
-}
-
-PyObject*
-MmttServer::python_lock_and_call(PyObject* func, PyObject *pArgs)
-{
-	lock_python();
-	PyObject *msgValue = PyObject_CallObject(func, pArgs);
-	unlock_python();
-	return msgValue;
-}
-
-std::string
-MmttServer::python_draw()
-{
-	if ( _processorDrawFunc == NULL ) {
-		// This is expected when there's been
-		// a syntax or execution error in the python code
-		DEBUGPRINT1(("_processorDrawFunc==NULL?"));
-		return "";
-	}
-	if ( _callBoundFunc == NULL ) {
-		DEBUGPRINT(("_callBoundFunc==NULL?"));
-		return "";
-	}
-
-	PyObject *pArgs = Py_BuildValue("(O)",_processorDrawFunc);
-	if ( pArgs == NULL ) {
-		return "Cannot create python arguments to _callBoundFunc";
-	}            
-	PyObject *msgobj = python_lock_and_call(_callBoundFunc, pArgs);
-	Py_DECREF(pArgs);
-	
-	if (msgobj == NULL) {
-		return "Call to _callBoundFunc failed";
-	}
-	if (msgobj == Py_None) {
-		return "Call to _callBoundFunc returned None?";
-	}
-	std::string msg = std::string(PyString_AsString(msgobj));
-	Py_DECREF(msgobj);
-	if ( msg != "" ) {
-		DEBUGPRINT(("python_callprocessor returned msg = %s",msg.c_str()));
-		DEBUGPRINT(("Disabling drawing function"));
-		_processorDrawFunc = NULL;
-	}
-	return msg;
-}
-
-bool
-MmttServer::python_recompileModule(const char *modulename)
-{
-	PyObject *pArgs;
-	bool r = FALSE;
-
-	if ( _recompileFunc == NULL ) {
-		DEBUGPRINT(("Hey, _recompileFunc is NULL!?"));
-		return FALSE;
-	}
-
-	pArgs = Py_BuildValue("(s)", modulename);
-	if ( pArgs == NULL ) {
-		DEBUGPRINT(("Cannot create python arguments to recompile"));
-		goto getout;
-	}            
-	PyObject *msgValue = python_lock_and_call(_recompileFunc, pArgs);
-	Py_DECREF(pArgs);
-	if (msgValue == NULL) {
-		DEBUGPRINT(("Call to recompile of %s failed\n",modulename));
-	} else if (msgValue == Py_None) {
-		DEBUGPRINT(("Call to recompile of %s returned None?\n",modulename));
-	} else {
-		char *msg = PyString_AsString(msgValue);
-		r = (*msg != '\0') ? FALSE : TRUE;
-		if ( r == FALSE ) {
-			DEBUGPRINT(("Call to recompile of %s failed, msg=%s\n",modulename,msg));
-		}
-		Py_DECREF(msgValue);
-	}
-getout:
-	return r;
-}
-
-void MmttServer::python_disable(std::string msg) {
-	NosuchErrorOutput("python is being disabled!  msg=%s",msg.c_str());
-	_python_disabled = TRUE;
-}
-
-std::string
-MmttForwardSlash(std::string filepath) {
-	size_t i;
-	while ( (i=filepath.find("\\")) != filepath.npos ) {
-		filepath.replace(i,1,"/");
-	}
-	return filepath;
-}
-
-bool isFullPath(std::string path) {
-	if ( path.find(":") == 2 ) {
-		return true;
-	}
-	return false;
-}
-
-void MmttServer::addPyEvent(PyEvent* e) {
-	if ( ! python_events_disabled() ) {
-		_pyevents.push_back(e);
-	}
-}
-
-PyEvent* MmttServer::popPyEvent() {
-	if ( python_events_disabled() ) {
-		return NULL;
-	}
-	PyEvent* e;
-	// LockMmttServer();
-	if ( _pyevents.size() == 0 )
-		e = NULL;
-	else {
-		e = _pyevents.front();
-		_pyevents.pop_front();
-	}
-	// UnlockMmttServer();
-	return e;
-}
-
-#endif

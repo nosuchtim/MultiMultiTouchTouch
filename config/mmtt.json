@@ -1,25 +1,27 @@
+#######################################
+# Startup configuration file for MMTT #
+#######################################
+
+# The format of this file is JSON, with '#' used for comments.
+
 {
-  "port": 4444,
 
-  "camera": "pcx",
-  "patch": "fullscreen320",
+  "port": 4444,               # The HTTP port for the browser interface
 
-#   "camera": "kinect",
-#   "patch": "fullscreen_kinect",
+  "camera": "pcx",            # Other possible values: kinect, kinect2
 
-#   "camera": "kinect2",
-#   "patch": "fullscreen_kinect2",
+  "patch": "fullscreen320",   # Name of a file in the config/mmtt directory
 
-# If initialalign is 1, an auto-alignment will be done at startup.
-# If you don't want auto-alignment to happen automatically
-# (e.g. if the patch is a fixed fullscreen one), then set it to 0.
+  "initialalign": 0,          # If initialalign is 1, an auto-alignment
+                              # will be done at startup.  If you don't want
+                              # auto-alignment to happen automatically
+                              # (e.g. if the patch is a fixed fullscreen one),
+                              # then set it to 0.
 
-   "initialalign": 0,
-
-  "sharedmem": 0,
-  "tuio": 1,
   "tuio.25d.clientlist": "127.0.0.1:3333",
+                              # A comma-separated of destinations
+                              # to which TUIO/osc messages are sent.
 
-  "debugtoconsole": 1,
-  "debugtolog": 1
+  "debugtolog": 1             # If 1, send debug messages to the log directory
+
 }

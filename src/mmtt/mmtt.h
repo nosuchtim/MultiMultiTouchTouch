@@ -43,21 +43,7 @@
 
 #include "NosuchHttpServer.h"
 #include "NosuchException.h"
-// #include "NosuchGraphics.h"
 
-#ifdef USE_PYTHON
-#ifdef _DEBUG
-// We do this dance because we don't want Python.h to pull in python*_d.lib,
-// since python*_d.lib is not part of the standard Python binary distribution.
-#   undef _DEBUG
-#   include "Python.h"
-#   define _DEBUG
-#else
-#   include "Python.h"
-#endif
-#endif
-
-class PyEvent;
 class Cursor;
 
 class UT_SharedMem;
@@ -98,29 +84,18 @@ public:
 	MmttValue(double vl,double mn,double mx,bool persist = true) {
 		minvalue = mn;
 		maxvalue = mx;
-		internal_value = vl;
-		external_value = (internal_value-mn) / (mx-mn);
+		value = vl;
 		persistent = persist;
 	}
 	void set_persist(bool p) { persistent = p; }
-	void set_internal_value(double v) {
+	void set_value(double v) {
 		if ( v < minvalue )
 			v = minvalue;
 		else if ( v > maxvalue )
 			v = maxvalue;
-		internal_value = v;
-		external_value = (internal_value - minvalue) / (maxvalue-minvalue);
+		value = v;
 	}
-	void set_external_value(double v) {
-		if ( v < 0.0 )
-			v = 0.0;
-		else if ( v > 1.0 )
-			v = 1.0;
-		external_value = v;
-		internal_value = minvalue + v * (maxvalue-minvalue);
-	}
-	double internal_value;
-	double external_value; // always 0.0 to 1.0
+	double value;
 	double minvalue;
 	double maxvalue;
 	bool persistent;
@@ -149,10 +124,10 @@ public:
 		_first_sid = first_sid;
 		_rect = r;
 		name = NosuchSnprintf("Region%d",id);
-		DEBUGPRINT1(("==== NEW MmttRegion id=%d _first_sid=%d",id,_first_sid));
+		DEBUGPRINT1(("==== NEW MmttRegion id=%d _first_sid=%d",_id,_first_sid));
 	}
 	~MmttRegion() {
-		DEBUGPRINT(("MmttRegion DESTRUCTOR called! _id=%d\n",_first_sid));
+		DEBUGPRINT(("MmttRegion DESTRUCTOR called! id=%d _first_id=%d\n",id,_first_sid));
 	}
 	int id;
 	std::string name;
@@ -174,41 +149,11 @@ class MmttServer : public NosuchJsonListener {
 	static void ErrorPopup(LPCWSTR msg);
 	static void ErrorPopup(const char* msg);
 
-#ifdef USE_PYTHON
-	bool		python_init();
-	bool		python_recompileModule(const char *modulename);
-	bool		python_getUtilValues();
-	int			python_runfile(std::string filename);
-	bool		python_reloadPyffleUtilModule();
-	void		python_disable(std::string msg);
-	std::string python_draw();
-	bool		python_change_processor(std::string behavename);
-	PyObject*	python_getProcessorObject(std::string btype);
-	PyObject*	python_lock_and_call(PyObject* func, PyObject *pArgs);
-	bool		python_events_disabled() { return false; }
-	void		lock_python();
-	void		unlock_python();
-#endif
-
 	void buttonDown(std::string bn);
 	void buttonUp(std::string bn);
 	void cursorDown(Cursor* c);
 	void cursorDrag(Cursor* c);
 	void cursorUp(Cursor* c);
-
-#ifdef USE_PYTHON
-	void addPyEvent(PyEvent* e);
-	PyEvent* popPyEvent();
-
-	PyObject *_recompileFunc;
-	// PyObject *_processorObj;
-	PyObject *_processorDrawFunc;
-	PyObject *_getProcessorFunc;
-	PyObject *_callBoundFunc;
-    PyObject *_MmttUtilModule;
-
-	std::list<PyEvent*> _pyevents;
-#endif
 
 	void InitOscClientLists();
 	void SetOscClientList(std::string& clientlist,std::vector<OscSender*>& clientvector);
@@ -241,13 +186,13 @@ class MmttServer : public NosuchJsonListener {
 	CvScalar colorOfSession(int g);
 	int regionOfColor(int r, int g, int b);
 
-	std::string SavePatch(std::string prefix, const char* id);
+	std::string SavePatch(std::string prefix);
 	void deriveRegionsFromImage();
 	void startNewRegions();
 	void finishNewRegions();
 	std::string LoadPatch(std::string prefix);
 	std::string LoadPatchJson(std::string jstr);
-	std::string startAlign();
+	std::string startAlign(bool reload);
 	void StartStuff();
 
 	bool shutting_down;
@@ -269,7 +214,6 @@ class MmttServer : public NosuchJsonListener {
 
 	DepthCamera* camera;
 
-	MmttValue val_debug;
 	MmttValue val_showfps;
 	MmttValue val_showrawdepth;
 	MmttValue val_showregionhits;
@@ -278,13 +222,14 @@ class MmttServer : public NosuchJsonListener {
 	MmttValue val_showmask;
 	MmttValue val_usemask;
 	MmttValue val_tilt;
-	MmttValue val_left;
-	MmttValue val_right;
-	MmttValue val_top;
-	MmttValue val_bottom;
-	MmttValue val_front; // mm
-	MmttValue val_backtop;  // mm
-	MmttValue val_backbottom; // mm
+	MmttValue val_edge_left;
+	MmttValue val_edge_right;
+	MmttValue val_edge_top;
+	MmttValue val_edge_bottom;
+	MmttValue val_depth_front; // mm
+	MmttValue val_depth_detect_top;  // mm
+	MmttValue val_depth_detect_bottom; // mm
+	MmttValue val_depth_align;  // mm - depth used (only) when doing alignment
 	MmttValue val_auto_window; // mm
 	MmttValue val_blob_filter;
 	MmttValue val_blob_param1;
@@ -298,9 +243,12 @@ class MmttServer : public NosuchJsonListener {
 	MmttValue val_expand_ymin;
 	MmttValue val_expand_ymax;
 
+	uint16_t *depthmm_plane;
 	uint16_t *depthmm_mid;
 	uint8_t *thresh_mid;
 	uint8_t *depth_mid;
+
+	bool continuousAlign;
 
 private:
 
@@ -358,7 +306,6 @@ private:
 	int _jsonport;
 	std::string _htmldir;
 	std::string _patchFile;
-	std::string _patchDir;
 	std::string _cameraType;
 	int _cameraIndex; // when there are multiple cameras
 	std::string _tempDir;
@@ -403,20 +350,15 @@ private:
 	// CvPoint crosshairPoint;
 	int currentRegionValue;
 	int registrationState;  // if 0, registration is not currently underway
-	bool continuousAlign;
 	bool continuousAlignStop;
 	int continuousAlignOkayCount;
 	int continuousAlignOkayEnough;
 	
 	uint8_t *depth_copy;
 	uint8_t *depth_front;
-	uint16_t *rawdepth_mid, *rawdepth_back, *rawdepth_front;
+
 	uint16_t *depthmm_front;
 	uint8_t *thresh_front;
-	// uint16_t *depth_mm;
-	// pthread_mutex_t gl_mutex;
-	// pthread_mutex_t gl_backbuf_mutex;
-	// pthread_cond_t gl_frame_cond;
 
 	pthread_mutex_t json_mutex;
 	pthread_cond_t json_cond;

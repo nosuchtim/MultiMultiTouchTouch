@@ -74,8 +74,8 @@ public:
 	~PcxDepthCamera();
 	const int width() { return 320; }
 	const int height() { return 240; }
-	const int default_backtop() { return 700; };
-	const int default_backbottom() { return 700; };
+	const int default_depth_detect_top() { return 700; };
+	const int default_depth_detect_bottom() { return 700; };
 	bool InitializeCamera();
 	void Update();
 	void Shutdown();

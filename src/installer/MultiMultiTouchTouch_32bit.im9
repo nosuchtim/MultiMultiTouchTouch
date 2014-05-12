@@ -285,10 +285,10 @@ project Flags=0x20 {
 			str Value: Default="MultiMultiTouchTouch-Setup";
 		}
 		var BuildDate: Flags=0x5, Type=0, Description="Build date as YYYYMMDD" {
-			str Value: Default=20140424;
+			str Value: Default=20140428;
 		}
 		var BuildDayNo: Flags=0x5, Type=0, Description="Build day number, starting from 1 January 2000" {
-			str Value: Default=5228;
+			str Value: Default=5232;
 		}
 		var BuildFolder: Flags=0x5, Type=1, Description="Folder containing the build target" {
 			str Value: Default="C:\\Users\\tjt\\Documents\\GitHub\\MultiMultiTouchTouch\\src\\installer\\MultiMultiTouchTouch_32bit\\mmtt";
@@ -303,7 +303,7 @@ project Flags=0x20 {
 			str Value: Default="C:\\Users\\tjt\\Documents\\GitHub\\MultiMultiTouchTouch\\src\\installer\\MultiMultiTouchTouch_32bit\\mmtt\\MultiMultiTouchTouch-Setup.exe";
 		}
 		var BuildTime: Flags=0x5, Type=0, Description="Build time as HHMMSS" {
-			str Value: Default=211310;
+			str Value: Default=201637;
 		}
 		var BuildType: Flags=0x5, Type=0, Description="Build type: always TSU" {
 			str Value: Default=TSU;
@@ -601,7 +601,7 @@ project Flags=0x20 {
 			str Value: Default="<MSOfficeDir14=MSOfficeDir12=MSOfficeDir11=MSOfficeDir10=MSOfficeDir9=MSOfficeDir8=!<ProgramFilesFolder>\\Microsoft Office\\Office>";
 		}
 		var PackageCode: Flags=0x205, Type=0, Description="Distribution package GUID" {
-			str Value: Default="{73522548-76D9-448C-5967-8A22852AB2CE}";
+			str Value: Default="{347905F6-121D-4A13-57F8-EEE6C2019270}";
 		}
 		var PersonalFolder: Flags=0x244, Type=1, Description="Current User Documents folder" {
 			str Value: Default="<$shpath(5)=@<ShellFoldersCU>\\Personal=_LocPersonalFolder>";
@@ -756,7 +756,7 @@ project Flags=0x20 {
 			str Value: Default="<$sysval(4)>";
 		}
 		var SessionID: Flags=0x204, Type=0, Description="Pseudo-random 8-character session identifier" {
-			str Value: Default="469D2055";
+			str Value: Default="6230FA8B";
 		}
 		var ShellFoldersCU: Flags=0x20C, Type=2, Description="Current User Shell folders registry key" {
 			str Value: Default="<HKCU>\\<WinCurVer>\\Explorer\\Shell Folders";
@@ -2193,6 +2193,10 @@ project Flags=0x20 {
 				str DisplayName: Flags=0x40000, Default=DROPPED_20140424182238;
 				str Description: Flags=0x40000;
 			}
+			component DROPPED_20140425233159: Flags=0x0, Platforms=0x7FFFFFFF, Packaging=0, Languages="0=", State0=3, State1=3, ExtraSize=0 {
+				str DisplayName: Flags=0x40000, Default=DROPPED_20140425233159;
+				str Description: Flags=0x40000;
+			}
 		}
 		component mmtt_559C2BA7C5D41C8E: Flags=0x0, Platforms=0x7FFFFFFF, Packaging=0, Languages="0=", State0=3, State1=3, ExtraSize=0 {
 			str DisplayName: Flags=0x40000, Default=mmtt_Files;
@@ -2257,8 +2261,18 @@ project Flags=0x20 {
 								str Title: Default="Install Processing";
 								str Arguments: Default="x -y -o<PersonalFolder> Processing.zip";
 							}
+							shlink Shortcut1_E346105764731EF1: Flags=0x0, TargetPath="<#runexample.bat_75EEABAE3B3C3D5C>", WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=1 {
+								str Title: Default="Run example_1";
+								str Arguments: Default=example_1;
+							}
+							shlink Shortcut1_E346105764731EF2: Flags=0x0, TargetPath="<#runprocessing.bat_A49DCB928035D1C8>", WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=1 {
+								str Title: Default="Run Processing";
+							}
 							shlink Shortcut5_BFBC40DE86B7E40D: Flags=0x0, TargetPath="http://127.0.0.1:4444", IconIndex=0, ShowCmd=0 {
 								str Title: Default="Browser-based Config (MMTT must be running)";
+							}
+							shlink Shortcut5_BFBC40DE86B7E40D1: Flags=0x0, TargetPath="file:///<PersonalFolder>/<Publisher>/<ProductName>/html/mmtt/readme.html", IconIndex=0, ShowCmd=0 {
+								str Title: Default=README;
 							}
 							shlink Shortcut_to_KinectRuntime_v1.8_Setup.exe_C057A1670F57E1C10: Flags=0x0, Component=Product, TargetPath="<#KinectRuntime_v1.8_Setup.exe_45256275A5E01889>", WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=0 {
 								str Title: Default="Install Kinect Runtime";
@@ -2468,14 +2482,8 @@ project Flags=0x20 {
 									file advanced.html_71689C885F036130: Flags=0x0, Component=Folder1_419118276212BB7E, Path="..\\..\\html\\mmtt\\advanced.html", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
 										str Name: Default=advanced.html;
 									}
-									file advanced_direct.html_7EB8BF0F0B2D2840: Flags=0x0, Component=Folder1_419118276212BB7E, Path="..\\..\\html\\mmtt\\advanced_direct.html", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
-										str Name: Default=advanced_direct.html;
-									}
 									file calibration.html_3634077F90D9E53F: Flags=0x0, Component=Folder1_419118276212BB7E, Path="..\\..\\html\\mmtt\\calibration.html", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
 										str Name: Default=calibration.html;
-									}
-									file calibration_direct.html_20CDA7E9ACC3504B: Flags=0x0, Component=Folder1_419118276212BB7E, Path="..\\..\\html\\mmtt\\calibration_direct.html", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
-										str Name: Default=calibration_direct.html;
 									}
 									file colors.html_B0ECB85EE5E7017E: Flags=0x0, Component=Folder1_419118276212BB7E, Path="..\\..\\html\\mmtt\\colors.html", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
 										str Name: Default=colors.html;
@@ -2494,9 +2502,6 @@ project Flags=0x20 {
 									}
 									file drawfade.js_2A63C07845FB036E: Flags=0x0, Component=Folder1_419118276212BB7E, Path="..\\..\\html\\mmtt\\drawfade.js", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
 										str Name: Default=drawfade.js;
-									}
-									file index.html_4E7903BAC5425652: Flags=0x0, Component=Folder1_419118276212BB7E, Path="..\\..\\html\\mmtt\\index.html", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
-										str Name: Default=index.html;
 									}
 									file readme.html_746669D8C8BE666A: Flags=0x0, Component=Folder1_419118276212BB7E, Path="..\\..\\html\\mmtt\\readme.html", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
 										str Name: Default=readme.html;
@@ -2699,6 +2704,12 @@ project Flags=0x20 {
 					}
 					file python27.dll_86F84A204B90FE6D: Flags=0x0, Component=Product, Path="..\\oscutil\\dist\\python27.dll", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
 						str Name: Default=python27.dll;
+					}
+					file runexample.bat_75EEABAE3B3C3D5C: Flags=0x0, Component=Product, Path="..\\..\\bin\\runexample.bat", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+						str Name: Default=runexample.bat;
+					}
+					file runprocessing.bat_A49DCB928035D1C8: Flags=0x0, Component=Product, Path="..\\..\\bin\\runprocessing.bat", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+						str Name: Default=runprocessing.bat;
 					}
 					file select.pyd_9FE282DD799B1BA6: Flags=0x0, Component=Product, Path="..\\oscutil\\dist\\select.pyd", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
 						str Name: Default=select.pyd;

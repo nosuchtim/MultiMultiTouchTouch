@@ -12,24 +12,23 @@
     html, body { width: 100%; margin: 0; }
     button.incdec { width: 100%; }
     text.spacer { width: 30%; }
-    td.valuelabel { width: 15%; text-align: center}
+    td.valuelabel { width: 40%; text-align: center}
     td.valuevalue { width: 15%; text-align: center}
-    td.buttontrio { width: 10%; text-align: center}
+    td.buttontrio { width: 5%; text-align: center}
 </style>
 
 <script src="dojo/dojo.js" djConfig="parseOnLoad: true"> </script>
 <script type="text/javascript">
 
 var ValNames = [
-		["Tilt (Kinect)","tilt","number"],
-		["Threshold Top","backtop","number"],
-		["Threshold Bottom","backbottom","number"],
+		["Depth for Top of Detection Plane","depth_detect_top","number"],
+		["Depth for Bottom of Detection Plane","depth_detect_bottom","number"],
+		["Depth for Mask Alignment","depth_align","number"],
 		["Max Blob Size","blob_maxsize","number"],
 		["Min Blob Size","blob_minsize","number"],
 		["Minimum Confidence","confidence","number"],
 		["Show Region Rects","showregionrects","toggle"],
-		["Show Region Hits","showregionhits","toggle"],
-		["Show Raw Depth","showrawdepth","toggle"]
+		["Show Region Hits","showregionhits","toggle"]
       ];
 
 var LastResult = "";
@@ -47,34 +46,16 @@ function is_toggle(nm) {
 	return(false);
 }
 
-function is_threshold(nm) {
-	for ( n in ValNames ) {
-		a = ValNames[n]
-		if ( nm == a[1] ) {
-			if ( a[0].match(/^thresh/i) )
-				return true;
-			else
-				return(false);
-		}
-	}
-}
-
 function format_value(varname,r) {
-	var o = eval("("+r+")");
-	var s = o.result;
-	// alert("format_value start s="+s+" r="+r+" o.result="+o.result)
+	var s = r.result;
 	if ( is_toggle(varname) ) {
 		if ( s == 0 ) 
 			s = "off";
 		else
 			s = "on";
-	} else if ( is_threshold(varname) ) {
-		s = s * 3.0;
-		s = s.toPrecision(5);
 	} else {
 		s = s.toPrecision(5);
 	}
-	// alert("format_value varname="+varname+" r="+r+" returning "+s)
 	return s;
 }
 
@@ -100,7 +81,7 @@ function get_and_update_value(varname) {
 		handleAs: "json",
 		headers: { "Content-Type": "application/json"},
 		sync: true,
-		postData: "{ \"jsonrpc\": \"2.0\", \"method\": \"mmtt.passthru."+meth+"\", \"params\": "+params+", \"id\":\""+id+"\" }\n"
+		postData: "{ \"jsonrpc\": \"2.0\", \"method\": \""+meth+"\", \"params\": "+params+", \"id\":\""+id+"\" }\n"
 	});
 
 	var place = dojo.byId("status");
@@ -112,9 +93,9 @@ function get_and_update_value(varname) {
 		} else if ( r.error ) {
 			place.innerHTML = ("Method: "+meth+"  Error! id:" + r.id + " msg="+r.error.message);
 		} else {
-			// alert("get/update value, varname="+varname);
 			place.innerHTML = ("Status: OK");
 			dojo.byId("value_"+varname).innerHTML = format_value(varname,r);
+			// alert("get/update value, varname is "+varname+" value="+format_value(varname,r));
 		}
 		},
 		function(err) {
@@ -155,7 +136,7 @@ function doaction(meth,params) {
 		handleAs: "json",
 		headers: { "Content-Type": "application/json"},
 		sync: true,
-		postData: "{ \"jsonrpc\": \"2.0\", \"method\": \"mmtt.passthru."+meth+"\", \"params\": "+params+", \"id\":\""+id+"\" }\n"
+		postData: "{ \"jsonrpc\": \"2.0\", \"method\": \""+meth+"\", \"params\": "+params+", \"id\":\""+id+"\" }\n"
 	});
 
 	var place = dojo.byId("status");
@@ -176,7 +157,7 @@ function doaction(meth,params) {
 
 }
 
-function doconfig(type) {
+function do_patch(type) {
 	// type is either "load" or "save"
 	meth = "config_"+type
 	config = dojo.byId("text_configname");
@@ -192,7 +173,7 @@ function doconfig(type) {
 		handleAs: "json",
 		headers: { "Content-Type": "application/json"},
 		sync: true,
-		postData: "{ \"jsonrpc\": \"2.0\", \"method\": \"mmtt.passthru."+meth+"\", \"params\": "+params+", \"id\":\""+id+"\" }\n"
+		postData: "{ \"jsonrpc\": \"2.0\", \"method\": \""+meth+"\", \"params\": "+params+", \"id\":\""+id+"\" }\n"
 	});
 
 	var place = dojo.byId("status");
@@ -236,7 +217,7 @@ function adjust_value(varname,meth,params,valueplace) {
 		handleAs: "json",
 		headers: { "Content-Type": "application/json"},
 		sync: true,
-		postData: "{ \"jsonrpc\": \"2.0\", \"method\": \"mmtt.passthru."+meth+"\", \"params\": "+params+", \"id\":\""+id+"\" }\n"
+		postData: "{ \"jsonrpc\": \"2.0\", \"method\": \""+meth+"\", \"params\": "+params+", \"id\":\""+id+"\" }\n"
 	});
 
 	place.innerHTML = "Sending meth="+meth;
@@ -279,10 +260,11 @@ function one_spacer() {
 
 function make_value_ui(label,nm) {
         var x = dojo.byId("div_"+nm);
+	var hyphen = "&#8209;";   // The non-breakable kind.
 	x.innerHTML = "<table width=100%><tr><td></td>"
-	+one_button(nm,"---","decr",0.1)
-	+one_button(nm,"--","decr",0.01)
-	+one_button(nm,"-","decr",0.001)
+	+one_button(nm,hyphen+hyphen+hyphen,"decr",0.1)
+	+one_button(nm,hyphen+hyphen,"decr",0.01)
+	+one_button(nm,hyphen,"decr",0.001)
 	+"<td class=valuelabel align=center>"
 	+"<table border=1 width=100%><tr>"
 	+"<td>"+label+"<br><span id='value_"+nm+"' /></span></td>"
@@ -317,12 +299,15 @@ function setup() {
 	var title = dojo.byId("title");
 	var host = document.location.host;
 	var i = host.indexOf(":");
-	var instancenum = 1;
-	if ( i > 0 ) {
-		var port = host.substr(i+1);
-		instancenum = port - 4439;
-	}
-	title.innerHTML = "<h2>MMTT Frame "+instancenum+"</h2>"
+
+	// var instancenum = 1;
+	// if ( i > 0 ) {
+	// 	var port = host.substr(i+1);
+	// 	instancenum = port - 4439;
+	// }
+	// title.innerHTML = "<h2>MMTT Frame "+instancenum+"</h2>"
+
+	title.innerHTML = "<h2>MMTT Calibration</h2>";
 
 	var values = dojo.byId("values");
 	for ( n in ValNames ) {
@@ -356,7 +341,7 @@ dojo.addOnLoad(setup);
 &nbsp;&nbsp;&nbsp;
 <input type="button" name="butt_stop" value="STOP sending TUIO (Shows Raw Depth)" onClick="doaction('stop');">
 <p>
-<input type="button" name="butt_autopoke" value="ReAlign" onClick="doaction('align_start');">
+<input type="button" name="butt_autopoke" value="Reload and redo Mask Alignment" onClick="doaction('reload_and_align_start');">
 <br>
 <div id="status">&nbsp;</div>
 </center>

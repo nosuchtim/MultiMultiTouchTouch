@@ -41,7 +41,7 @@
 using namespace std;
 
 int NosuchDebugLevel = 0;
-bool NosuchDebugToConsole = true;
+bool NosuchDebugToConsole = false;
 bool NosuchDebugTimeTag = true;
 bool NosuchDebugThread = true;
 bool NosuchDebugToLog = true;

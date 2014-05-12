@@ -44,8 +44,8 @@ public:
 
 	virtual const int width() = 0;
 	virtual const int height() = 0;
-	virtual const int default_backtop() = 0;
-	virtual const int default_backbottom() = 0;
+	virtual const int default_depth_detect_top() = 0;
+	virtual const int default_depth_detect_bottom() = 0;
 	virtual bool InitializeCamera() = 0;
 	virtual void Shutdown() = 0;
 	virtual void Update() = 0;

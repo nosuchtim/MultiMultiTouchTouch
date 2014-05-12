@@ -10,80 +10,100 @@
 </style>
 </head>
 <body>
-<h1>README for MultiMultiTouchTouch</h1>
+<h1>README for MultiMultiTouchTouch 2.0</h1>
 <p>
-**** NOTE **** this document needs to be updated, particularly to document the
-new method of defining regions with coordinates rather than interactively or with the specially-colored image.
-<p>
-The MMTT (Multi Multi Touch Touch) program uses the Microsoft Kinect to create multiple 3D multitouch surfaces in mid-air that you can interact with by merely waving your hands.
+The MMTT (MultiMultiTouchTouch) program uses a 3D camera (such as the
+Creative Senz3D or the Microsoft Kinect) to create multiple 3D multitouch regions
+in mid-air that you can interact with by merely waving your hands (or other objects)
+within regions that have been defined.
 The <a href=http://spacepalette.com>Space Palette</a> instrument is
-one of its applications, you can find a YouTube video
-<a href=http://www.youtube.com/watch?v=y2d4BSSyOok>here</a> and more details
-<a href=http://spacepalette.com>here</a>.
+one of its applications, you can find YouTube videos and and more details at
+<a href=http://spacepalette.com>http://spacepalette.com</a>.
 This document describes how to use MMTT.
-<h2>Installation, Startup, and Debugging</h2>
-Currently, MMTT only runs on Windows, and assumes that you have
-<a href="http://openkinect.org/wiki/Getting_Started#Driver_installation">installed</a> the libfreenect drivers for the Kinect.
-After starting MMTT, you should see a window appear that contains
-a depth image from the Kinect.
-If you don't see a window, the most likely reason is that you don't have a
-Kinect plugged into your computer or that you need to
-<a href="http://openkinect.org/wiki/Getting_Started#Driver_installation">install the drivers</a>.
-You interact with the program (when it is running) by pointing your browser at
+<h2>Installation</h2>
+If you're reading this document, you've already installed the MMTT package.
+If this is the first time you've installed it,
+you may need to install a few other things, for which you'll find shortcuts in the
+"App Programs -> Nosuch Media -> MultiMultiTouchTouch" directory.  These shortcuts are:
+<ol>
+	<li>Install Kinect Runtime
+	<li>Install Kinect SDK
+	<li>Install loopMIDI
+	<li>Install Processing
+	<li>Install Senz3D Runtime
+	<li>Install Senz3D SDK
+</ol>
+<h2>Configuration Files</h2>
+In the "Documents" directory of your Windows login,
+you will find a sub-directory named "Nosuch Media/MultiMultiTouchTouch/config".
+The file "mmtt.json" there controls the default behaviour of MMTT.  Edit that file with
+the text editor of your choice, and adjust the values within it to reflect your desires.
+The most important values to adjust are "camera" and "patch".  The "patch" value should be
+the name of a file within the "Nosuch Media/MultiMultiTouchTouch/config/mmtt" directory.
+<h2>Starting MMTT</h2>
+Use the "Start MMTT" shortcut to start the program.
+If you don't see a window, you should see an error popup that explains the reason (e.g.
+"No camera detected").  If you don't see any window or errors, use the "Monitor Debug Output"
+shortcut to see if there are any errors in the debug logfile,
+or just look at the file "Nosuch Media/MultiMultiTouchTouch/log/mmtt.debug" in your
+Documents directory.
+<h2>Controlling MMTT</h2>
+When MMTT is running, you interact with it by pointing your browser at
 <a href=http://127.0.0.1:4444>http://127.0.0.1:4444</a>.
-Debugging and status information can be viewed with <a href=http://technet.microsoft.com/en-us/sysinternals/bb896647>debugview</a>.
 <h2>Usage Scenarios</h2>
-The multiple 3D multitouch surfaces that MMTT provides exist within a
-single plane, with the Z direction pointing at the Kinect.
-When using MMTT, you need to know where that plane is,
-either using a physical device (e.g. a frame) or audio/visual feedback
-(e.g. a projected image).
-MMTT was primarily designed to be used with a frame (any flat surface with
-lots of large holes), since this simplifies the registration of the regions
-as well as
+The 3D multitouch regions that MMTT understands exist within a
+single plane, with the Z direction pointing at the 3D camera.
+To define the regions, you can either use a physical frame (any flat surface with
+large holes) or explicitly specify the region coordinates in the config file.
+MMTT was primarily designed to be used with a physical frame
+(like the <a href=http://spacepalette.com>Space Palette</a>),
+which simplifies the
+registration of the regions as well as
 providing visual guidance for both the player and audience.
-However, you can also define the
-regions by providing a specially-colored image,
-or by specifying the regions in a configuration file.
 <h3>Using a physical frame to define the regions</h3>
 To use a physical frame, first you need to build one.
 One easy and quick way is to cut holes in a sheet of foam core board.
-My original prototype
-used wood <a href=http://www.dickblick.com/categories/stretcherstrips/>stretcher bars</a> that are easily available at craft and artist
-supply stores, and you can get them in many different lengths
-to build any size frame you like.  I used these to make
-a few 4-sided frames and used zip-ties to tie them together.
-I've built the latest frame by cutting regions out of a
-solid sheet of birch plywood.  Anything that is flat and has large open regions will do.  The open regions don't have to be rectangular, but should be at least a few inches high and/or wide.  The parts of the frame between the open regions should be at least an inch wide.
+Anything that is flat and has large open regions will do.
+The open regions don't have to be rectangular, but should be at least a few inches high and/or wide.
+The parts of the frame between the open regions should be at least 1/2" wide,
+so that the 3D camera can see them.
 <p>
-Using a physical frame requires that you register the frame, telling MMTT where the regions are.  This is a one-time operation:
+Using a physical frame requires a one-time operation that "registers" the regions of the frame,
+determining the coordinates of the regions.
 <ol>
-<li>Put the frame in front of the Kinect, at a distance somewhere between 1 meter and 2.5 meters
+<li>Put the frame in front of the 3D camera.
 <li>Start the MMTT program
+<li>Go to the "MMTT Calibration (Advanced)" page in the browser-based interface.
+<li>Click on "STOP sending TUIO (Shows Raw Depth)"
+<li>Position the frame so that it's centered in the image.
+<li>Click on "START sending TUIO".  The image may disappear until you adjust the depth values in the next step.
 <li>
-Adjust the parameters of the depth thresholding.
-The depth threshold parameters are Threshold Front, Threshold Top,
-and Threshold Bottom, found on the
+Adjust the parameters of the depth thresholding, which are listed as:
+<ul>
+	<li>Depth for Top of Detection Plane
+	<li>Depth for Bottom of Detection Plane
+	<li>Depth for Mask Alignment
+</ul>
+These parameters identify the distance from the 3D camera
+to wherever the frame (Mask Alignment) and your hands (Detection Plane) will be.
+The goal is to set the Depth for Top/Bottom of Detection Plane so that your flat frame is included,
+but things beyond the plane of the frame (like your body) are not included.
+The reason there are Top and Bottom values is to allow some skew correction in the
+vertical direction; the 3D camera will usually be centered horizontally with respect to the frame,
+but may not be centered vertically.
+<li>
+Start the manual registration process with the "New Registration Start" button on the
 browser-based user interface.
-These parameters identify the range of distance from the Kinect
-to wherever the frame and your hands will be.
-The Threshold Front value is the minimum distance for the "front" of the detection range, close to the Kinect.  Normally this will be 0, meaning that there
-is no minimum distance.
-The Threshold Top and Threshold Bottom values identify the distance to the plane of the frame, in meters.
-The goal is to set the Threshold Top and Bottom values so that your flat frame is included, but things beyond the plane of the frame (like your body) are not included.
-The reason there are Top and Bottom values is to allow some skew correction in the vertical direction; the Kinect will usually be centered horizontally with respect to the frame, but not centered vertically.
-<li>
-Start the manual registration process with the "Start Registration" button on the browser-based user interface.
 Then, stick your hand into each hole of the frame that you want to use, in order.
 When you pull your hand out of each hole, you should see (in the image
 on the screen) the color of that region change to the next color in
 the <a href=./colors.html>color sequence</a>.
 The registration process concludes either when you stick your hand into
-the first region for a second time, or when you press the "Stop Registration"
+the first region for a second time, or when you press the "New Registration Stop"
 button.
 <li>
 Type a new configuration name into the text field next to the
-"Save Config" button, and press "Save Config".
+"Save Patch" button, and press "Save Patch".
 This will save two files - a .json file with the
 current control parameters, and a .ppm (portable pix map) image file with the current region map that you've just defined.
 </ol>
@@ -91,7 +111,7 @@ current control parameters, and a .ppm (portable pix map) image file with the cu
 After registering a particular frame and saving its configuration, you
 can subsequently just start the
 MMTT program and load the saved configuration.   If you move
-the Kinect or the frame, you may have to tweak the threshold parameters and/or
+the 3D camera or the frame, you may have to tweak the threshold parameters and/or
 re-register and re-save the configuration.
 If things have only moved slightly, you should be able
 to just press the "RePoke" button at the top of the

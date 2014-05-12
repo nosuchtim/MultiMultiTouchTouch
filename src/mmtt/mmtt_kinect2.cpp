@@ -185,8 +185,8 @@ Kinect2DepthCamera::processRawDepth(const UINT16* pBuffer, int width , int heigh
 	// UINT16 *pdepth = depth;
 
 	for (int y=0; y<height; y++) {
-	  float backval = (float)(server()->val_backtop.internal_value
-		  + (server()->val_backbottom.internal_value - server()->val_backtop.internal_value)
+	  float backval = (float)(server()->val_depth_detect_top.internal_value
+		  + (server()->val_depth_detect_bottom.internal_value - server()->val_depth_detect_top.internal_value)
 		  * (float(y)/height));
 
 	  for (int x=0; x<width; x++,i++) {
@@ -202,12 +202,12 @@ Kinect2DepthCamera::processRawDepth(const UINT16* pBuffer, int width , int heigh
 		int deltamm;
 		int pval = 0;
 		if ( filterdepth ) {
-			if ( mm == 0 || mm < server()->val_front.internal_value || mm > backval ) {
+			if ( mm == 0 || mm < server()->val_depth_front.internal_value || mm > backval ) {
 				pval = OUT_OF_BOUNDS;
-			} else if ( x < server()->val_left.internal_value || x > server()->val_right.internal_value || y < server()->val_top.internal_value || y > server()->val_bottom.internal_value ) {
+			} else if ( x < server()->val_edge_left.internal_value || x > server()->val_edge_right.internal_value || y < server()->val_edge_top.internal_value || y > server()->val_edge_bottom.internal_value ) {
 				pval = OUT_OF_BOUNDS;
 			} else {
-				// deltamm = (int)server()->val_backtop.internal_value - mm;
+				// deltamm = (int)server()->val_depth_detect_top.internal_value - mm;
 				deltamm = (int)backval - mm;
 			}
 		} else {

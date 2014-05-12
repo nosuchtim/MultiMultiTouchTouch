@@ -2,6 +2,9 @@ import java.util.*;
 
 class Area {
 
+	static Map<String,Area> areas = new HashMap<String,Area>();
+
+
 	Map<Integer,Cursor> cursors;
 	int sidmin;
 	int sidmax;
@@ -71,5 +74,15 @@ class Area {
 			Cursor c = cursors.get(sid);
 			c.draw(width,height,colour);
 		}
+	}
+
+	public static Area findArea(int sid) {
+		for (String a: areas.keySet()) {
+			Area area = areas.get(a); 
+			if ( sid >= area.sidmin && sid <= area.sidmax ) {
+				return area;
+			}
+		}
+		return null;
 	}
 };

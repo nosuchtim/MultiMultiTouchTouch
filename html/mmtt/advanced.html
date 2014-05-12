@@ -12,32 +12,33 @@
     html, body { width: 100%; margin: 0; }
     button.incdec { width: 100%; }
     text.spacer { width: 30%; }
-    td.valuelabel { width: 15%; text-align: center}
+    td.valuelabel { width: 40%; text-align: center}
     td.valuevalue { width: 15%; text-align: center}
-    td.buttontrio { width: 10%; text-align: center}
+    td.buttontrio { width: 5%; text-align: center}
 </style>
 
 <script src="dojo/dojo.js" djConfig="parseOnLoad: true"> </script>
 <script type="text/javascript">
 
 var ValNames = [
-		["Tilt (Kinect)","tilt","number"],
-		["Threshold Top","backtop","number"],
-		["Threshold Bottom","backbottom","number"],
-		["Threshold Front","front","number"],
-		["Left Edge","left","number"],
-		["Right Edge","right","number"],
-		["Top Edge","top","number"],
-		["Bottom Edge","bottom","number"],
+		["Depth for Top of Detection Plane","depth_detect_top","number"],
+		["Depth for Bottom of Detection Plane","depth_detect_bottom","number"],
+		["Depth for Front Edge","depth_front","number"],
+		["Depth for Mask Alignment","depth_align","number"],
+		["Left Edge","edge_left","number"],
+		["Right Edge","edge_right","number"],
+		["Top Edge","edge_top","number"],
+		["Bottom Edge","edge_bottom","number"],
 		["Max Blob Size","blob_maxsize","number"],
 		["Min Blob Size","blob_minsize","number"],
-		["Minimum Confidence","confidence","number"],
+		["Minimum Confidence (Senz3D only)","confidence","number"],
 		["Depth Factor","depthfactor","number"],
 		["Expand Factor","expandfactor","number"],
 		["Expand Xmin","expand_xmin","number"],
 		["Expand Xmax","expand_xmax","number"],
 		["Expand Ymin","expand_ymin","number"],
 		["Expand Ymax","expand_ymax","number"],
+		["Tilt (Kinect only)","tilt","number"],
 		["Use Mask","usemask","toggle"],
 		["Blob Filter","blob_filter","toggle"],
 		["Show Mask","showmask","toggle"],
@@ -46,7 +47,6 @@ var ValNames = [
 		["Show Region Hits","showregionhits","toggle"],
 		["Show Raw Depth","showrawdepth","toggle"],
 		["Extreme Debugging","debug","toggle"],
-		["Do Python","dopython","toggle"],
 		["Show FPS","showfps","toggle"]
       ];
 
@@ -65,18 +65,6 @@ function is_toggle(nm) {
 	return(false);
 }
 
-function is_threshold(nm) {
-	for ( n in ValNames ) {
-		a = ValNames[n]
-		if ( nm == a[1] ) {
-			if ( a[0].match(/^thresh/i) )
-				return true;
-			else
-				return(false);
-		}
-	}
-}
-
 function format_value(varname,r) {
 	var s = r.result;
 	if ( is_toggle(varname) ) {
@@ -84,9 +72,6 @@ function format_value(varname,r) {
 			s = "off";
 		else
 			s = "on";
-	} else if ( is_threshold(varname) ) {
-		s = s * 3.0;
-		s = s.toPrecision(5);
 	} else {
 		s = s.toPrecision(5);
 	}
@@ -102,7 +87,7 @@ function format_error(meth,err) {
 	}
 }
 
-function get_and_update_value(varname) {
+function get_and_update_value(varname,formatit) {
 	// The value of params should include the curly braces
 	var id = "12345";
 	var url = "/dojo.txt";
@@ -127,7 +112,11 @@ function get_and_update_value(varname) {
 			place.innerHTML = ("Method: "+meth+"  Error! id:" + r.id + " msg="+r.error.message);
 		} else {
 			place.innerHTML = ("Status: OK");
-			dojo.byId("value_"+varname).innerHTML = format_value(varname,r);
+			if ( formatit ) {
+				dojo.byId("value_"+varname).innerHTML = format_value(varname,r);
+			} else {
+				dojo.byId("value_"+varname).value = r.result;
+			}
 		}
 		},
 		function(err) {
@@ -140,8 +129,9 @@ function updatevalues() {
 	for ( n in ValNames ) {
 		a = ValNames[n]
 		var name = a[1]; 
-		get_and_update_value(name);
+		get_and_update_value(name,true);
 	}
+	get_and_update_value("patchname",false);
 }
 
 function decr(name,amount) {
@@ -187,10 +177,10 @@ function doaction(meth,params) {
 
 }
 
-function doconfig(type) {
+function do_patch(type) {
 	// type is either "load" or "save"
-	meth = "config_"+type
-	config = dojo.byId("text_configname");
+	meth = "patch_"+type
+	config = dojo.byId("value_patchname");
 	name = config.value;
 	params = "{ \"name\": \""+name+"\" }";
 
@@ -284,11 +274,14 @@ function one_spacer() {
 }
 
 function make_value_ui(label,nm) {
+
         var x = dojo.byId("div_"+nm);
+	var hyphen = "&#8209;";   // The non-breakable kind.
+
 	x.innerHTML = "<table width=100%><tr><td></td>"
-	+one_button(nm,"---","decr",0.1)
-	+one_button(nm,"--","decr",0.01)
-	+one_button(nm,"-","decr",0.001)
+	+one_button(nm,hyphen+hyphen+hyphen,"decr",0.1)
+	+one_button(nm,hyphen+hyphen,"decr",0.01)
+	+one_button(nm,hyphen,"decr",0.001)
 	+"<td class=valuelabel align=center>"
 	+"<table border=1 width=100%><tr>"
 	+"<td>"+label+"<br><span id='value_"+nm+"' /></span></td>"
@@ -346,20 +339,19 @@ dojo.addOnLoad(setup);
 <body class="claro">
 
 <center>
-<h2>Space Manifold Calibration (Advanced)</h2>
+<h2>MMTT Calibration (Advanced)</h2>
 <input type="button" name="butt_start" value="START sending TUIO (Shows only Filtered Depth)" onClick="doaction('start');">
 &nbsp;&nbsp;&nbsp;
 <input type="button" name="butt_stop" value="STOP sending TUIO (Shows Raw Depth)" onClick="doaction('stop');">
 <p>
-<input type="button" name="butt_loadconfig" value="Load Config" onClick="doconfig('load');">
-<input type="button" name="butt_saveconfig" value="Save Config" onClick="doconfig('save');">
-<input type="text" id="text_configname" name="text_configname" value="default">
+<input type="button" name="butt_loadconfig" value="Load Patch" onClick="do_patch('load');">
+<input type="button" name="butt_saveconfig" value="Save Patch" onClick="do_patch('save');">
+<input type="text" id="value_patchname" name="value_patchname" value="unknown">
 <p>
-<input type="button" name="butt_autopoke" value="RePoke" onClick="doaction('autopoke');">
-<input type="button" name="butt_startreg" value="Start Registration" onClick="doaction('start_registration');">
-<input type="button" name="butt_stopreg" value="Stop Registration" onClick="doaction('stop_registration');">
-<input type="button" name="butt_align_start" value="Align Start" onClick="align_start();">
-<input type="button" name="butt_align_stop" value="Align Stop" onClick="align_stop();">
+<input type="button" name="butt_autopoke" value="Mask Alignment Start" onClick="doaction('align_start');">
+<input type="button" name="butt_align_stop" value="Mask Alignment Stop" onClick="align_stop();">
+<input type="button" name="butt_startreg" value="New Registration Start" onClick="doaction('start_registration');">
+<input type="button" name="butt_stopreg" value="New Registration Stop" onClick="doaction('stop_registration');">
 <br>
 <div id="status">&nbsp;</div>
 </center>

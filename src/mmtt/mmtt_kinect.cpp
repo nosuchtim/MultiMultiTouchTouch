@@ -162,7 +162,7 @@ KinectDepthCamera::processRawDepth(const NUI_DEPTH_IMAGE_PIXEL *depth)
 
 	int i = 0;
 
-	bool filterdepth = ! server()->val_showrawdepth.internal_value;
+	bool filterdepth = ! server()->val_showrawdepth.value;
 
 	// XXX - THIS NEEDS OPTIMIZATION!
 
@@ -171,8 +171,8 @@ KinectDepthCamera::processRawDepth(const NUI_DEPTH_IMAGE_PIXEL *depth)
 	int h = height();
 	int w = width();
 	for (int y=0; y<h; y++) {
-	  float backval = (float)(server()->val_backtop.internal_value
-		  + (server()->val_backbottom.internal_value - server()->val_backtop.internal_value)
+	  float backval = (float)(server()->val_depth_detect_top.value
+		  + (server()->val_depth_detect_bottom.value - server()->val_depth_detect_top.value)
 		  * (float(y)/h));
 
 	  for (int x=0; x<w; x++,i++) {
@@ -194,12 +194,12 @@ KinectDepthCamera::processRawDepth(const NUI_DEPTH_IMAGE_PIXEL *depth)
 		int deltamm;
 		int pval = 0;
 		if ( filterdepth ) {
-			if ( mm == 0 || mm < server()->val_front.internal_value || mm > backval ) {
+			if ( mm == 0 || mm < server()->val_depth_front.value || mm > backval ) {
 				pval = OUT_OF_BOUNDS;
-			} else if ( x < server()->val_left.internal_value || x > server()->val_right.internal_value || y < server()->val_top.internal_value || y > server()->val_bottom.internal_value ) {
+			} else if ( x < server()->val_edge_left.value || x > server()->val_edge_right.value || y < server()->val_edge_top.value || y > server()->val_edge_bottom.value ) {
 				pval = OUT_OF_BOUNDS;
 			} else {
-				// deltamm = (int)server()->val_backtop.internal_value - mm;
+				// deltamm = (int)server()->val_depth_detect_top.value - mm;
 				deltamm = (int)backval - mm;
 			}
 		} else {

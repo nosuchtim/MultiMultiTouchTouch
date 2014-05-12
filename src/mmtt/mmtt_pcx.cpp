@@ -171,9 +171,8 @@ void PcxDepthCamera::ProcessDepth() {
 			PXCImage::ImageData data;
 			sts = pi->TryAccess(PXCImage::ACCESS_READ,PXCImage::COLOR_FORMAT_DEPTH,&data);
 			if ( sts == PXC_STATUS_NO_ERROR ) {
-				pxcBYTE* dplane = data.planes[0];
-				pxcBYTE* confidence = data.planes[1];
-				processRawDepth((pxcU16*)dplane,(pxcU16*)confidence);
+				// planes[0] is depth, planes[1] is confidence
+				processRawDepth((pxcU16*)data.planes[0],(pxcU16*)data.planes[1]);
 				pi->ReleaseAccess(&data);
 			} else {
 				DEBUGPRINT(("sts from TryAccess = %d",sts));
@@ -202,7 +201,7 @@ PcxDepthCamera::processRawDepth(pxcU16 *depth,pxcU16* confidence)
 
 	int i = 0;
 
-	bool filterdepth = ! server()->val_showrawdepth.internal_value;
+	bool filterbydepth = ! server()->val_showrawdepth.value;
 
 	// XXX - THIS NEEDS OPTIMIZATION!
 
@@ -212,9 +211,14 @@ PcxDepthCamera::processRawDepth(pxcU16 *depth,pxcU16* confidence)
 	int h = height();
 	int w = width();
 	for (int y=0; y<h; y++) {
-	  float backval = (float)(server()->val_backtop.internal_value
-		  + (server()->val_backbottom.internal_value - server()->val_backtop.internal_value)
-		  * (float(y)/h));
+		float backval;
+		if ( server()->continuousAlign == true ) {
+			backval = (float)(server()->val_depth_align.value);
+		} else {
+			backval = (float)(server()->val_depth_detect_top.value
+				+ (server()->val_depth_detect_bottom.value - server()->val_depth_detect_top.value)
+				* (float(y)/h));
+		}
 
 	  pxcU16* lastpixel = depth + (y+1)*w - 1;
 	  pxcU16* lastconf = confidence + (y+1)*w - 1;
@@ -229,15 +233,15 @@ PcxDepthCamera::processRawDepth(pxcU16 *depth,pxcU16* confidence)
 #define OUT_OF_BOUNDS 99999
 		int deltamm;
 		int pval = 0;
-		if ( filterdepth ) {
-			if ( mm == 0 || mm < server()->val_front.internal_value || mm > backval ) {
+		if ( filterbydepth ) {
+			if ( mm == 0 || mm < server()->val_depth_front.value || mm > backval ) {
 				pval = OUT_OF_BOUNDS;
-			} else if ( x < server()->val_left.internal_value || x > server()->val_right.internal_value || y < server()->val_top.internal_value || y > server()->val_bottom.internal_value ) {
+			} else if ( x < server()->val_edge_left.value || x > server()->val_edge_right.value || y < server()->val_edge_top.value || y > server()->val_edge_bottom.value ) {
 				pval = OUT_OF_BOUNDS;
-			} else if ( conf < server()->val_confidence.internal_value ) {
+			} else if ( conf < server()->val_confidence.value ) {
 				pval = OUT_OF_BOUNDS;
 			} else {
-				// deltamm = (int)val_backtop.internal_value - mm;
+				// deltamm = (int)val_depth_detect_top.value - mm;
 				deltamm = (int)backval - mm;
 			}
 		} else {
