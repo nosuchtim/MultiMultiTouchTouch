@@ -190,7 +190,8 @@ class MmttServer : public NosuchJsonListener {
 	void deriveRegionsFromImage();
 	void startNewRegions();
 	void finishNewRegions();
-	std::string LoadPatch(std::string prefix);
+	std::string LoadPatch(std::string prefix, const char* id = NULL);
+	std::string LoadPatchReal(std::string prefix);
 	std::string LoadPatchJson(std::string jstr);
 	std::string startAlign(bool reload);
 	void StartStuff();

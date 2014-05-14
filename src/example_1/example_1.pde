@@ -3,7 +3,6 @@
 // This is an example program for
 // interpreting the TUIO/OSC messages
 // coming from MMTT (MultiMultiTouchTouch).
-// This example 
 //
 ///////////////////////////////////
 
@@ -16,17 +15,20 @@ import netP5.*;
 import themidibus.*;
 
 OscP5 oscP5;
-MidiBus myMidi;
+MidiBus midi;
+Area defaultArea;
+Areas areas;
 
 void setup() {
 
 	size(800,600);
 	background(0);
 
-	myMidi = new MidiBus(this, -1, "Microsoft GS Wavetable Synth");
+	midi = new MidiBus(this, -1, "Microsoft GS Wavetable Synth");
+	areas = new Areas();
 
 	// If you want to send MIDI things to a VST soft synth, use loopMIDI
-	// myMidi = new MidiBus(this, -1, "loopMIDI Port 1");
+	// midi = new MidiBus(this, -1, "loopMIDI Port 1");
 
 	oscP5 = new OscP5(this,3333);
 
@@ -39,29 +41,34 @@ void setup() {
 	Area a0 = new Area(0,999);
 	a0.setColor(color(255,0,0));
 	a0.setChannel(0);
+	areas.add("ONE",a0);
 
-	Area a1 = new Area(11000,11999);
+	Area a1 = new Area(1000,1999);
 	a1.setColor(color(0,255,0));
 	a1.setChannel(1);
+	areas.add("TWO",a1);
 
-	Area a2 = new Area(12000,12999);
+	Area a2 = new Area(2000,2999);
 	a2.setColor(color(0,0,255));
 	a2.setChannel(2);
+	areas.add("THREE",a2);
 
-	Area a3 = new Area(13000,13999);
+	Area a3 = new Area(3000,3999);
 	a3.setColor(color(255,255,0));
 	a3.setChannel(3);
+	areas.add("FOUR",a3);
 
-	Area a4 = new Area(14000,14999);
+	Area a4 = new Area(4000,4999);
 	a4.setColor(color(0,255,255));
 	a4.setChannel(4);
+	areas.add("FIVE",a4);
 
 	defaultArea = a0;
 }
 
 // Send a MIDI program change message.  Both chan and prog values start at 0.
 void programchange(int chan, int prog) {
-	myMidi.sendMessage( 0xc0 | chan, prog );
+	midi.sendMessage( 0xc0 | chan, prog );
 }
 
 // Draw everything on the screen
@@ -71,11 +78,7 @@ void draw() {
 	fill(0,0,0,128);
 	rect(0,0,width,height);
 
-	Area.draw();
-	for (String a: areas.keySet()) {
-		Area area = areas.get(a); 
-		area.draw();
-	}
+	areas.draw();
 }
 
 // Incoming osc message are forwarded to the oscEvent method.
@@ -90,24 +93,18 @@ void oscEvent(OscMessage m) {
 		if ( cmd.equals("alive") ) {
 			int na = m.typetag().length() - 1;
 
-			for (String a: areas.keySet()) {
-				Area area = areas.get(a); 
-				area.clear_touched();
-			}
+			areas.clearTouched();
 
 			for ( int i=1; i<=na; i++ ) {
 				int sid = m.get(i).intValue();
-				Area area = findArea(sid);
+				Area area = areas.findArea(sid);
 				if ( area == null ) {
 					area = defaultArea;
 				}
 				area.touch(sid);
 			}
 
-			for (String a: areas.keySet()) {
-				Area area = areas.get(a); 
-				area.checkCursorUp();
-			}
+			areas.checkCursorUp();
 
 		} else if (cmd.equals("fseq") ) {
 
@@ -118,7 +115,7 @@ void oscEvent(OscMessage m) {
 			float y = m.get(3).floatValue();
 			float z = m.get(4).floatValue();
 
-			Area area = findArea(sid);
+			Area area = areas.findArea(sid);
 			if ( area == null ) {
 				area = defaultArea;
 			}

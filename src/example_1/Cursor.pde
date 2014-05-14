@@ -45,15 +45,15 @@ class Cursor {
 
 	public void cursorDown() {
 		setPitchEtc();
-		myMidi.sendNoteOn(channel,pitch,velocity);
+		midi.sendNoteOn(channel,pitch,velocity);
 	}
 	public void cursorDrag() {
-		myMidi.sendNoteOff(channel,pitch,velocity);
+		midi.sendNoteOff(channel,pitch,velocity);
 		setPitchEtc();
-		myMidi.sendNoteOn(channel,pitch,velocity);
+		midi.sendNoteOn(channel,pitch,velocity);
 	}
 	public void cursorUp() {
-		myMidi.sendNoteOff(channel,pitch,velocity);
+		midi.sendNoteOff(channel,pitch,velocity);
 	}
 };
 

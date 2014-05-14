@@ -2,9 +2,6 @@ import java.util.*;
 
 class Area {
 
-	static Map<String,Area> areas = new HashMap<String,Area>();
-
-
 	Map<Integer,Cursor> cursors;
 	int sidmin;
 	int sidmax;
@@ -27,7 +24,7 @@ class Area {
 		channel = ch;
 	}
 
-	synchronized public void clear_touched() {
+	synchronized public void clearTouched() {
 		for (Integer sid: cursors.keySet()) {
 			Cursor c = cursors.get(sid);
 			c.touched = false;
@@ -74,15 +71,5 @@ class Area {
 			Cursor c = cursors.get(sid);
 			c.draw(width,height,colour);
 		}
-	}
-
-	public static Area findArea(int sid) {
-		for (String a: areas.keySet()) {
-			Area area = areas.get(a); 
-			if ( sid >= area.sidmin && sid <= area.sidmax ) {
-				return area;
-			}
-		}
-		return null;
 	}
 };

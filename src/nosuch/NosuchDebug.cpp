@@ -38,6 +38,13 @@
 #include <list>
 #include "NosuchDebug.h"
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <errno.h>
+#include <string.h>
+
 using namespace std;
 
 int NosuchDebugLevel = 0;
@@ -299,23 +306,35 @@ NosuchForwardSlash(std::string filepath) {
 	return filepath;
 }
 
+BOOL DirectoryExists(const char* path)
+{
+  DWORD dwAttrib = GetFileAttributesA(path);
+
+  return (dwAttrib != INVALID_FILE_ATTRIBUTES && 
+         (dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
+}
+
 std::string
 MmttPath(std::string fn)
 {
 	static std::string savedroot = "";
 	
 	if ( savedroot == "" ) {
-		char* dir = getenv("MMTT");
-		if ( dir != NULL ) {
-			savedroot = std::string(dir);
-			NosuchErrorOutput("Using MMTT environment value for root directory");
-		} else {
-			char* userdir = getenv("USERPROFILE");
-			if ( userdir == NULL ) {
-				NosuchErrorOutput("No value for USERPROFILE!?  using c:\\Users\\Public, which is probably wrong\n");
-				userdir = "c:\\Users\\Public";
+		// If the USERPROFILE directory contains a MultiMultiTouchTouch directory, we use it for everything,
+		// rather than what's in the development directory (which is determined by the MMTT environment variable).
+		// If you want to force the use of the development directory, just rename the USERPROFILE one.
+		char* userdir = getenv("USERPROFILE");
+		if ( userdir == NULL ) {
+			NosuchErrorOutput("No value for USERPROFILE!?  using c:\\Users\\Public, which is probably wrong\n");
+			userdir = "c:\\Users\\Public";
+		}
+		savedroot = NosuchSnprintf("%s\\Documents\\Nosuch Media\\MultiMultiTouchTouch",userdir);
+		if ( ! DirectoryExists(savedroot.c_str()) ) {
+			char* dir = getenv("MMTT");
+			if ( dir != NULL ) {
+				savedroot = std::string(dir);
+				NosuchErrorOutput("Using MMTT environment value for root directory");
 			}
-			savedroot = NosuchSnprintf("%s\\Documents\\Nosuch Media\\MultiMultiTouchTouch",userdir);
 		}
 		NosuchErrorOutput("Using root directory: %s",savedroot.c_str());
 	}

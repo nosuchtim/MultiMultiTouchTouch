@@ -258,10 +258,6 @@ MmttServer::MmttServer(std::string configpath)
 			ErrorPopup(msg.c_str());
 			exit(1);
 		}
-		// Do it again?  There's a bug somewhere where it doesn't get completely initialized
-		// unless you do it twice!?  HACK!!  Do not remove this unless you really test everything (including
-		// registration on a new frame) to make sure everything still works.
-		LoadPatch(_patchFile);
 	}
 
 	if ( _do_sharedmem ) {
@@ -1317,17 +1313,7 @@ MmttServer::processJson(std::string meth, cJSON *params, const char *id) {
 			return error_json(-32000,"Invalid characters in name",id);
 		}
 		_patchFile = nm;
-		std::string err = LoadPatch(_patchFile);
-		if ( err == "" ) {
-#ifdef THIS_IS_AN_OLD_HACK
-			// Not sure this is still needed - it was a bug workaround
-			DEBUGPRINT(("Loading Patch a second time")); // HACK!!
-			(void) LoadPatch(_patchFile);
-#endif
-			return ok_json(id);
-		} else {
-			return error_json(-32000,err.c_str(),id);
-		}
+		return LoadPatch(_patchFile,id);
 	}
 	if ( strcmp(method,"mmtt_increment") == 0 ) {
 		return AdjustValue(params,id,1);
@@ -1698,9 +1684,34 @@ MmttServer::LoadConfigDefaultsJson(cJSON* json)
 	}
 }
 
+// The default value of id is NULL, so the return value of LoadPatch is just a string.
+// If id is non-NULL, then it means we want to return a JSON value.
+std::string
+MmttServer::LoadPatch(std::string patchname, const char *id)
+{
+	std::string err = LoadPatchReal(_patchFile);
+	if ( err == "" ) {
+		// Do it again?  There's a bug somewhere where it doesn't get completely initialized
+		// unless you do it twice!?  HACK!!  Do not remove this unless you really test everything (including
+		// registration on a new frame) to make sure everything still works.
+		DEBUGPRINT(("Loading Patch a second time")); // HACK!!
+		(void) LoadPatchReal(_patchFile);
+		if ( id ) {
+			return ok_json(id);
+		} else {
+			return "";
+		}
+	} else {
+		if ( id ) {
+			return error_json(-32000,err.c_str(),id);
+		} else {
+			return err;
+		}
+	}
+}
 
 std::string
-MmttServer::LoadPatch(std::string patchname)
+MmttServer::LoadPatchReal(std::string patchname)
 {
 	startNewRegions();
 
