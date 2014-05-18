@@ -24,19 +24,19 @@ void setup() {
 	size(800,600);
 	background(0);
 
-	midi = new MidiBus(this, -1, "Microsoft GS Wavetable Synth");
 	areas = new Areas();
 
 	// If you want to send MIDI things to a VST soft synth, use loopMIDI
 	// midi = new MidiBus(this, -1, "loopMIDI Port 1");
+	midi = new MidiBus(this, -1, "Microsoft GS Wavetable Synth");
 
 	oscP5 = new OscP5(this,3333);
 
-	programchange(0,5);
-	programchange(1,20);
-	programchange(2,30);
-	programchange(3,40);
-	programchange(4,50);
+	programchange(0,0);   // channel 1 = acoustic piano
+	programchange(1,4);   // channel 2 = electric piano
+	programchange(2,11);  // channel 3 = vibes
+	programchange(3,80);  // channel 4 = lead (square)
+	programchange(4,88);  // channel 5 = pad (new age)
 
 	Area a0 = new Area(0,999);
 	a0.setColor(color(255,0,0));
@@ -66,6 +66,18 @@ void setup() {
 	defaultArea = a0;
 }
 
+void randomizeprograms() {
+	programchange(0,int(random(127)));
+	programchange(1,int(random(127)));
+	programchange(2,int(random(127)));
+	programchange(3,int(random(127)));
+	programchange(4,int(random(127)));
+}
+
+void keyPressed() {
+	randomizeprograms();
+}
+
 // Send a MIDI program change message.  Both chan and prog values start at 0.
 void programchange(int chan, int prog) {
 	midi.sendMessage( 0xc0 | chan, prog );
@@ -75,7 +87,7 @@ void programchange(int chan, int prog) {
 void draw() {
 
 	// fade things out gradually
-	fill(0,0,0,128);
+	fill(0,0,0,4);
 	rect(0,0,width,height);
 
 	areas.draw();
