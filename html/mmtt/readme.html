@@ -38,8 +38,17 @@ In the "Documents" directory of your Windows login (i.e. %USERPROFILE%\Documents
 you will find a sub-directory named "Nosuch Media/MultiMultiTouchTouch/config".
 The file "mmtt.json" there controls the default behaviour of MMTT.  Edit that file with
 the text editor of your choice, and adjust the values within it to reflect your desires.
-The most important values to adjust are "camera" and "patch".  The "patch" value should be
+The most important values to adjust are "camera" and "patch".
+<p>
+By default, the value for camera is "senz3d", for the Creative Senz3D camera (which can be
+purchased for $170 from Amazon.com).  This camera is very nice for desktop use because it is
+much shorter-range than the Kinect.  If you have a Microsoft Kinect, change the camera value 
+to "kinect".
+<p>
+The "patch" value should be
 the name of a file within the "Nosuch Media/MultiMultiTouchTouch/config/mmtt" directory.
+These files define the regions that are recognized by MMTT - each region is a separate
+3D multitouch surface.
 <h2>Starting MMTT</h2>
 Use the "Start MMTT" shortcut to start the program.
 If you don't see a window, you should see an error popup that explains the reason (e.g.
@@ -53,15 +62,23 @@ When MMTT is running, you interact with it by pointing your browser at
 <h2>Usage Scenarios</h2>
 The 3D multitouch regions that MMTT understands exist within a
 single plane, with the Z direction pointing at the 3D camera.
-To define the regions, you can either use a physical frame (any flat surface with
-large holes) or explicitly specify the region coordinates in the config file.
+To define the regions, you can either explicitly specify the region coordinates in the config file, or use a physical frame (any flat surface with large holes).
 MMTT was primarily designed to be used with a physical frame
 (like the <a href=http://spacepalette.com>Space Palette</a>),
 which simplifies the
 registration of the regions as well as
 providing visual guidance for both the player and audience.
+<h3>Using coordinates to define the regions</h3>
+If you don't have a physical frame, the easiest way to define the regions is to specify
+the coordinates explicitly in the config file.   The file
+config/mmtt/quadrants320.json is an example which defines four regions that cover
+the entire camera field of view.  The "regions" value in the file defines four regions.
+The "first_sid" value in a region defines the first SID (the TUIO Session ID) for each
+cursor (hand or object) that appears in that region.  For example, if "first_sid" is 2000,
+the first hand in that region will have SID 2000, the second hand will have
+SID 2001, and so on.
 <h3>Using a physical frame to define the regions</h3>
-To use a physical frame, first you need to build one.
+To use a physical frame, first you need to make one.
 One easy and quick way is to cut holes in a sheet of foam core board.
 Anything that is flat and has large open regions will do.
 The open regions don't have to be rectangular, but should be at least a few inches high and/or wide.
@@ -69,7 +86,7 @@ The parts of the frame between the open regions should be at least 1/2" wide,
 so that the 3D camera can see them.
 <p>
 Using a physical frame requires a one-time operation that "registers" the regions of the frame,
-determining the coordinates of the regions.
+determining the coordinates of the regions.  Here are the steps.
 <ol>
 <li>Put the frame in front of the 3D camera.
 <li>Start the MMTT program
@@ -108,10 +125,11 @@ This will save two files - a .json file with the
 current control parameters, and a .ppm (portable pix map) image file with the current region map that you've just defined.
 </ol>
 <p>
-After registering a particular frame and saving its configuration, you
-can subsequently just start the
-MMTT program and load the saved configuration.   If you move
-the 3D camera or the frame, you may have to tweak the threshold parameters and/or
+After registering a particular frame and saving its configuration (which ends up
+as a file in the config/mmtt directory), you
+can subsequently restart the MMTT program and load the saved configuration.
+Setting the "patch" value in the config/mmtt.json file will set the default configuration.
+If you move the 3D camera or the frame, you may have to tweak the threshold parameters and/or
 re-register and re-save the configuration.
 If things have only moved slightly, you should be able
 to just press the "RePoke" button at the top of the
