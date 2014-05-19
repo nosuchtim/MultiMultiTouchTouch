@@ -285,10 +285,10 @@ project Flags=0x20 {
 			str Value: Default="MultiMultiTouchTouch-Setup";
 		}
 		var BuildDate: Flags=0x5, Type=0, Description="Build date as YYYYMMDD" {
-			str Value: Default=20140513;
+			str Value: Default=20140518;
 		}
 		var BuildDayNo: Flags=0x5, Type=0, Description="Build day number, starting from 1 January 2000" {
-			str Value: Default=5247;
+			str Value: Default=5252;
 		}
 		var BuildFolder: Flags=0x5, Type=1, Description="Folder containing the build target" {
 			str Value: Default="C:\\Users\\tjt\\Documents\\GitHub\\MultiMultiTouchTouch\\src\\installer\\MultiMultiTouchTouch_32bit\\mmtt";
@@ -303,7 +303,7 @@ project Flags=0x20 {
 			str Value: Default="C:\\Users\\tjt\\Documents\\GitHub\\MultiMultiTouchTouch\\src\\installer\\MultiMultiTouchTouch_32bit\\mmtt\\MultiMultiTouchTouch-Setup.exe";
 		}
 		var BuildTime: Flags=0x5, Type=0, Description="Build time as HHMMSS" {
-			str Value: Default=171802;
+			str Value: Default=185854;
 		}
 		var BuildType: Flags=0x5, Type=0, Description="Build type: always TSU" {
 			str Value: Default=TSU;
@@ -601,7 +601,7 @@ project Flags=0x20 {
 			str Value: Default="<MSOfficeDir14=MSOfficeDir12=MSOfficeDir11=MSOfficeDir10=MSOfficeDir9=MSOfficeDir8=!<ProgramFilesFolder>\\Microsoft Office\\Office>";
 		}
 		var PackageCode: Flags=0x205, Type=0, Description="Distribution package GUID" {
-			str Value: Default="{5F649ECB-8163-42D9-5F32-7D98A91C094D}";
+			str Value: Default="{C7C095FD-E737-4CAD-5146-1BCC31B8027B}";
 		}
 		var PersonalFolder: Flags=0x244, Type=1, Description="Current User Documents folder" {
 			str Value: Default="<$shpath(5)=@<ShellFoldersCU>\\Personal=_LocPersonalFolder>";
@@ -756,7 +756,7 @@ project Flags=0x20 {
 			str Value: Default="<$sysval(4)>";
 		}
 		var SessionID: Flags=0x204, Type=0, Description="Pseudo-random 8-character session identifier" {
-			str Value: Default="27814CB2";
+			str Value: Default=BD00F91E;
 		}
 		var ShellFoldersCU: Flags=0x20C, Type=2, Description="Current User Shell folders registry key" {
 			str Value: Default="<HKCU>\\<WinCurVer>\\Explorer\\Shell Folders";
@@ -2475,6 +2475,15 @@ project Flags=0x20 {
 								}
 								file example_1.pde_0D4369765A35F0DC: Flags=0x0, Component=DROPPED_20140330161628, Path="..\\example_1\\example_1.pde", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
 									str Name: Default=example_1.pde;
+								}
+								file runit.bat_11EE9BBA70BC5066: Flags=0x0, Component=example_1_2C2184633DD3E736, Path="..\\example_1\\runit.bat", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+									str Name: Default=runit.bat;
+								}
+								file Sprite.pde_B24F9489BA5EAE66: Flags=0x0, Component=example_1_2C2184633DD3E736, Path="..\\example_1\\Sprite.pde", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+									str Name: Default=Sprite.pde;
+								}
+								file Sprites.pde_87E6468EFE525C13: Flags=0x0, Component=example_1_2C2184633DD3E736, Path="..\\example_1\\Sprites.pde", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+									str Name: Default=Sprites.pde;
 								}
 							}
 							folder Folder1_419118276212BB7E: Flags=0x0, Component=Folder1_419118276212BB7E, Traits=0x80000000, InstallAction=0, RemoveAction=1 {

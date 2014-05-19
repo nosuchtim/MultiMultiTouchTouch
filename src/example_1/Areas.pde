@@ -12,13 +12,6 @@ public class Areas {
 		areaMap.put(name,a);
 	}
 
-	public void draw() {
-		for (String a: areaMap.keySet()) {
-			Area area = areaMap.get(a); 
-			area.draw();
-		}
-	}
-
 	public void clearTouched() {
 		for (String a: areaMap.keySet()) {
 			Area area = areaMap.get(a); 

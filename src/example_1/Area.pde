@@ -2,11 +2,12 @@ import java.util.*;
 
 class Area {
 
+	color colour;
+	int channel;	// 0-15
+
 	Map<Integer,Cursor> cursors;
 	int sidmin;
 	int sidmax;
-	color colour;
-	int channel;
 
 	Area(int mn, int mx) {
 		sidmin = mn;
@@ -14,14 +15,6 @@ class Area {
 		cursors = new HashMap<Integer,Cursor>();
 		colour = color(255,255,255,255);
 		channel = 0;
-	}
-
-	void setColor(color c) {
-		colour = c;
-	}
-
-	void setChannel(int ch) {	// 0-15
-		channel = ch;
 	}
 
 	synchronized public void clearTouched() {
@@ -43,15 +36,14 @@ class Area {
 		if ( cursors.containsKey(sid) ) {
 			c = (Cursor) cursors.get(sid);
 			c.setPosition(x,y,z);
-			c.cursorDrag();
+			cursorDragEvent(this,c);
 		} else {
 			c = new Cursor(sid,channel);
 			c.setPosition(x,y,z);
 			cursors.put(sid,c);
-			c.cursorDown();
+			cursorDownEvent(this,c);
 		}
 	}
-
 
 	synchronized public void checkCursorUp() {
 		Iterator iter = cursors.entrySet().iterator();
@@ -60,16 +52,10 @@ class Area {
 			Cursor c = (Cursor) pair.getValue();
 			int sid = (Integer) pair.getKey();
 			if ( ! c.touched ) {
-				c.cursorUp();
+				cursorUpEvent(this,c);
 				iter.remove();
 			}
 		}
 	}
 
-	synchronized public void draw() {
-		for (Integer sid: cursors.keySet()) {
-			Cursor c = cursors.get(sid);
-			c.draw(width,height,colour);
-		}
-	}
 };
