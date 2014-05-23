@@ -285,10 +285,10 @@ project Flags=0x20 {
 			str Value: Default="MultiMultiTouchTouch-Setup";
 		}
 		var BuildDate: Flags=0x5, Type=0, Description="Build date as YYYYMMDD" {
-			str Value: Default=20140518;
+			str Value: Default=20140523;
 		}
 		var BuildDayNo: Flags=0x5, Type=0, Description="Build day number, starting from 1 January 2000" {
-			str Value: Default=5252;
+			str Value: Default=5257;
 		}
 		var BuildFolder: Flags=0x5, Type=1, Description="Folder containing the build target" {
 			str Value: Default="C:\\Users\\tjt\\Documents\\GitHub\\MultiMultiTouchTouch\\src\\installer\\MultiMultiTouchTouch_32bit\\mmtt";
@@ -303,7 +303,7 @@ project Flags=0x20 {
 			str Value: Default="C:\\Users\\tjt\\Documents\\GitHub\\MultiMultiTouchTouch\\src\\installer\\MultiMultiTouchTouch_32bit\\mmtt\\MultiMultiTouchTouch-Setup.exe";
 		}
 		var BuildTime: Flags=0x5, Type=0, Description="Build time as HHMMSS" {
-			str Value: Default=185854;
+			str Value: Default=131234;
 		}
 		var BuildType: Flags=0x5, Type=0, Description="Build type: always TSU" {
 			str Value: Default=TSU;
@@ -601,7 +601,7 @@ project Flags=0x20 {
 			str Value: Default="<MSOfficeDir14=MSOfficeDir12=MSOfficeDir11=MSOfficeDir10=MSOfficeDir9=MSOfficeDir8=!<ProgramFilesFolder>\\Microsoft Office\\Office>";
 		}
 		var PackageCode: Flags=0x205, Type=0, Description="Distribution package GUID" {
-			str Value: Default="{C7C095FD-E737-4CAD-5146-1BCC31B8027B}";
+			str Value: Default="{426599CA-F0CB-4C5A-51B1-0C30B41D0E4C}";
 		}
 		var PersonalFolder: Flags=0x244, Type=1, Description="Current User Documents folder" {
 			str Value: Default="<$shpath(5)=@<ShellFoldersCU>\\Personal=_LocPersonalFolder>";
@@ -756,7 +756,7 @@ project Flags=0x20 {
 			str Value: Default="<$sysval(4)>";
 		}
 		var SessionID: Flags=0x204, Type=0, Description="Pseudo-random 8-character session identifier" {
-			str Value: Default=BD00F91E;
+			str Value: Default="91E4C18C";
 		}
 		var ShellFoldersCU: Flags=0x20C, Type=2, Description="Current User Shell folders registry key" {
 			str Value: Default="<HKCU>\\<WinCurVer>\\Explorer\\Shell Folders";
@@ -2261,15 +2261,22 @@ project Flags=0x20 {
 								str Title: Default="Install Processing";
 								str Arguments: Default="x -y -o<PersonalFolder> Processing.zip";
 							}
-							shlink Shortcut1_E346105764731EF1: Flags=0x0, TargetPath="<#runexample.bat_75EEABAE3B3C3D5C>", WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=0 {
-								str Title: Default="Run example_1";
-								str Arguments: Default=example_1;
+							shlink Shortcut1_E346105764731EF1: Flags=0x0, TargetPath="<#installall.bat_90431AD1DABC946F>", WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=0 {
+								str Title: Default="Install EVERYTHING";
 							}
 							shlink Shortcut1_E346105764731EF2: Flags=0x0, TargetPath="<#runprocessing.bat_A49DCB928035D1C8>", WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=0 {
 								str Title: Default="Run Processing";
 							}
+							shlink Shortcut1_E346105764731EF3: Flags=0x0, TargetPath="<#runexample.bat_75EEABAE3B3C3D5C>", WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=0 {
+								str Title: Default="Run example_1";
+								str Arguments: Default=example_1;
+							}
+							shlink Shortcut1_E346105764731EF4: Flags=0x0, TargetPath=explorer, WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=0 {
+								str Title: Default="Open config directory";
+								str Arguments: Default="\"%USERPROFILE%\\Documents\\Nosuch Media\\MultiMultiTouchTouch/config\"";
+							}
 							shlink Shortcut5_BFBC40DE86B7E40D: Flags=0x0, TargetPath="http://127.0.0.1:4444", IconIndex=0, ShowCmd=0 {
-								str Title: Default="Browser-based Config (MMTT must be running)";
+								str Title: Default="Browser Interface (MMTT must be running)";
 							}
 							shlink Shortcut5_BFBC40DE86B7E40D1: Flags=0x0, TargetPath="file:///<PersonalFolder>/<Publisher>/<ProductName>/html/mmtt/readme.html", IconIndex=0, ShowCmd=0 {
 								str Title: Default=README;
@@ -2293,12 +2300,12 @@ project Flags=0x20 {
 								str Title: Default=MMTT;
 							}
 							shlink Shortcut_to_osclisten.bat_F5FC72ABC040B770: Flags=0x0, Component=Product, TargetPath="<#oscutil.exe_EAEE736D582545BA>", WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=0 {
-								str Title: Default="OSC TEST - Listen on port 3333";
+								str Title: Default="Monitor OSC port 3333";
 								str Arguments: Default="listen 3333";
 							}
 							shlink Shortcut_to_taildebug.bat_76A53AB756AF850B: Flags=0x0, Component=Product, TargetPath="<#tail.exe_FE421BFFCF0D2977>", WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=0 {
 								str Title: Default="Monitor debug output";
-								str Arguments: Default="-f \"<CommonDocumentsFolder>\\Nosuch Media\\MultiMultiTouchTouch\\log\\mmtt.debug\"";
+								str Arguments: Default="-f \"%USERPROFILE%\\Documents\\Nosuch Media\\MultiMultiTouchTouch\\log\\mmtt.debug\"";
 							}
 						}
 					}
@@ -2442,17 +2449,20 @@ project Flags=0x20 {
 								}
 								folder mmtt_99A8B249BF306A3E: Flags=0x0, Component=config_A1EBBC7E6C02D007, Traits=0x80000000, InstallAction=0, RemoveAction=1 {
 									str Name: Default=mmtt;
-									file fullscreen320.json_E4BF4EE1DCD7DAB4: Flags=0x0, Component=config_A1EBBC7E6C02D007, Path="..\\..\\config\\mmtt\\fullscreen320.json", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
-										str Name: Default=fullscreen320.json;
+									file colorexample.ppm_EF9A66F72D9A60F1: Flags=0x0, Component=config_A1EBBC7E6C02D007, Path="..\\..\\config\\mmtt\\colorexample.ppm", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+										str Name: Default=colorexample.ppm;
 									}
 									file fullscreen_kinect.json_5090CAB88EE0C480: Flags=0x0, Component=config_A1EBBC7E6C02D007, Path="..\\..\\config\\mmtt\\fullscreen_kinect.json", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
 										str Name: Default=fullscreen_kinect.json;
 									}
-									file fullscreen_kinect2.json_CEAEB14D86BC412B: Flags=0x0, Component=config_A1EBBC7E6C02D007, Path="..\\..\\config\\mmtt\\fullscreen_kinect2.json", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
-										str Name: Default=fullscreen_kinect2.json;
+									file fullscreen_senz3d.json_E8AB6CB1E6F858D9: Flags=0x0, Component=config_A1EBBC7E6C02D007, Path="..\\..\\config\\mmtt\\fullscreen_senz3d.json", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+										str Name: Default=fullscreen_senz3d.json;
 									}
-									file quadrants320.json_8F1ECF4DCC147A6A: Flags=0x0, Component=config_A1EBBC7E6C02D007, Path="..\\..\\config\\mmtt\\quadrants320.json", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
-										str Name: Default=quadrants320.json;
+									file quadrants_kinect.json_EA2D08F2F5066B00: Flags=0x0, Component=config_A1EBBC7E6C02D007, Path="..\\..\\config\\mmtt\\quadrants_kinect.json", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+										str Name: Default=quadrants_kinect.json;
+									}
+									file quadrants_senz3d.json_90D94D615328E065: Flags=0x0, Component=config_A1EBBC7E6C02D007, Path="..\\..\\config\\mmtt\\quadrants_senz3d.json", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+										str Name: Default=quadrants_senz3d.json;
 									}
 									file small4.json_40F4CF967B77238E: Flags=0x0, Component=config_A1EBBC7E6C02D007, Path="..\\..\\config\\mmtt\\small4.json", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
 										str Name: Default=small4.json;
@@ -2684,6 +2694,9 @@ project Flags=0x20 {
 					file DepthSenseSDK_1.2.0.814_win32.exe_72E70521AD66085E: Flags=0x0, Component=Product, Path="..\\..\\other\\senz3d\\DepthSenseSDK-1.2.0.814-win32.exe", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=2000, Packaging=0 {
 						str Name: Default="DepthSenseSDK-1.2.0.814-win32.exe";
 					}
+					file installall.bat_90431AD1DABC946F: Flags=0x0, Component=Product, Path="..\\..\\bin\\installall.bat", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+						str Name: Default=installall.bat;
+					}
 					file intel_pc_sdk_runtime_ia32_9817.msi_3AE29F9B843733A7: Flags=0x0, Component=Product, Path="..\\..\\other\\senz3d\\intel_pc_sdk_runtime_ia32_9817.msi", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
 						str Name: Default=intel_pc_sdk_runtime_ia32_9817.msi;
 					}
@@ -2714,8 +2727,8 @@ project Flags=0x20 {
 					file oscutil.exe_EAEE736D582545BA: Flags=0x0, Component=Product, Path="..\\..\\bin\\oscutil.exe", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=2000, Packaging=0 {
 						str Name: Default=oscutil.exe;
 					}
-					file processing.zip_812700E70910A2A0: Flags=0x0, Component=Product, Path="..\\..\\other\\processing-2.1.2-windows32\\Processing.zip", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
-						str Name: Default=Processing.zip;
+					file processing.zip_812700E70910A2A0: Flags=0x0, Component=Product, Path="..\\..\\other\\processing-2.2.1-windows32\\Processing.zip", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+						str Name: Flags=0x10000, Default=Processing.zip;
 					}
 					file pthreadVC2.dll_7681FD2AAC2E3100: Flags=0x0, Component=Product, Path="..\\..\\other\\pthreads-w32-2-9-1-release\\Pre-built.2\\dll\\x86\\pthreadVC2.dll", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=1000, Packaging=0 {
 						str Name: Default=pthreadVC2.dll;

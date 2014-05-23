@@ -10,7 +10,7 @@
 
   "camera": "senz3d",         # Other possible values: kinect, kinect2
 
-  "patch": "quadrants320",   # Name of a file in the config/mmtt directory
+  "patch": "quadrants_senz3d",   # Name a file in the config/mmtt directory
 
   "initialalign": 0,          # If initialalign is 1, an auto-alignment
                               # will be done at startup.  If you don't want
@@ -21,6 +21,8 @@
   "tuio.25d.clientlist": "127.0.0.1:3333",
                               # A comma-separated of destinations
                               # to which TUIO/osc messages are sent.
+  "sharedmem": 1,
+  "sharedmemname": "mmtt_outlines",
 
   "debugtolog": 1             # If 1, send debug messages to the log directory
 

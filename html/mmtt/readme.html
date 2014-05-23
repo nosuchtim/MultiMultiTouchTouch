@@ -22,13 +22,18 @@ one of its applications, you can find YouTube videos and and more details at
 This document describes how to use MMTT.
 <h2>Installation</h2>
 If you're reading this document, you've already installed the MMTT package.
+You'll find a number of program shortcuts for various things
+in the "All Programs -> Nosuch Media -> MultiMultiTouchTouch" directory.
 If this is the first time you've installed it,
-you may need to install a few other things, for which you'll find shortcuts in the
-"All Programs -> Nosuch Media -> MultiMultiTouchTouch" directory.  These shortcuts are:
+you will probably need to install a few other things (like the 3D camera
+drivers), which you can do by running:
+<ol>
+	<li>"Install EVERYTHING"
+</ol>
+If you want to be more selective (for example if you already have Kinect or Senz3D drivers installed), the shortcuts for installing individual prerequisites are:
 <ol>
 	<li>Install Kinect Runtime
 	<li>Install Kinect SDK
-	<li>Install loopMIDI
 	<li>Install Processing
 	<li>Install Senz3D Runtime
 	<li>Install Senz3D SDK
@@ -36,19 +41,23 @@ you may need to install a few other things, for which you'll find shortcuts in t
 <h2>Configuration Files</h2>
 In the "Documents" directory of your Windows login (i.e. %USERPROFILE%\Documents ),
 you will find a sub-directory named "Nosuch Media/MultiMultiTouchTouch/config".
-The file "mmtt.json" there controls the default behaviour of MMTT.  Edit that file with
-the text editor of your choice, and adjust the values within it to reflect your desires.
+You can open this directory using "Open configuration directory".
+The file "mmtt.json" there controls the default behaviour of MMTT.
+Edit that file with the text editor of your choice, and adjust the values
+within it to reflect your desires.
 The most important values to adjust are "camera" and "patch".
 <p>
-By default, the value for camera is "senz3d", for the Creative Senz3D camera (which can be
-purchased for $170 from Amazon.com).  This camera is very nice for desktop use because it is
-much shorter-range than the Kinect.  If you have a Microsoft Kinect, change the camera value 
-to "kinect".
+By default, the value for camera is "senz3d", for the
+Creative Senz3D camera (which can be purchased for $170 from Amazon.com).
+This camera is very nice for desktop use because it is
+much shorter-range than the Kinect.  If you have a Microsoft Kinect,
+change the camera value to "kinect".
 <p>
 The "patch" value should be
 the name of a file within the "Nosuch Media/MultiMultiTouchTouch/config/mmtt" directory.
 These files define the regions that are recognized by MMTT - each region is a separate
 3D multitouch surface.
+By default, the value of "patch" is "quadrants_senz3d".  If you are using a Kinect, change the vlue to "quadrants_kinect".
 <h2>Starting MMTT</h2>
 Use the "Start MMTT" shortcut to start the program.
 If you don't see a window, you should see an error popup that explains the reason (e.g.
@@ -71,16 +80,19 @@ providing visual guidance for both the player and audience.
 <h3>Using coordinates to define the regions</h3>
 If you don't have a physical frame, the easiest way to define the regions is to specify
 the coordinates explicitly in the config file.   The file
-config/mmtt/quadrants320.json is an example which defines four regions that cover
-the entire camera field of view.  The "regions" value in the file defines four regions.
-The "first_sid" value in a region defines the first SID (the TUIO Session ID) for each
-cursor (hand or object) that appears in that region.  For example, if "first_sid" is 2000,
+config/mmtt/quadrants_senz3d.json is an example which defines
+four regions that cover the entire camera field of view.
+The "regions" value in the file defines four regions.
+The "first_sid" value in a region defines the first SID
+(the TUIO Session ID) for each
+cursor (hand or object) that appears in that region.  For example,
+if "first_sid" is 2000,
 the first hand in that region will have SID 2000, the second hand will have
 SID 2001, and so on.
 <h3>Using a physical frame to define the regions</h3>
 To use a physical frame, first you need to make one.
 One easy and quick way is to cut holes in a sheet of foam core board.
-Anything that is flat and has large open regions will do.
+Anything that is flat and has large open regions will work.
 The open regions don't have to be rectangular, but should be at least a few inches high and/or wide.
 The parts of the frame between the open regions should be at least 1/2" wide,
 so that the 3D camera can see them.
@@ -125,11 +137,13 @@ This will save two files - a .json file with the
 current control parameters, and a .ppm (portable pix map) image file with the current region map that you've just defined.
 </ol>
 <p>
-After registering a particular frame and saving its configuration (which ends up
-as a file in the config/mmtt directory), you
-can subsequently restart the MMTT program and load the saved configuration.
-Setting the "patch" value in the config/mmtt.json file will set the default configuration.
-If you move the 3D camera or the frame, you may have to tweak the threshold parameters and/or
+The saved configuration will be in the config/mmtt directory,
+with a .json suffix.
+You can edit this configuration manually with a text editor, if you prefer.
+Setting the "patch" value in the config/mmtt.json file will set the
+default configuration.
+If you move the 3D camera or the frame, you may have to
+tweak the threshold parameters and/or
 re-register and re-save the configuration.
 If things have only moved slightly, you should be able
 to just press the "RePoke" button at the top of the
@@ -138,7 +152,7 @@ currently-configured regions.
 After doing this, you should save the configuration again.
 <p>
 <h3>Using a specially-color image to define the regions</h3>
-If you look at the image file <b>reference.ppm</b> (which
+If you look at the image file <b>colorexample.ppm</b> (which
 is a Portable Pixmap image), you will see the type of colored image
 that can be used to configure MMTT without having a physical frame.
 Each different color identifies a different region.  White is used to identify
@@ -160,28 +174,19 @@ will show you the raw depth image with no thresholding.
 By default, the TUIO output of MMTT gets sent to port 3333 of host 127.0.0.1,
 using the profile for 25D surfaces
 (i.e. the OSC messages start with /tuio/25Dblb).
-You can change this by using the -n option, letting you can specify one or more semicolon-separated host:port values.
-For example, -n127.0.0.1:3333;127.0.0.1:7777 would tell MMTT to send TUIO
-to two clients on host 127.0.0.1, one at port 3333 and one at port 7777.
+You can change this by setting the "tuio.25d.clientlist" value in the "mmtt.json" file.  This value is a semicolon-separated list of host:port values.
+For example, if you set the value to "127.0.0.1:3333;127.0.0.1:7777",
+it would tell MMTT to send TUIO to two clients on your local host (127.0.0.1),
+one at port 3333 and one at port 7777.
+If you are on a network, you can specify other hosts as well.
 <p>
 If you want to interact with programs that expect the TUIO 2D profile,
-you can tell MMTT to use the 2D profile by using the -o option.
-For example, -o127.0.0.1:3333 would tell MMTT to send TUIO messages using
-the 2D profile to a clients on host 127.0.0.1 at port 3333.
+you can tell MMTT to use the 2D profile by setting the "tuio.2d.clientlist"
+value in the "mmtt.json" configuration file.
 <p>
-The TUIO session id's indicate the region of the frame by multiplying the region id by 1000 and adding it to the session id.  So, if you see session id's 2000, 2001, 5000, and 5001, you know that 4 hands have been detected - 2 in region 2 and 2 in region 5.
-<h3>Command-line Options</h3>
-Note: there is no space between an option letter and its value (when it has a value).
-<p>
-<table>
-<tr><td width=5%></td><td width=15%>-f</td><td width=40%>Disable auto-flushing of debug output</td></tr>
-<tr><td></td><td>-h<i>html-directory</i></td><td>Specify the directory from which to serve HTML</td></tr>
-<tr><td></td><td>-l<i>logfile</i></td><td>Specify the debug log filename</td></tr>
-<tr><td></td><td>-L</td><td>Disable debugging to log file</td></tr>
-<tr><td></td><td>-D</td><td>Disable all debug output</td></tr>
-<tr><td></td><td>-o<i>host:port</i></td><td>Specify the host:port to receive 2D TUIO messages (multiple values can be separated by semicolons)</td></tr>
-<tr><td></td><td>-n<i>host:port</i></td><td>Specify the host:port to receive 25D TUIO messages (multiple values can be separated by semicolons)</td></tr>
-</table>
-</ul>
+The TUIO session IDs indicate which region of the frame they are from.
+The session ID values are specified in the patch file for a configuration,
+with the "first_sid" value.  If you train by using a physical frame,
+the values of
 <h3>Questions, etc.</h3>
 Send email to me@timthompson.com

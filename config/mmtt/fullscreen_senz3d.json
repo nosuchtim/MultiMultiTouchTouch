@@ -1,8 +1,8 @@
 {
   "autowindow": 80,
 
-  "depth_detect_bottom": 500,
-  "depth_detect_top": 500,
+  "depth_detect_bottom": 520,
+  "depth_detect_top": 515,
   "depth_align": 540,
 
   "blob_filter": 1,
@@ -24,10 +24,7 @@
   "edge_top": 0,
   "usemask": 0,
   "regions": [
-    { "first_sid": 1000, "x": 0, "y": 0, "width": 160, "height": 120} ,
-    { "first_sid": 2000, "x": 160, "y": 0, "width": 160, "height": 120} ,
-    { "first_sid": 3000, "x": 160, "y": 120, "width": 160, "height": 120} ,
-    { "first_sid": 4000, "x": 0, "y": 120, "width": 160, "height": 120}
+    { "first_sid": 1000, "x": 0, "y": 0, "width": 320, "height": 240}
   ]
 
 }

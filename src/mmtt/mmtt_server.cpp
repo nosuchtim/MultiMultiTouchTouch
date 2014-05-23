@@ -635,11 +635,12 @@ MmttServer::shmem_update_outlines(MMTT_SharedMemHeader* h,
 	for ( int i=0; i<numblobs; i++ ) {
 
 		MmttRegion* r = blob_region[i];
-		if ( r == NULL )
+		int sid = blob_sid[i];
+		if ( r == NULL || sid < 0 ) {
 			continue;
+		}
 		CBlob *blob = _newblobresult->GetBlob(i);
 
-		int sid = blob_sid[i];
 		int tuio_sid = tuioSessionId(r,sid);
 		MmttSession* sess = r->_sessions[sid];
 
@@ -2621,18 +2622,22 @@ MmttServer::doTuio2( int nactive, int numblobs, std::vector<int> &blob_sid, std:
 		msg.addStringArg("alive");
 		for ( int i=0; i<numblobs; i++ ) {
 			MmttRegion* r = blob_region[i];
-			if ( r == NULL )
+			int sid = blob_sid[i];
+			if ( r == NULL || sid < 0 ) {
 				continue;
+			}
 			CBlob *blob = _newblobresult->GetBlob(i);
-			int tuio_sid = tuioSessionId(r,blob_sid[i]);
+			int tuio_sid = tuioSessionId(r,sid);
 			msg.addIntArg(tuio_sid);
 		}
 		bundle.addMessage(msg);
 
 		for ( int i=0; i<numblobs; i++ ) {
 			MmttRegion* r = blob_region[i];
-			if ( r == NULL )
+			int sid = blob_sid[i];
+			if ( r == NULL || sid < 0 ) {
 				continue;
+			}
 			CBlob *blob = _newblobresult->GetBlob(i);
 			CvRect blobrect = blob->GetBoundingBox();
 
@@ -2645,7 +2650,6 @@ MmttServer::doTuio2( int nactive, int numblobs, std::vector<int> &blob_sid, std:
 			float y = float(dy);
 			normalize_region_xy(x,y,regionrect);
 
-			int sid = blob_sid[i];
 			int tuio_sid = tuioSessionId(r,sid);
 
 			MmttSession* sess = r->_sessions[sid];
@@ -2794,18 +2798,22 @@ MmttServer::doTuio1_25D( int nactive, int numblobs, std::vector<int> &blob_sid, 
 		msg.addStringArg("alive");
 		for ( int i=0; i<numblobs; i++ ) {
 			MmttRegion* r = blob_region[i];
-			if ( r == NULL )
+			int sid = blob_sid[i];
+			if ( r == NULL || sid < 0 ) {
 				continue;
+			}
 			CBlob *blob = _newblobresult->GetBlob(i);
-			int tuio_sid = tuioSessionId(r,blob_sid[i]);
+			int tuio_sid = tuioSessionId(r,sid);
 			msg.addIntArg(tuio_sid);
 		}
 		bundle.addMessage(msg);
 
 		for ( int i=0; i<numblobs; i++ ) {
 			MmttRegion* r = blob_region[i];
-			if ( r == NULL )
+			int sid = blob_sid[i];
+			if ( r == NULL || sid < 0 ) {
 				continue;
+			}
 			CBlob *blob = _newblobresult->GetBlob(i);
 			CvRect blobrect = blob->GetBoundingBox();
 
@@ -2822,7 +2830,6 @@ MmttServer::doTuio1_25D( int nactive, int numblobs, std::vector<int> &blob_sid, 
 			float e_ymax = (float)(mmtt_values["expand_ymax"]->value);
 			normalize_region_xy(x,y,regionrect,efactor,e_xmin,e_xmax,e_ymin,e_ymax);
 
-			int sid = blob_sid[i];
 			int tuio_sid = tuioSessionId(r,sid);
 
 			MmttSession* sess = r->_sessions[sid];
@@ -2899,18 +2906,22 @@ MmttServer::doTuio1_2D( int nactive, int numblobs, std::vector<int> &blob_sid, s
 		msg.addStringArg("alive");
 		for ( int i=0; i<numblobs; i++ ) {
 			MmttRegion* r = blob_region[i];
-			if ( r == NULL )
+			int sid = blob_sid[i];
+			if ( r == NULL || sid < 0 ) {
 				continue;
+			}
 			CBlob *blob = _newblobresult->GetBlob(i);
-			int tuio_sid = tuioSessionId(r,blob_sid[i]);
+			int tuio_sid = tuioSessionId(r,sid);
 			msg.addIntArg(tuio_sid);
 		}
 		bundle.addMessage(msg);
 
 		for ( int i=0; i<numblobs; i++ ) {
 			MmttRegion* r = blob_region[i];
-			if ( r == NULL )
+			int sid = blob_sid[i];
+			if ( r == NULL || sid < 0 ) {
 				continue;
+			}
 			CBlob *blob = _newblobresult->GetBlob(i);
 			CvRect blobrect = blob->GetBoundingBox();
 
@@ -2921,7 +2932,6 @@ MmttServer::doTuio1_2D( int nactive, int numblobs, std::vector<int> &blob_sid, s
 			float y = (float)blobcenter.y;
 			normalize_region_xy(x,y,regionrect);
 
-			int sid = blob_sid[i];
 			int tuio_sid = tuioSessionId(r,sid);
 
 			// MmttSession* sess = r->_sessions[sid];

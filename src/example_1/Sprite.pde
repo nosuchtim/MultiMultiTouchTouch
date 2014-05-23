@@ -1,5 +1,13 @@
 import java.util.*;
 
+///////////////////////////////////////////////////////////////////////////
+//
+// A Sprite is a moving graphical entity.
+//
+// Modify the code in the draw() method to change what it looks like.
+//
+///////////////////////////////////////////////////////////////////////////
+
 class Sprite {
 
 	float x;
@@ -28,11 +36,17 @@ class Sprite {
 	}
 
 	void draw() {
+
 		int x0 = (int)(width * x);
 		int y0 = (int)(height * y);
+
+		// The size the sprite is dependent
+		// on the Z value (depth) of the cursor
 		int w = (int)(width * z);
 		int h = (int)(height * z);
+
 		fill(colour,alpha);
+
 		rect(x0,y0,w,h);
 	}
 

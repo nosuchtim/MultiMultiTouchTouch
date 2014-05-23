@@ -62,6 +62,7 @@ void cursorDownEvent(Area a, Cursor c) {
 	c.pitch = pitchOf(c);
 	midi.sendNoteOn(a.channel, c.pitch, velocityOf(c));
 
+	// Generate a Sprite using the cursor position
 	Sprite s = new Sprite(c.x,c.y,c.z,a.colour);
 
 	// The motion of the sprite is random in each direction
