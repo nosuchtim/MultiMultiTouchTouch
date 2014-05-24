@@ -303,7 +303,7 @@ project Flags=0x20 {
 			str Value: Default="C:\\Users\\tjt\\Documents\\GitHub\\MultiMultiTouchTouch\\src\\installer\\MultiMultiTouchTouch_32bit\\mmtt\\MultiMultiTouchTouch-Setup.exe";
 		}
 		var BuildTime: Flags=0x5, Type=0, Description="Build time as HHMMSS" {
-			str Value: Default=131234;
+			str Value: Default=151652;
 		}
 		var BuildType: Flags=0x5, Type=0, Description="Build type: always TSU" {
 			str Value: Default=TSU;
@@ -601,7 +601,7 @@ project Flags=0x20 {
 			str Value: Default="<MSOfficeDir14=MSOfficeDir12=MSOfficeDir11=MSOfficeDir10=MSOfficeDir9=MSOfficeDir8=!<ProgramFilesFolder>\\Microsoft Office\\Office>";
 		}
 		var PackageCode: Flags=0x205, Type=0, Description="Distribution package GUID" {
-			str Value: Default="{426599CA-F0CB-4C5A-51B1-0C30B41D0E4C}";
+			str Value: Default="{EC3EBF74-7CD2-414E-5CA5-80291A4628F2}";
 		}
 		var PersonalFolder: Flags=0x244, Type=1, Description="Current User Documents folder" {
 			str Value: Default="<$shpath(5)=@<ShellFoldersCU>\\Personal=_LocPersonalFolder>";
@@ -756,7 +756,7 @@ project Flags=0x20 {
 			str Value: Default="<$sysval(4)>";
 		}
 		var SessionID: Flags=0x204, Type=0, Description="Pseudo-random 8-character session identifier" {
-			str Value: Default="91E4C18C";
+			str Value: Default="47DA8552";
 		}
 		var ShellFoldersCU: Flags=0x20C, Type=2, Description="Current User Shell folders registry key" {
 			str Value: Default="<HKCU>\\<WinCurVer>\\Explorer\\Shell Folders";
@@ -2271,12 +2271,12 @@ project Flags=0x20 {
 								str Title: Default="Run example_1";
 								str Arguments: Default=example_1;
 							}
-							shlink Shortcut1_E346105764731EF4: Flags=0x0, TargetPath=explorer, WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=0 {
-								str Title: Default="Open config directory";
-								str Arguments: Default="\"%USERPROFILE%\\Documents\\Nosuch Media\\MultiMultiTouchTouch/config\"";
+							shlink Shortcut1_E346105764731EF4: Flags=0x0, TargetPath="<WindowsFolder>\\explorer.exe", WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=0 {
+								str Title: Default="Open Config Directory";
+								str Arguments: Default="\"%USERPROFILE%\\Documents\\Nosuch Media\\MultiMultiTouchTouch\\config\"";
 							}
 							shlink Shortcut5_BFBC40DE86B7E40D: Flags=0x0, TargetPath="http://127.0.0.1:4444", IconIndex=0, ShowCmd=0 {
-								str Title: Default="Browser Interface (MMTT must be running)";
+								str Title: Default="Open Browser Interface";
 							}
 							shlink Shortcut5_BFBC40DE86B7E40D1: Flags=0x0, TargetPath="file:///<PersonalFolder>/<Publisher>/<ProductName>/html/mmtt/readme.html", IconIndex=0, ShowCmd=0 {
 								str Title: Default=README;
@@ -2297,7 +2297,7 @@ project Flags=0x20 {
 								str Title: Default="Install Kinect SDK";
 							}
 							shlink Shortcut_to_Mmtt_kinect.exe_4DD5E706893D5CE7: Flags=0x0, Component=Product, TargetPath="<#MMTT.exe_3F1C2A8184FE717A>", WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=0 {
-								str Title: Default=MMTT;
+								str Title: Default="Run MMTT";
 							}
 							shlink Shortcut_to_osclisten.bat_F5FC72ABC040B770: Flags=0x0, Component=Product, TargetPath="<#oscutil.exe_EAEE736D582545BA>", WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=0 {
 								str Title: Default="Monitor OSC port 3333";
@@ -2534,6 +2534,12 @@ project Flags=0x20 {
 									file test.html_B86D5DA0878FE435: Flags=0x0, Component=Folder1_419118276212BB7E, Path="..\\..\\html\\mmtt\\test.html", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
 										str Name: Default=test.html;
 									}
+								}
+								file mmtt_workshop1.pdf_06379F0907E672F0: Flags=0x0, Component=Folder1_419118276212BB7E, Path="..\\..\\html\\mmtt_workshop1.pdf", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+									str Name: Default=mmtt_workshop1.pdf;
+								}
+								file mmtt_workshop2.pdf_9A93E7D208C34D4C: Flags=0x0, Component=Folder1_419118276212BB7E, Path="..\\..\\html\\mmtt_workshop2.pdf", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+									str Name: Default=mmtt_workshop2.pdf;
 								}
 							}
 							folder Folder1_A00D49FD5FFBA13D: Flags=0x10000, Component=Folder1_A00D49FD5FFBA13D, Traits=0x80000000, InstallAction=1, RemoveAction=3 {

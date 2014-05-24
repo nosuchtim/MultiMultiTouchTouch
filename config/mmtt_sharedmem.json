@@ -13,12 +13,16 @@
   "patch": "quadrants_senz3d",   # Name a file in the config/mmtt directory
 
   "initialalign": 0,          # If initialalign is 1, an auto-alignment
-                              # will be done at startup.  This is only
-                              # appropriate if you're using a physical frame.
+                              # will be done at startup.  If you don't want
+                              # auto-alignment to happen automatically
+                              # (e.g. if the patch is a fixed fullscreen one),
+                              # then set it to 0.
 
   "tuio.25d.clientlist": "127.0.0.1:3333",
-                              # A comma-separated list of destinations
+                              # A comma-separated of destinations
                               # to which TUIO/osc messages are sent.
+  "sharedmem": 1,
+  "sharedmemname": "mmtt_outlines",
 
   "debugtolog": 1             # If 1, send debug messages to the log directory
 

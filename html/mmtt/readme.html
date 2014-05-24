@@ -27,20 +27,20 @@ in the "All Programs -> Nosuch Media -> MultiMultiTouchTouch" directory.
 If this is the first time you've installed it,
 you will probably need to install a few other things (like the 3D camera
 drivers), which you can do by running:
-<ol>
+<ul>
 	<li>"Install EVERYTHING"
-</ol>
+</ul>
 If you want to be more selective (for example if you already have Kinect or Senz3D drivers installed), the shortcuts for installing individual prerequisites are:
-<ol>
+<ul>
 	<li>Install Kinect Runtime
 	<li>Install Kinect SDK
 	<li>Install Processing
 	<li>Install Senz3D Runtime
 	<li>Install Senz3D SDK
-</ol>
+</ul>
 <h2>Configuration Files</h2>
 In the "Documents" directory of your Windows login (i.e. %USERPROFILE%\Documents ),
-you will find a sub-directory named "Nosuch Media/MultiMultiTouchTouch/config".
+you will find a sub-directory named "Nosuch Media\MultiMultiTouchTouch\config".
 You can open this directory using "Open configuration directory".
 The file "mmtt.json" there controls the default behaviour of MMTT.
 Edit that file with the text editor of your choice, and adjust the values
@@ -54,23 +54,29 @@ much shorter-range than the Kinect.  If you have a Microsoft Kinect,
 change the camera value to "kinect".
 <p>
 The "patch" value should be
-the name of a file within the "Nosuch Media/MultiMultiTouchTouch/config/mmtt" directory.
+the name of a file within the "Nosuch Media\MultiMultiTouchTouch\config\mmtt" directory.
 These files define the regions that are recognized by MMTT - each region is a separate
 3D multitouch surface.
 By default, the value of "patch" is "quadrants_senz3d".  If you are using a Kinect, change the vlue to "quadrants_kinect".
 <h2>Starting MMTT</h2>
-Use the "Start MMTT" shortcut to start the program.
+Use the "Run MMTT" shortcut to start the program.
 If you don't see a window, you should see an error popup that explains the reason (e.g.
 "No camera detected").  If you don't see any window or errors, use the "Monitor Debug Output"
 shortcut to see if there are any errors in the debug logfile,
-or just look at the file "Nosuch Media/MultiMultiTouchTouch/log/mmtt.debug" in your
+or just look at the file "Nosuch Media\MultiMultiTouchTouch\log\mmtt.debug" in your
 Documents directory.
 <h2>Controlling MMTT</h2>
 When MMTT is running, you interact with it by pointing your browser at
 <a href=http://127.0.0.1:4444>http://127.0.0.1:4444</a>.
 <h2>Usage Scenarios</h2>
-The 3D multitouch regions that MMTT understands exist within a
-single plane, with the Z direction pointing at the 3D camera.
+The 3D multitouch regions that MMTT understands are bounded on one side
+by a flat plane.  If you are using a physical frame, this is
+the plane of the physical frame.
+The location of this plane is controlled in the browser interface
+by the "Depth for ... Detection Plane" values.
+The Z (depth) direction of each 3D multitouch region starts at this plane
+(meaning that the Z value at the plane is 0), and the positive direction
+points toward the 3D camera.
 To define the regions, you can either explicitly specify the region coordinates in the config file, or use a physical frame (any flat surface with large holes).
 MMTT was primarily designed to be used with a physical frame
 (like the <a href=http://spacepalette.com>Space Palette</a>),
