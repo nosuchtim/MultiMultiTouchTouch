@@ -2197,6 +2197,10 @@ project Flags=0x20 {
 				str DisplayName: Flags=0x40000, Default=DROPPED_20140425233159;
 				str Description: Flags=0x40000;
 			}
+			component DROPPED_20140524151403: Flags=0x0, Platforms=0x7FFFFFFF, Packaging=0, Languages="0=", State0=3, State1=3, ExtraSize=0 {
+				str DisplayName: Flags=0x40000, Default=DROPPED_20140524151403;
+				str Description: Flags=0x40000;
+			}
 		}
 		component mmtt_559C2BA7C5D41C8E: Flags=0x0, Platforms=0x7FFFFFFF, Packaging=0, Languages="0=", State0=3, State1=3, ExtraSize=0 {
 			str DisplayName: Flags=0x40000, Default=mmtt_Files;
@@ -2220,6 +2224,10 @@ project Flags=0x20 {
 		}
 		component processing_8783F00E944A4465: Flags=0x0, Platforms=0x7FFFFFFF, Packaging=0, Languages="0=", State0=3, State1=3, ExtraSize=0 {
 			str DisplayName: Flags=0x40000, Default=processing_Files;
+			str Description: Flags=0x40000;
+		}
+		component example_2_DD1D1477B75C8FB2: Flags=0x0, Platforms=0x7FFFFFFF, Packaging=0, Languages="0=", State0=3, State1=3, ExtraSize=0, FolderAlias=example_2_DD1D1477B75C8FB2 {
+			str DisplayName: Flags=0x40000, Default=example_2_Files;
 			str Description: Flags=0x40000;
 		}
 	}
@@ -2274,6 +2282,10 @@ project Flags=0x20 {
 							shlink Shortcut1_E346105764731EF4: Flags=0x0, TargetPath="<WindowsFolder>\\explorer.exe", WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=0 {
 								str Title: Default="Open Config Directory";
 								str Arguments: Default="\"%USERPROFILE%\\Documents\\Nosuch Media\\MultiMultiTouchTouch\\config\"";
+							}
+							shlink Shortcut1_E346105764731EF5: Flags=0x0, TargetPath="<#runexample.bat_75EEABAE3B3C3D5C>", WorkDir="<INSTALLDIR>", IconIndex=0, ShowCmd=0 {
+								str Title: Default="Run example_2";
+								str Arguments: Default=example_2;
 							}
 							shlink Shortcut5_BFBC40DE86B7E40D: Flags=0x0, TargetPath="http://127.0.0.1:4444", IconIndex=0, ShowCmd=0 {
 								str Title: Default="Open Browser Interface";
@@ -2493,6 +2505,30 @@ project Flags=0x20 {
 									str Name: Default=Sprite.pde;
 								}
 								file Sprites.pde_87E6468EFE525C13: Flags=0x0, Component=example_1_2C2184633DD3E736, Path="..\\example_1\\Sprites.pde", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+									str Name: Default=Sprites.pde;
+								}
+							}
+							folder example_2_DD1D1477B75C8FB2: Flags=0x0, Component=example_2_DD1D1477B75C8FB2, Traits=0x80000000, InstallAction=0, RemoveAction=1 {
+								str Name: Default=example_2;
+								file Area.pde_5E335681780E78F1: Flags=0x0, Component=DROPPED_20140524151403, Path="..\\example_2\\Area.pde", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+									str Name: Default=Area.pde;
+								}
+								file Areas.pde_B1CA2CCEE25782DE: Flags=0x0, Component=DROPPED_20140524151403, Path="..\\example_2\\Areas.pde", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+									str Name: Default=Areas.pde;
+								}
+								file Cursor.pde_1995E140AC122296: Flags=0x0, Component=DROPPED_20140524151403, Path="..\\example_2\\Cursor.pde", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+									str Name: Default=Cursor.pde;
+								}
+								file example_2.pde_EC8B6D743BB43B61: Flags=0x0, Component=DROPPED_20140524151403, Path="..\\example_2\\example_2.pde", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+									str Name: Default=example_2.pde;
+								}
+								file Scale.pde_5B66D62B1372457C: Flags=0x0, Component=DROPPED_20140524151403, Path="..\\example_2\\Scale.pde", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+									str Name: Default=Scale.pde;
+								}
+								file Sprite.pde_3C626D5D798AF915: Flags=0x0, Component=DROPPED_20140524151403, Path="..\\example_2\\Sprite.pde", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
+									str Name: Default=Sprite.pde;
+								}
+								file Sprites.pde_CB56CA5F47420B6C: Flags=0x0, Component=DROPPED_20140524151403, Path="..\\example_2\\Sprites.pde", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=0, Packaging=0 {
 									str Name: Default=Sprites.pde;
 								}
 							}

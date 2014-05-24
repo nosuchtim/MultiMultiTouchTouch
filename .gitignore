@@ -220,4 +220,5 @@ src/example_1/application.windows64/
 src/example_1/output/
 src/example_2/application.windows64/
 src/example_2/output/
+src/example_2_old
 log/

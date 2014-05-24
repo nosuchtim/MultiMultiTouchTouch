@@ -6,7 +6,7 @@ rem set midibus=..\..\other\themidibus\library\themidibus.jar
 rem
 rem
 
-set dir="c:\users\tjt\documents\github\multimultitouchtouch\src\example_2"
+set dir="c:\users\tjt\documents\Nosuch Media\multimultitouchtouch\example_1"
 set p=c:\users\tjt\documents\processing
 
 %p%\processing-java.exe --run --force --sketch=%dir% --output=%dir%\output

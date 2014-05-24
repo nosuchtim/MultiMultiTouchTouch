@@ -3,6 +3,8 @@
 // This is an example program for interpreting the TUIO/OSC messages
 // coming from MMTT (MultiMultiTouchTouch).
 //
+// Pressing ' ' (space bar) changes the sounds.
+//
 ///////////////////////////////////////////////////////////////////////////
 
 import java.util.*;
@@ -161,7 +163,10 @@ void randomizePrograms() {
 ///////////////////////////////////////////////////////////////////////////
 
 void keyPressed() {
-	randomizePrograms();
+	// When the space bar is hit, randomize all the MIDI program sounds
+	if ( key == ' ' ) {
+		randomizePrograms();
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////

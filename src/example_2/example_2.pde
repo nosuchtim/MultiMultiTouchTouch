@@ -1,350 +1,313 @@
+///////////////////////////////////////////////////////////////////////////
+//
+// This is an example program for interpreting the TUIO/OSC messages
+// coming from MMTT (MultiMultiTouchTouch).
+//
+// This is a little more musical version of example_1
+//
+// Notes/Sprites are only generated if a Cursor moves
+// more than a certain amount.
+//
+// Pressing ' ' (space bar) changes the sounds.
+//
+// Pressing '0', '1', '2', ... '9' changes the scale being used.
+//
+// Pressing 'a', 'b', 'c', ... 'g' changes the key (pitch offset) being used.
+//
+///////////////////////////////////////////////////////////////////////////
+
 import java.util.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileInputStream;
-import java.io.StringReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.StringWriter;
 
 import processing.net.*;
 import oscP5.*;
 import netP5.*;
-import processing.opengl.*;
-
-String filesDir = "/users/tjt/documents/processing/tjt_particles1";
-
-ArrayList clients = new ArrayList();
-byte[] byteBuffer = new byte[256];
-byte newline = 10;
- 
-OscP5 oscP5;
-
 import themidibus.*;
-MidiBus myMidi;
 
-// ControlP5 controlP5;
-Bird bird;
-ArrayList birds;
-ArrayList cursors;
-float maxvel=20;
-float maxmaxvel=10;
-int startbirds=10;   // was 20000
-PVector mouse;
-float cap;
-boolean draw_background=false;
-boolean drawtrails=true;
-int numbirdareas = 7;
-int numareas = 8;
-ArrayList areas;
-// int numalive = 0;
-float zmult = 200.0;
-int minsize = 4;
-int maxsize = 30;
-float vel_mult_active = 4.0;
-float vel_mult_normal = 4.0;
-float alpha = 0.2;
-// float fade = 0.0058;
-float fade = 0.1;
+OscP5 oscP5;
+MidiBus midi;
+Areas areas;
+Sprites sprites;
+Map colorOfArea;
+Map channelOfArea;
+Map scales;
+Map keyoffsets;
+Scale currentScale;
+int currentKeyoffset;
+
+///////////////////////////////////////////////////////////////////////////
+// The setup() and draw() methods are standard Processing methods.
+// setup() gets called only once, but draw() gets called repeatedly.
+///////////////////////////////////////////////////////////////////////////
 
 void setup() {
 
-  size(800,600);
-  background(0);
+	size(800,600);
+	background(0);
 
-  myMidi = new MidiBus(this, -1, "loopMIDI Port 1");
+	sprites = new Sprites();
 
-  oscP5 = new OscP5(this,3333);
+	// If you want to send MIDI things to a VST soft synth, use loopMIDI.
+	// midi = new MidiBus(this, -1, "loopMIDI Port 1");
 
-  mouse = new PVector(mouseX,mouseY);
-  birds = new ArrayList();
+	midi = new MidiBus(this, -1, "Microsoft GS Wavetable Synth");
 
-  // controlP5 = new ControlP5(this);
-  // controlP5.addButton("background",0,20,20,80,19);
-  // controlP5.addButton("trails",0,100,20,80,19);
+	// OscP5 will call oscEvent() when things are received
+	oscP5 = new OscP5(this,3333);
 
-  areas = new ArrayList();
-  for(int a=0;a<numareas;a++) {
-    MultiTouchArea area = new MultiTouchArea();
-    areas.add(area);
+	initializeScales();
 
-	switch(a%numbirdareas){
-	case 0: area.setcolor(255,0,0); break;
-	case 1: area.setcolor(0,255,0); break;
-	case 2: area.setcolor(0,0,255); break;
-	case 3: area.setcolor(255,255,0); break;
-	case 4: area.setcolor(0,255,255); break;
-	case 5: area.setcolor(255,0,255); break;
-	case 6: area.setcolor(255,255,255); break;
-	default: break;
-	}
+	initializePrograms();
 
-      for(int i=0;i<startbirds;i++) {
-        birds.add(new Bird(int(random(0,width)),int(random(0,height)),random(-1,1),random(-1,1),birds,birds.size()+1,area));
-      }
-    }
-    set_alpha_all(alpha);
-
+	initializeAreas();
 }
 
-void set_alpha_all(float a) {
-      for ( int i=0; i<numareas; i++ ) {
-        MultiTouchArea area = (MultiTouchArea) areas.get(i);
-        area.set_alpha(a);
-      }        
-}
-
-/* incoming osc message are forwarded to the oscEvent method. */
-void oscEvent(OscMessage m) {
-  /* print the address pattern and the typetag of the received OscMessage */
-  // print("### TJT PARTICLES received an osc message.");
-  // print(" addrpattern: "+m.addrPattern());
-  // println(" typetag: "+m.typetag());
-  Object[] args = m.arguments();
-  // println("OSCEVENT addr="+m.addrPattern());
-
-  if (m.checkAddrPattern("/tuio/25Dblb")) {
-
-    String cmd = m.get(0).stringValue();
-    // println("NEW CMD=("+cmd+")");
-    if ( cmd.equals("alive") ) {
-      // println("ALIVE! typetag="+m.typetag());
-      int na = m.typetag().length() - 1;
-      for ( int a=0; a<numareas; a++ ) {
-        MultiTouchArea area = (MultiTouchArea) areas.get(a);
-        area.cleartouched();
-        area.setalive(0);
-      }        
-      for ( int i=1; i<=na; i++ ) {
-        int sid = m.get(i).intValue();
-        int areanum = (sid/1000) - 1;
-        if ( areanum >= numareas ) {
-          println("HEY! areanum from osc = "+areanum+" !?");
-          continue;
-        }
-        MultiTouchArea area = (MultiTouchArea) areas.get(areanum);
-        if ( areanum < numbirdareas ) {
-          area.incalive();
-        } else {
-          // Do button/slider areas
-          area.settouched();
-        }
-      }
-
-//      for ( int a=0; a<numareas; a++ ) {
-//        if ( a >= numbirdareas ) {
-//          MultiTouchArea area = (MultiTouchArea) areas.get(a);
-//          if ( area.touched == 1 ) {
-//            if ( area.onoff == 0 ) {
-//              println("TURNING AREA "+a+" ON");
-//              area.onoff = 1;
-//              if ( a == 5 ) {
-//                println("TOGGLING DRAWTRAILS");
-//                drawtrails = !drawtrails;
-//              }
-//            }
-//          } else {
-//            // area wasn't touched, so turn it off if it's on
-//            if ( area.onoff == 1 ) {
-//              println("TURNING AREA "+a+" OFF");
-//              area.onoff = 0;
-//            }
-//          }
-//        }
-//      }        
-
-      // println("NUMalive now "+numalive);
-    } else if (cmd.equals("fseq") ) {
-    } else if ( cmd.equals("set") ) {
-      int sid = m.get(1).intValue();
-      float x = m.get(2).floatValue();
-      float y = m.get(3).floatValue();
-      float z = m.get(4).floatValue();
-      y = 1.0 - y;
-      // println("RAW z="+z);
-      float a = m.get(8).floatValue();
-      int areanum = (sid/1000) - 1;
-      MultiTouchArea area = (MultiTouchArea) areas.get(areanum);
-      int w = (int)(z*zmult);
-      /* if ( w > 10 ) {
-        println("osc set, w>10 = "+w+" raw z="+z);
-      } */
-      area.setcursor((int)(x*width),(int)(y*height),(int)(z*zmult));
-      int pitch = (int)(x * 127);
-      int vel = (int)((z*3) * 127);
-      if ( vel > 127 ) {
-        vel = 127;
-      }
-      println("Note pitch="+pitch+" vel="+vel);
-      myMidi.sendNoteOn(0,pitch,vel);
-    }
-  }
-  // println("End of OSCEVENT");
-}
- 
 void draw() {
-	
-	if(draw_background){
-		background(0);
-	} else {
-		fill(0,0,0,(int)(255*fade));
-		rect(0,0,width,height);
+	background(0);		// background is black
+	sprites.draw();
+	sprites.advanceTime();
+}
+
+///////////////////////////////////////////////////////////////////////////
+// These methods are called for Cursor events (generated in the Area class)
+///////////////////////////////////////////////////////////////////////////
+
+void cursorDownEvent(Area a, Cursor c) {
+
+	// Generate a NOTEON, and save the pitch in the Cursor,
+	// so that we can make sure the NOTEOFF uses the same pitch
+	c.pitch = pitchOf(c);
+	midi.sendNoteOn(a.channel, c.pitch, velocityOf(c));
+
+	// Generate a Sprite using the cursor position
+	Sprite s = new Sprite(c.x,c.y,c.z,a.colour);
+
+	// The motion of the sprite is random in each direction
+	s.setMotion( random(-0.005,0.005), random(-0.005,0.005) );
+
+	sprites.add(s);
+}
+
+void cursorDragEvent(Area a, Cursor c) {
+
+	// We only do something if the Cursor
+	// has moved more than a certain amount
+
+	if ( c.distFromPosition0() > 0.05 ) {
+
+		c.resetPosition0();
+
+		// uses pitch saved in Cursor
+		midi.sendNoteOff(a.channel, c.pitch, 0);
+
+		cursorDownEvent(a,c);   // then do the same thing as a cursorDown
 	}
+}
 
-  //if(drawtrails){fill(0,60);rect(0,0,width,height);}
-   
-  // controlP5.draw();
-  for(int i=0;i<birds.size();i++) {
-    Bird bird = (Bird) birds.get(i);
-    bird.move();
-    bird.display();
-    bird.flock();
-  }
+void cursorUpEvent(Area a, Cursor c) {
+	midi.sendNoteOff(a.channel, c.pitch, 0);
+}
 
-  
-  mouse.x =mouseX;
-  mouse.y=mouseY;
-   
+///////////////////////////////////////////////////////////////////////////
+// These methods compute the pitch and velocity (normally volume) for the
+// MIDI notes generated from a Cursor.
+///////////////////////////////////////////////////////////////////////////
+
+int pitchOf(Cursor c) {
+	int p = (int)(c.x * 127);  // from 0 to 127
+	p = currentScale.closestTo(p);
+	return p + currentKeyoffset;
+}
+
+int velocityOf(Cursor c) {
+	int v = (int)((c.z*3) * 127);   // the factor of 3 increases the volume
+	if ( v > 127 ) {
+		v = 127;
+	}
+	return v;
+}
+
+///////////////////////////////////////////////////////////////////////////
+// Set up the Areas that we're going to respond to.
+// Each Area "listens" for a range of SID (session ID) values.
+// Each Area is mapped to a different color and MIDI channel.
+// For example, when Sprites are created by a Cursor in a particular area,
+// the color of the Sprite will be the color for that area.  Likewise,
+// MIDI notes created by a Cursor will be on the MIDI channel for that area.
+///////////////////////////////////////////////////////////////////////////
+
+void initializeAreas() {
+
+	areas = new Areas();
+	colorOfArea = new HashMap();
+	channelOfArea = new HashMap();
+
+	Area a1 = new Area(1000,1999);	// listen for SIDs from 1000-1999
+	Area a2 = new Area(2000,2999);
+	Area a3 = new Area(3000,3999);
+	Area a4 = new Area(4000,4999);
+
+	a1.colour = color(255,255,0);
+	a2.colour = color(255,0,255);
+	a3.colour = color(0,255,0);
+	a4.colour = color(0,255,255);
+
+	a1.channel = 0;
+	a2.channel = 1;
+	a3.channel = 2;
+	a4.channel = 3;
+
+	areas.add("ONE",a1);
+	areas.add("TWO",a2);
+	areas.add("THREE",a3);
+	areas.add("FOUR",a4);
+}
+
+void initializeScales() {
+
+	scales = new HashMap();
+
+	scales.put('0', new Scale("chromatic",0,1,2,3,4,5,6,7,8,9,10,11));
+	scales.put('1', new Scale("newage",0,3,5,7,10));
+	scales.put('2', new Scale("arabian",0,1,4,5,7,8,10));
+	scales.put('3', new Scale("harminor",0,2,3,5,7,8,11));
+	scales.put('4', new Scale("melminor",0,2,3,5,7,9,11));
+	scales.put('5', new Scale("aeolian",0,2,3,5,7,8,10));
+	scales.put('6', new Scale("dorian",0,2,3,5,7,9,10));
+	scales.put('7', new Scale("ionian",0,2,4,5,7,9,11));
+	scales.put('8', new Scale("octaves",0));
+	scales.put('9', new Scale("phrygian",0,1,3,5,7,8,10));
+
+	scales.put('-', new Scale("lydian",0,2,4,6,7,9,11));
+	scales.put('=', new Scale("mixolydian",0,2,4,5,7,9,10));
+	scales.put('`', new Scale("locrian",0,1,3,5,6,8,10));
+
+	currentScale = (Scale) scales.get('1');
+
+	keyoffsets = new HashMap();
+	keyoffsets.put('a',-3);
+	keyoffsets.put('A',-2);
+	keyoffsets.put('b',-1);
+	keyoffsets.put('c',0);
+	keyoffsets.put('C',1);
+	keyoffsets.put('d',2);
+	keyoffsets.put('D',3);
+	keyoffsets.put('e',4);
+	keyoffsets.put('f',5);
+	keyoffsets.put('F',6);
+	keyoffsets.put('g',7);
+	keyoffsets.put('G',8);
+
+	currentKeyoffset = (Integer) keyoffsets.get('c');
+}
+
+///////////////////////////////////////////////////////////////////////////
+// Programs are MIDI Programs.  Values go from 0 to 127.
+// Each program number is a different patch or sound.
+// If you're driving a General MIDI synth, the patch numbers are
+// standardized (e.g. patch number 4 is an electric piano).
+///////////////////////////////////////////////////////////////////////////
+
+void initializePrograms() {
+	programchange(0,0);	// channel 1 = acoustic piano
+	programchange(1,107);	// channel 2 = koto
+	programchange(2,11);	// channel 3 = vibes
+	programchange(3,80);	// channel 4 = lead (square)
+}
+
+void randomizePrograms() {
+	programchange(0,int(random(127)));
+	programchange(1,int(random(127)));
+	programchange(2,int(random(127)));
+	programchange(3,int(random(127)));
+}
+
+///////////////////////////////////////////////////////////////////////////
+// When you press a key on your QWERTY keyboard, keyPressed() is called.
+///////////////////////////////////////////////////////////////////////////
+
+void keyPressed() {
+
+	// When the space bar is hit, randomize the MIDI program sounds.
+
+	// Key offsets (transpositions) are controlled
+	// by pressing 'a', 'b', 'c', etc.
+	// 'A' is a-sharp, 'C' is c-sharp, etc.
+
+	// Scales are controlled by pressing '0', '1', '2', etc.
+	// See initializeScales() for the mappings.
+
+	if ( key == ' ' ) {
+		println("Changing sounds...");
+		randomizePrograms();
+	} else if ( scales.get(key) != null ) {
+		currentScale = (Scale) scales.get(key);
+		println("Changing scale to ",currentScale.name);
+	} else if ( keyoffsets.get(key) != null ) {
+		currentKeyoffset = (Integer) keyoffsets.get(key);
+		println("Changing key to ",key);
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////
+// Send a MIDI program change message.  Both chan and prog values start at 0.
+///////////////////////////////////////////////////////////////////////////
+
+void programchange(int chan, int prog) {
+	midi.sendMessage( 0xc0 | chan, prog );
+}
+
+///////////////////////////////////////////////////////////////////////////
+// Incoming osc message are forwarded to the oscEvent method.
+///////////////////////////////////////////////////////////////////////////
+
+void oscEvent(OscMessage m) {
+
+   try {
+	Object[] args = m.arguments();
+
+	if (m.checkAddrPattern("/tuio/25Dblb")) {
+
+		String cmd = m.get(0).stringValue();
+		if ( cmd.equals("alive") ) {
+			int na = m.typetag().length() - 1;
+
+			areas.clearTouched();
+
+			for ( int i=1; i<=na; i++ ) {
+				int sid = m.get(i).intValue();
+				Area area = areas.findArea(sid);
+				if ( area != null ) {
+					area.touch(sid);
+				}
+			}
+
+			areas.checkCursorUp();
+
+		} else if (cmd.equals("fseq") ) {
+
+		} else if ( cmd.equals("set") ) {
+
+			int sid = m.get(1).intValue();
+			float x = m.get(2).floatValue();
+			float y = m.get(3).floatValue();
+			float z = m.get(4).floatValue();
+
+			Area area = areas.findArea(sid);
+			if ( area != null ) {
+				area.setSidPosition(sid,x,y,z);
+			}
+		}
+	}
+    } catch (Exception e) {
+	println("HEY!! EXCEPTION in oscEvent! msg="+ExceptionString(e));
+    }
 }
  
-class Cursor {
-  int x;
-  int y;
-  int z;
+String ExceptionString(Exception e) {
+	StringWriter sw = new StringWriter();
+	PrintWriter pw = new PrintWriter(sw);
+	e.printStackTrace(pw);
+	return sw.toString();
 }
 
-class MultiTouchArea {
-  Cursor cursor;
-  int r;
-  int g;
-  int b;
-  int a;
-  int numalive;
-  int touched;
-  int onoff;
-  MultiTouchArea() {
-    cursor = new Cursor();
-    numalive = 0;
-    touched = 0;
-    onoff = 0;
-  }
-  void settouched() {
-    touched = 1;
-  }
-  void cleartouched() {
-    touched = 0;
-  }
-  void setalive(int a) {
-    numalive = a;
-  }
-  boolean isalive() {
-    return (numalive>0);
-  }
-  void incalive() {
-    numalive++;
-  }
-  void setcolor(int r_, int g_, int b_) {
-    r = r_;
-    g = g_;
-    b = b_;
-  }
-  void set_alpha(float a_) {
-    a = (int)Math.floor(a_ * 255);
-  }
-  void setcursor(int x_, int y_, int z_) {
-    cursor.x = x_;
-    cursor.y = y_;
-    /* if ( z_ > 0 ) {
-      println("setcursor non-zero z="+z_);
-    } */
-    cursor.z = z_;
-  }
-}
-
-class Bird {
-   
-  PVector location;
-  PVector velocity;
-  PVector acceleration=new PVector(0,0);
-  PVector dir=new PVector(0,0);
-  int siz;
-  ArrayList others;
-  int id;
-  float dirmag;
-  Bird other;
-  MultiTouchArea mtarea;
-   
-  Bird(int startx,int starty, float startxvel,float startyvel,ArrayList others_,int id_,MultiTouchArea mtarea_) {
-    // println("Bird constructor xy="+startx+" "+starty);
-    location = new PVector(startx,starty);
-    velocity = new PVector(startxvel,startyvel);
-    // siz=siz_;
-    others = others_;
-    id=id_;
-    if(id>1){other = (Bird) others.get(int(random(others.size())));} else { other = this;}
-    mtarea = mtarea_;
-  }
-  void flock() {
-     if(mtarea.numalive > 0) {
-       PVector v = new PVector(mtarea.cursor.x,mtarea.cursor.y);
-        dir = PVector.sub(v,location);
-        dirmag=dir.mag();
-        dir.normalize();
-        dir.mult(vel_mult_active);
-        // println("numalive="+numalive);
-        //cap=maxmaxvel;
-      } else {
-        dir = PVector.sub(other.location,location);
-        dir.normalize();
-        dir.mult(vel_mult_normal);
-      }
- 
-      acceleration=dir;
-     }
-  void bound() {
-	if ( location.x < 0 ) {
-		location.x = 0;
-	} else if ( location.x > width ) {
-		location.x = width;
-	}
-	if ( location.y < 0 ) {
-		location.y = 0;
-	} else if ( location.y > height ) {
-		location.y = height;
-	}
-  }
-  void move() {
-    velocity.add(acceleration);
-    velocity.limit(maxvel);
-     
-    location.add(velocity);
-    bound();
-    velocity.mult(0.99);
-  }
-   
-  void display() {
-    // stroke(velocity.mag()*40+50,acceleration.mag()*100+100,velocity.mag()*100+100,dirmag+20);
-    if ( ! mtarea.isalive() ) {
-	return;
-    }
-    stroke(mtarea.r,mtarea.g,mtarea.b,mtarea.a);
-    int w = mtarea.cursor.z;
-    // println("mtarea.z="+mtarea.cursor.z);
-    if ( w < minsize ) {
-      w = minsize;
-    } else if ( w > maxsize ) {
-      w = maxsize;
-    } else {
-      // println("w >= 2 < 10 = "+w);
-    }
-    if(!drawtrails){
-      strokeWeight(w);
-      point(location.x,location.y);
-    } else {
-      strokeWeight(3);
-      int zval = w / 3;
-      line(location.x,location.y,location.x-velocity.x*zval,location.y-velocity.y*zval);
-      // line(location.x,location.y,location.x-velocity.x*3,location.y-velocity.y*3);
-    } 
-  }
-}
