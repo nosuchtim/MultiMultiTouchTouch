@@ -2757,8 +2757,14 @@ project Flags=0x20 {
 					file MMTT.exe_3F1C2A8184FE717A: Flags=0x0, Component=Product, Path="..\\..\\bin\\mmtt.exe", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=2000, Packaging=0 {
 						str Name: Default=MMTT.exe;
 					}
+					file msvcp100.dll_BB2D3F3E880F629A: Flags=0x0, Component=Product, Path="..\\..\\bin\\msvcp100.dll", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=400, Packaging=0 {
+						str Name: Default=msvcp100.dll;
+					}
 					file msvcp100d.dll_394CB0D6005B85DA: Flags=0x0, Component=Product, Path="..\\..\\bin\\msvcp100d.dll", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=400, Packaging=0 {
 						str Name: Default=msvcp100d.dll;
+					}
+					file msvcr100.dll_6A12F49835ED8AAC: Flags=0x0, Component=Product, Path="..\\..\\bin\\msvcr100.dll", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=400, Packaging=0 {
+						str Name: Default=msvcr100.dll;
 					}
 					file msvcr100d.dll_6FFB97FC49145691: Flags=0x0, Component=Product, Path="..\\..\\bin\\msvcr100d.dll", Attributes=0x0, InstallAction=4, RemoveAction=2, Registration=0, RegOrder=400, Packaging=0 {
 						str Name: Default=msvcr100d.dll;
