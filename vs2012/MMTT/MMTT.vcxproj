@@ -81,7 +81,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(MMTT)\src\space;$(MMTT)\src\nosuch;$(MMTT)\src\misclib;$(MMTT)\src\mmtt;$(MMTT)\other\freeframe;$(MMTT)\other\osc\include;$(MMTT)\other\cvblobslib;$(MMTT)\other\opencv\build\include;$(MMTT)\other\cJSON;$(MMTT)\other\pthreads-w32-2-9-1-release\Pre-built.2\include;$(MMTT)\other\portmidi\porttime;$(MMTT)\other\portmidi\pm_common;$(MMTT)\other\PCSDK\include;$(MMTT)\other\PCSDK\sample\common\include;c:\Python27\include;$(MMTT)\other\kinect2\inc;$(MMTT)\other\kinect\v1.8\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(MMTT)\src\space;$(MMTT)\src\nosuch;$(MMTT)\src\misclib;$(MMTT)\src\mmtt;$(MMTT)\other\freeframe;$(MMTT)\other\osc\include;$(MMTT)\other\cvblobslib;$(MMTT)\other\opencv\build\include;$(MMTT)\other\cJSON;$(MMTT)\other\pthreads-w32-2-9-1-release\Pre-built.2\include;$(MMTT)\other\portmidi\porttime;$(MMTT)\other\portmidi\pm_common;c:\Python27\include;$(MMTT)\other\kinect\v2.0\inc;$(MMTT)\other\kinect\v1.8\inc;$(RSSDK_DIR)/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <ExceptionHandling>Async</ExceptionHandling>
@@ -98,9 +98,9 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>opencv_highgui246d.lib;opencv_core246d.lib;opencv_flann246d.lib;opencv_ml246d.lib;opencv_imgproc246d.lib;libjpegd.lib;libpngd.lib;libtiffd.lib;libjasperd.lib;IlmImfd.lib;pthreadVC2.lib;winmm.lib;libpxc_d.lib;libpxcutils_d.lib;kinect10.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_highgui246d.lib;opencv_core246d.lib;opencv_flann246d.lib;opencv_ml246d.lib;opencv_imgproc246d.lib;libjpegd.lib;libpngd.lib;libtiffd.lib;libjasperd.lib;IlmImfd.lib;pthreadVC2.lib;winmm.lib;libpxc_d.lib;libpxcutils_d.lib;kinect10.lib;kinect20.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>Debug\Mmtt.exe</OutputFile>
-      <AdditionalLibraryDirectories>..\Debug;$(MMTT)\other\opencv\build\x86\vc11\staticlib;$(MMTT)\other\pthreads-w32-2-9-1-release\Pre-built.2\lib\x86;$(MMTT)\other\PCSDK\lib\$(PlatformName);$(MMTT)\other\PCSDK\sample/common/lib/$(PlatformName)/$(PlatformToolset);C:\Python27\libs;$(MMTT)\other\kinect\v1.8\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Debug;$(MMTT)\other\opencv\build\x86\vc11\staticlib;$(MMTT)\other\pthreads-w32-2-9-1-release\Pre-built.2\lib\x86;C:\Python27\libs;$(MMTT)\other\kinect\v1.8\lib\x86;$(MMTT)\other\kinect\v2.0\lib\x86;$(RSSDK_DIR)/lib/$(PlatformName);$(RSSDK_DIR)/sample/common/lib/$(PlatformName)/$(PlatformToolset);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -246,7 +246,8 @@
     <ClCompile Include="..\..\src\mmtt\mmtt_camera.cpp" />
     <ClCompile Include="..\..\src\mmtt\mmtt_kinect.cpp" />
     <ClCompile Include="..\..\src\mmtt\mmtt_kinect2.cpp" />
-    <ClCompile Include="..\..\src\mmtt\mmtt_pcx.cpp" />
+    <ClCompile Include="..\..\src\mmtt\mmtt_senz3d.cpp" />
+    <ClCompile Include="..\..\src\mmtt\mmtt_realsense.cpp" />
     <ClCompile Include="..\..\src\mmtt\mmtt_server.cpp" />
     <ClCompile Include="..\..\src\mmtt\mmtt_sharedmem.cpp" />
     <ClCompile Include="..\..\src\nosuch\midifile.cpp" />
@@ -276,7 +277,8 @@
     <ClInclude Include="..\..\src\mmtt\mmtt_depth.h" />
     <ClInclude Include="..\..\src\mmtt\mmtt_kinect.h" />
     <ClInclude Include="..\..\src\mmtt\mmtt_kinect2.h" />
-    <ClInclude Include="..\..\src\mmtt\mmtt_pcx.h" />
+    <ClInclude Include="..\..\src\mmtt\mmtt_senz3d.h" />
+    <ClInclude Include="..\..\src\mmtt\mmtt_realsense.h" />
     <ClInclude Include="..\..\src\mmtt\Resource.h" />
     <ClInclude Include="..\..\src\mmtt\stdafx.h" />
     <ClInclude Include="..\..\src\nosuch\NosuchDebug.h" />

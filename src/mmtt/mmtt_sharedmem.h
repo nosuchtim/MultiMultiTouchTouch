@@ -100,7 +100,6 @@ public:
     // version number of this header, must be set to MMTT_SHM_VERSION_NUMBER
     int							version;
 
-    int							ncursors_max;
     int							noutlines_max; 
     int							npoints_max; 
 
@@ -118,7 +117,6 @@ public:
 
     // This offset (in bytes) is the distance from the start of the data.
 	// WARNING: do not re-order these fields, the calc.* methods depend on it.
-    // int							cursorsOffset[3]; 
     int							outlinesOffset[3]; 
     int							pointsOffset[3]; 
 
@@ -142,11 +140,9 @@ public:
 	}
 
     int	calcOutlineOffset(int buffnum, int outlinenum = 0) {
-		// int v1 = calcCursorOffset(0) + NUM_BUFFS*ncursors_max*sizeof(CursorSharedMem);
 		int v1 = 0;
 		int v2 = buffnum*noutlines_max*sizeof(OutlineMem);
 		int v3 = outlinenum*sizeof(OutlineMem);
-		// NosuchDebug("calcOutlineOffset v1=0x%x v2=0x%x v3=0x%x  return 0x%x",v1,v2,v3,v1+v2+v3);
 		return v1 + v2 + v3;
     }
     int	calcPointOffset(int buffnum, int pointnum = 0) {
@@ -156,7 +152,7 @@ public:
     }
 
 	int addPoint(buff_index b, float x, float y, float z);
-	int addCursorOutline(buff_index b, int region, int sid, float x, float y, float z, int npoints);
+	int addOutline(buff_index b, int region, int sid, float x, float y, float z, int npoints);
 
 	void xinit();
 	void clear_lists(buff_index b);

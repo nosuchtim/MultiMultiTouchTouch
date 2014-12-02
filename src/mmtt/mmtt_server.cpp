@@ -406,7 +406,7 @@ MmttServer::setup_shmem_for_outlines() {
 
 	UT_SharedMem* mem = new UT_SharedMem(_sharedmemname.c_str(), totalsize); // figure out the size based on the OP
 
-	DEBUGPRINT(("Shared Memory created for cursors/outlines, name=%s size=%d",_sharedmemname.c_str(),totalsize));
+	DEBUGPRINT(("Shared Memory created, name=%s size=%d",_sharedmemname.c_str(),totalsize));
 
 	UT_SharedMemError shmerr = mem->getErrorState();
 	if (shmerr != UT_SHM_ERR_NONE) { 
@@ -666,9 +666,7 @@ MmttServer::shmem_update_outlines(MMTT_SharedMemHeader* h,
 		}
 		int npoints = contourpoints->total;
 
-		h->addCursorOutline(buff,r->id,tuio_sid,blobcenterx,blobcentery,depth,npoints);
-
-		// h->addOutline(buff,r->id,tuio_sid,npoints);
+		h->addOutline(buff,r->id,tuio_sid,blobcenterx,blobcentery,depth,npoints);
 
 		if ( npoints > 0 ) {
 			for(int i = 0; i < npoints; i++) {
@@ -846,18 +844,6 @@ void MmttServer::analyze_depth_images()
 
 void MmttServer::draw_depth_image() {
 
-	glMatrixMode(GL_MODELVIEW);	// Select The Modelview Matrix
-	glLoadIdentity();			// Reset The Modelview Matrix
-
-	glPushMatrix();
-
-	// this is tweaked so kinect image
-	// fills the window.
-	gluLookAt(  0, 0, 2.43,
-		0, 0, 0,
-		0, 1, 0); 
-	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-
 #ifdef DRAW_BOX_TO_DEBUG_THINGS
 	glColor4f(0.0,1.0,0.0,0.5);
 	glLineWidth((GLfloat)10.0f);
@@ -936,8 +922,9 @@ void MmttServer::draw_depth_image() {
 	glEnd();
 #endif
 
-	glPopMatrix();
-	glColor4f(1.0,1.0,1.0,1.0);
+}
+
+void MmttServer::swap_buffers() {
 
 	if ( continuousAlign == true && (
 		registrationState == 300
@@ -947,10 +934,29 @@ void MmttServer::draw_depth_image() {
 		|| registrationState == 330
 		) ) {
 		DEBUGPRINT1(("registrationState = %d",registrationState));
-		// do nothing - this avoids screen blinking/etc with in continuousAlign registration
+			// do nothing - this avoids screen blinking/etc with in continuousAlign registration
 	} else {
 		SwapBuffers(g.hdc);
 	}
+}
+
+void MmttServer::draw_begin() {
+	glMatrixMode(GL_MODELVIEW);	// Select The Modelview Matrix
+	glLoadIdentity();			// Reset The Modelview Matrix
+	glPushMatrix();
+
+	// this is tweaked so image fills the window.
+	gluLookAt(  0, 0, 2.43,
+		0, 0, 0,
+		0, 1, 0); 
+
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+}
+
+void MmttServer::draw_end() {
+	glPopMatrix();
+	glColor4f(1.0,1.0,1.0,1.0);
+	swap_buffers();
 }
 
 static std::string
@@ -2297,7 +2303,7 @@ MmttServer::analyzePixels()
 
 	if ( val_blob_filter.value != 0.0 ) {
 		// If the value of blob_maxsize is 1.0 (the maximum external value), turn off max filtering
-		if ( val_blob_maxsize.value != 1.0 ) {
+		if ( val_blob_maxsize.value < val_blob_maxsize.maxvalue ) {
 			_newblobresult->Filter( *_newblobresult, B_EXCLUDE, CBlobGetArea(), B_GREATER, val_blob_maxsize.value );
 		}
 		_newblobresult->Filter( *_newblobresult, B_EXCLUDE, CBlobGetArea(), B_LESS, val_blob_minsize.value );

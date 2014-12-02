@@ -149,12 +149,6 @@ class MmttServer : public NosuchJsonListener {
 	static void ErrorPopup(LPCWSTR msg);
 	static void ErrorPopup(const char* msg);
 
-	void buttonDown(std::string bn);
-	void buttonUp(std::string bn);
-	void cursorDown(Cursor* c);
-	void cursorDrag(Cursor* c);
-	void cursorUp(Cursor* c);
-
 	void InitOscClientLists();
 	void SetOscClientList(std::string& clientlist,std::vector<OscSender*>& clientvector);
 	void SendOscToClients();
@@ -169,6 +163,9 @@ class MmttServer : public NosuchJsonListener {
 	void check_json_and_execute();
 	void analyze_depth_images();
 	void draw_depth_image();
+	void draw_begin();
+	void draw_end();
+	void swap_buffers();
 
 	LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam ); 
 

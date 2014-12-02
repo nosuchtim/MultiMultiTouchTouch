@@ -28,38 +28,17 @@
 #ifndef MMTT_CAMERA_H
 #define MMTT_CAMERA_H
 
-#define PCX_CAMERA
-// #define KINETIC_CAMERA
-#define KINECT_CAMERA
+// #define SENZ3D_CAMERA
+#define REALSENSE_CAMERA
+// #define KINECT_CAMERA
 // #define KINECT2_CAMERA
 
-#include <string>
+#ifdef REALSENSE_CAMERA
+#include "mmtt_realsense.h"
+#endif
 
-class MmttServer;
-
-class DepthCamera {
-public:
-	static DepthCamera* makeDepthCamera(MmttServer* s, std::string camtype, int camnum);
-	MmttServer* server() { return _server; }
-
-	virtual const int width() = 0;
-	virtual const int height() = 0;
-	virtual const int default_depth_detect_top() = 0;
-	virtual const int default_depth_detect_bottom() = 0;
-	virtual bool InitializeCamera() = 0;
-	virtual void Shutdown() = 0;
-	virtual void Update() = 0;
-	virtual std::string camtype() = 0;
-	virtual bool Tilt(int degrees) { return false; };
-
-protected:
-	MmttServer* _server;
-	std::string _camtype;
-	int _camindex;
-};
-
-#ifdef PCX_CAMERA
-#include "mmtt_pcx.h"
+#ifdef SENZ3D_CAMERA
+#include "mmtt_senz3d.h"
 #endif
 
 #ifdef KINECT_CAMERA

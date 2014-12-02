@@ -288,13 +288,17 @@ int MmttServer::Run(std::string title, HINSTANCE hInstance, int nCmdShow)
 	}
 
     // Main message loop
+	DWORD tm0 = timeGetTime();
+	int nframes = 0;
     while (WM_QUIT != msg.message) {
 
 		camera->Update();
 
 		check_json_and_execute();
 		analyze_depth_images();
+		draw_begin();
 		draw_depth_image();
+		draw_end();
 
         if (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE)) {
             // If a dialog message will be taken care of by the dialog proc
@@ -305,6 +309,14 @@ int MmttServer::Run(std::string title, HINSTANCE hInstance, int nCmdShow)
             TranslateMessage(&msg);
             DispatchMessageW(&msg);
         }
+		nframes++;
+		DWORD tm = timeGetTime();
+		// Put out FPS every 10 seconds
+		if ( (tm - tm0) > 10000 ) {
+			DEBUGPRINT(("FPS = %d   tm=%ld",nframes/10,(long)tm));
+			tm0 = tm;
+			nframes = 0;
+		}
     }
 
     return static_cast<int>(msg.wParam);

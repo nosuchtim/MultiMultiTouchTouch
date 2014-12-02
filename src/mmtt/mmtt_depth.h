@@ -34,7 +34,10 @@ class MmttServer;
 
 class DepthCamera {
 public:
-	static DepthCamera* makeDepthCamera(MmttServer* s, std::string camtype);
+	static DepthCamera* makeDepthCamera(MmttServer* s, std::string camtype, int camnum);
+
+	MmttServer* server() { return _server; }
+
 	virtual const int width() = 0;
 	virtual const int height() = 0;
 	virtual const int default_depth_detect_top() = 0;
@@ -42,9 +45,16 @@ public:
 	virtual bool InitializeCamera() = 0;
 	virtual void Shutdown() = 0;
 	virtual void Update() = 0;
-	MmttServer* server() { return _server; }
+	virtual std::string camtype() = 0;
+
+	// These don't have to defined by all cameras
+	virtual bool Tilt(int degrees) { return false; };
+	virtual IplImage* colorimage() { return NULL; };
+
 protected:
 	MmttServer* _server;
+	std::string _camtype;
+	int _camindex;
 };
 
 #endif

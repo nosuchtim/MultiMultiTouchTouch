@@ -108,9 +108,6 @@
     <ClCompile Include="..\..\src\nosuch\NosuchOscUdpInput.cpp">
       <Filter>Source Files\nosuch</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\mmtt\mmtt_pcx.cpp">
-      <Filter>Source Files\mmtt</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\mmtt\main.cpp">
       <Filter>Source Files\mmtt</Filter>
     </ClCompile>
@@ -234,6 +231,12 @@
     <ClCompile Include="..\..\other\portmidi\porttime\ptwinmm.c">
       <Filter>Source Files\portmidi\porttime</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\mmtt\mmtt_realsense.cpp">
+      <Filter>Source Files\mmtt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\mmtt\mmtt_senz3d.cpp">
+      <Filter>Source Files\mmtt</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="mmtt.ico">
@@ -279,7 +282,10 @@
     <ClInclude Include="..\..\src\mmtt\mmtt_kinect.h">
       <Filter>Header Files\mmtt</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\mmtt\mmtt_pcx.h">
+    <ClInclude Include="..\..\src\mmtt\mmtt_realsense.h">
+      <Filter>Header Files\mmtt</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\mmtt\mmtt_senz3d.h">
       <Filter>Header Files\mmtt</Filter>
     </ClInclude>
   </ItemGroup>

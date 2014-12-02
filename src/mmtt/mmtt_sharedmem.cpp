@@ -58,14 +58,12 @@ MMTT_SharedMemHeader::xinit()
     version = MMTT_SHM_VERSION_NUMBER;
 
 	for ( buff_index b=0; b<NUM_BUFFS; b++ ) {
-		// cursorsOffset[b] = calcCursorOffset(b);
 		outlinesOffset[b] = calcOutlineOffset(b);
 		pointsOffset[b] = calcPointOffset(b);
 		buff_inuse[b] = false;
 		clear_lists(b);
 	}
 
-	ncursors_max = MMTT_CURSORS_MAX;
 	noutlines_max = MMTT_OUTLINES_MAX;
 	npoints_max = MMTT_POINTS_MAX;
 
@@ -83,13 +81,12 @@ MMTT_SharedMemHeader::xinit()
 }
 
 int
-MMTT_SharedMemHeader::addCursorOutline(buff_index b,
+MMTT_SharedMemHeader::addOutline(buff_index b,
 	int rid, int sid, float x, float y, float z, int npoints) {
 
 	NosuchAssert(b!=BUFF_UNSET);
 
 	int cnum = numoutlines[b];
-	// CursorSharedMem* cm = cursor(b,cnum);
 	OutlineMem* om = outline(b,cnum);
 
 	// NOTE: region id's in the shared memory are shifted down by 1

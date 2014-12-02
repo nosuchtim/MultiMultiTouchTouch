@@ -28,8 +28,13 @@
 #include "mmtt.h"
 
 DepthCamera* DepthCamera::makeDepthCamera(MmttServer* s, std::string camtype, int camnum) {
-#ifdef PCX_CAMERA
-	if ( camtype == "pcx" || camtype == "senz3d" ) {
+#ifdef REALSENSE_CAMERA
+	if ( camtype == "realsense" ) {
+		return new RealsenseDepthCamera(s,camnum);
+	}
+#endif
+#ifdef SENZ3D_CAMERA
+	if ( camtype == "pcx" || camtype == "pxc" || camtype == "senz3d" ) {
 		return new PcxDepthCamera(s,camnum);
 	}
 #endif

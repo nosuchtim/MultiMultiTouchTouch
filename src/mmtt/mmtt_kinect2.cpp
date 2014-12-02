@@ -25,13 +25,13 @@
 	WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifdef KINECT2_CAMERA
-
 #include "stdafx.h"
 #include "Kinect.h"
 #include "NosuchDebug.h"
 #include "mmtt.h"
 #include "mmtt_kinect2.h"
+
+#ifdef KINECT2_CAMERA
 
 using namespace std;
 
@@ -178,15 +178,15 @@ Kinect2DepthCamera::processRawDepth(const UINT16* pBuffer, int width , int heigh
 
 	int i = 0;
 
-	bool filterdepth = ! server()->val_showrawdepth.internal_value;
+	bool filterdepth = ! server()->val_showrawdepth.value;
 
 	// XXX - THIS NEEDS OPTIMIZATION!
 
 	// UINT16 *pdepth = depth;
 
 	for (int y=0; y<height; y++) {
-	  float backval = (float)(server()->val_depth_detect_top.internal_value
-		  + (server()->val_depth_detect_bottom.internal_value - server()->val_depth_detect_top.internal_value)
+	  float backval = (float)(server()->val_depth_detect_top.value
+		  + (server()->val_depth_detect_bottom.value - server()->val_depth_detect_top.value)
 		  * (float(y)/height));
 
 	  for (int x=0; x<width; x++,i++) {
@@ -202,12 +202,12 @@ Kinect2DepthCamera::processRawDepth(const UINT16* pBuffer, int width , int heigh
 		int deltamm;
 		int pval = 0;
 		if ( filterdepth ) {
-			if ( mm == 0 || mm < server()->val_depth_front.internal_value || mm > backval ) {
+			if ( mm == 0 || mm < server()->val_depth_front.value || mm > backval ) {
 				pval = OUT_OF_BOUNDS;
-			} else if ( x < server()->val_edge_left.internal_value || x > server()->val_edge_right.internal_value || y < server()->val_edge_top.internal_value || y > server()->val_edge_bottom.internal_value ) {
+			} else if ( x < server()->val_edge_left.value || x > server()->val_edge_right.value || y < server()->val_edge_top.value || y > server()->val_edge_bottom.value ) {
 				pval = OUT_OF_BOUNDS;
 			} else {
-				// deltamm = (int)server()->val_depth_detect_top.internal_value - mm;
+				// deltamm = (int)server()->val_depth_detect_top.value - mm;
 				deltamm = (int)backval - mm;
 			}
 		} else {
