@@ -10,7 +10,7 @@
 
   "camera": "realsense",         # Other possible values: kinect, kinect2
 
-  "patch": "quadrants_senz3d",   # Name a file in the config/mmtt directory
+  "patch": "fullscreen_realsense",   # Name a file in the config/mmtt directory
 
   "initialalign": 0,          # If initialalign is 1, an auto-alignment
                               # will be done at startup.  This is only

@@ -25,13 +25,14 @@
 	WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#include "mmtt_camera.h"
+
+#ifdef KINECT2_CAMERA
+
 #include "stdafx.h"
 #include "Kinect.h"
 #include "NosuchDebug.h"
 #include "mmtt.h"
-#include "mmtt_kinect2.h"
-
-#ifdef KINECT2_CAMERA
 
 using namespace std;
 
