@@ -959,6 +959,83 @@ void MmttServer::draw_end() {
 	swap_buffers();
 }
 
+void MmttServer::draw_color_image() {
+
+	IplImage* cimage = camera->colorimage();
+	if ( cimage == NULL ) {
+		return;
+	}
+
+#ifdef DEBUG_COLOR
+	glColor4f(1.0,1.0,0.0,0.5);
+	glLineWidth((GLfloat)10.0f);
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(-0.8f, 0.8f, 0.0f);	// Top Left
+	glVertex3f( 0.8f, 0.8f, 0.0f);	// Top Right
+	glVertex3f( 0.8f,-0.8f, 0.0f);	// Bottom Right
+	glVertex3f(-0.8f,-0.8f, 0.0f);	// Bottom Left
+	glEnd();
+
+	glColor4f(1.0,1.0,1.0,1.0);
+#endif
+
+	glPixelStorei (GL_UNPACK_ROW_LENGTH, _camWidth);
+ 
+	unsigned char *pix = (unsigned char *)(cimage->imageData);
+
+	static bool initialized = false;
+	static GLuint texture;
+	if ( ! initialized ) {
+		initialized = true;
+	    glGenTextures( 1, &texture );
+	}
+
+	glEnable( GL_TEXTURE_2D );
+
+	glEnable(GL_BLEND); 
+
+	// glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  // original
+
+	// We want the black in the texture image
+	// to NOT wipe out other things.
+	glBlendFunc(GL_ONE, GL_ONE);
+
+	if ( pix != NULL ) {
+
+	    glBindTexture( GL_TEXTURE_2D, texture );
+
+		glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB,
+			_camWidth, _camHeight,
+			0, GL_RGB, GL_UNSIGNED_BYTE, pix);
+
+		if ( _do_sharedmem ) {
+			shmem_lock_and_update_image(pix);
+		}
+
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+
+		glPushMatrix();
+
+		glColor4f(1.0,1.0,1.0,0.5);
+		glBegin(GL_QUADS);
+		GLfloat x0 = -1.0f;
+		GLfloat y0 = 1.0f;
+		GLfloat x1 = 1.0f;
+		GLfloat y1 = -1.0f;
+		glTexCoord2d(1.0,0.0); glVertex3f( x0, y0, 0.0f);	// Top Left
+		glTexCoord2d(0.0,0.0); glVertex3f( x1, y0, 0.0f);	// Top Right
+		glTexCoord2d(0.0,1.0); glVertex3f( x1, y1, 0.0f);	// Bottom Right
+		glTexCoord2d(1.0,1.0); glVertex3f( x0, y1, 0.0f);	// Bottom Left
+		glEnd();			
+
+		glPopMatrix();
+	}
+
+	glDisable( GL_TEXTURE_2D );
+
+}
+
 static std::string
 OscMessageToJson(OscMessage& msg) {
 	std::string s = NosuchSnprintf("{ \"address\" : \"%s\", \"args\" : [ ", msg.getAddress().c_str());

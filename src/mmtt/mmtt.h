@@ -163,6 +163,7 @@ class MmttServer : public NosuchJsonListener {
 	void check_json_and_execute();
 	void analyze_depth_images();
 	void draw_depth_image();
+	void draw_color_image();
 	void draw_begin();
 	void draw_end();
 	void swap_buffers();

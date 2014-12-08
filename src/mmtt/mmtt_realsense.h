@@ -127,6 +127,9 @@ private:
 
 	PXCImage* g_depthimage;
 	PXCImage* g_colorimage;
+	PXCProjection *g_projection;
+	PXCImage* g_projected;
+
 	IplImage* g_coloriplimage;
 
 	int _nactive;

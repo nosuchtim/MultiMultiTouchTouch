@@ -298,6 +298,7 @@ int MmttServer::Run(std::string title, HINSTANCE hInstance, int nCmdShow)
 		analyze_depth_images();
 		draw_begin();
 		draw_depth_image();
+		draw_color_image();
 		draw_end();
 
         if (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE)) {

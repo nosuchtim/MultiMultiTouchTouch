@@ -45,6 +45,8 @@ RealsenseDepthCamera::RealsenseDepthCamera(MmttServer* s, int camindex) {
 	g_sensemanager = 0;
 	g_colorimage = 0;
 	g_depthimage = 0;
+	g_projected = 0;
+	g_projection = 0;
 	g_coloriplimage = 0;
 }
 
@@ -90,8 +92,6 @@ PXCCapture::Device::StreamProfileSet RealsenseDepthCamera::GetProfileSet() {
 		}
 	}
 
-#define USE_COLOR
-#ifdef USE_COLOR
 	lookfortype =  PXCCapture::STREAM_TYPE_COLOR;
 	nprofiles = g_device->QueryStreamProfileSetNum(lookfortype);
 	for (int n=0;n<nprofiles;n++) {
@@ -107,7 +107,6 @@ PXCCapture::Device::StreamProfileSet RealsenseDepthCamera::GetProfileSet() {
 			break;
 		}
 	}
-#endif
 
 	return profiles;
 }
@@ -289,6 +288,13 @@ void RealsenseDepthCamera::Update() {
 		return;
 	}
 
+	if ( !g_projection ) {
+		g_projection = g_device->CreateProjection();
+		if ( !g_projection ) {
+			DEBUGPRINT(("UNABLE TO create Projection!?"));
+		}
+	}
+
 	if ( g_colorimage ) {
 		g_colorimage->Release();
 		g_colorimage = 0;
@@ -299,19 +305,16 @@ void RealsenseDepthCamera::Update() {
 		g_depthimage = 0;
 	}
 
+	if ( g_projected ) {
+		g_projected->Release();
+		g_projected = 0;
+	}
+
 	g_depthimage = sample->depth;
 	g_depthimage->AddRef();
 
 	g_colorimage = sample->color;
 	g_colorimage->AddRef();
-
-	PXCImage::ImageData depthidata;
-	status = g_depthimage->AcquireAccess(PXCImage::ACCESS_READ,&depthidata);
-	if ( status < PXC_STATUS_NO_ERROR ) {
-		DEBUGPRINT(("AcquireAccess returned error?"));
-	} else {
-		processRawDepth((pxcU16*)depthidata.planes[0]);
-	}
 
 	if ( g_coloriplimage == NULL ) {
 		// One-time
@@ -331,12 +334,30 @@ void RealsenseDepthCamera::Update() {
 		goto getout;
 	}
 
+	// No need to AddRef on g_projected, since we've created it
+
+	// I'd really like to use CreateColorImageMappedToDepth here, but there's a memory leak in the RSSDK.
+	g_projected = g_projection->CreateDepthImageMappedToColor(g_depthimage,g_colorimage);
+
+	PXCImage::ImageData projecteddata;
+	status = g_projected->AcquireAccess(PXCImage::ACCESS_READ,PXCImage::PIXEL_FORMAT_DEPTH,&projecteddata);
+	if ( status < PXC_STATUS_NO_ERROR ) {
+		DEBUGPRINT(("AcquireAccess returned error?"));
+		goto getout;
+	}
+	processRawDepth((pxcU16*)projecteddata.planes[0]);
+
+	status = g_projected->ExportData(&projecteddata);
+	if ( status < PXC_STATUS_NO_ERROR ) {
+		DEBUGPRINT(("Unable to ExportData from g_projected!?"));
+		goto getout;
+	}
+
 	g_coloriplimage->origin = 1;
-	// g_coloriplimage->imageData = (char*)(projecteddata.planes[0]);
 	g_coloriplimage->imageData = (char*)(coloridata.planes[0]);
 
 	g_colorimage->ReleaseAccess(&coloridata);
-	g_depthimage->ReleaseAccess(&depthidata);
+	g_projected->ReleaseAccess(&projecteddata);
 
 getout:
 	g_sensemanager->ReleaseFrame();
