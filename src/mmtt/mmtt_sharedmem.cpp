@@ -82,7 +82,7 @@ MMTT_SharedMemHeader::xinit()
 
 int
 MMTT_SharedMemHeader::addOutline(buff_index b,
-	int rid, int sid, float x, float y, float z, int npoints) {
+	int rid, int sid, float x, float y, float z, float area, int npoints) {
 
 	NosuchAssert(b!=BUFF_UNSET);
 
@@ -95,6 +95,7 @@ MMTT_SharedMemHeader::addOutline(buff_index b,
 	om->x = x;
 	om->y = y;
 	om->z = z;
+	om->area = area;
 	om->npoints = npoints;
 	om->index_of_firstpoint = numpoints[b];
 

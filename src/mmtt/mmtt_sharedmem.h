@@ -8,7 +8,8 @@
 #define TOP_SHM_VERSION_NUMBER 	2
 
 #define MMTT_SHM_MAGIC_NUMBER 	0xe95df674
-#define MMTT_SHM_VERSION_NUMBER 	1
+// Version 2 got rid of cursors in favor of outlines
+#define MMTT_SHM_VERSION_NUMBER 	3
 #define MMTT_CURSORS_MAX 100
 #define MMTT_OUTLINES_MAX 1000
 #define MMTT_POINTS_MAX 100000
@@ -81,6 +82,7 @@ typedef struct OutlineMem {
 	float x;
 	float y;
 	float z;
+	float area;
 	int npoints;
 	int index_of_firstpoint;
 } OutlineMem;
@@ -92,7 +94,6 @@ typedef int buff_index;
 class MMTT_SharedMemHeader
 {
 public:
-    /* Begin version 1 */
     // Magic number to make sure we are looking at the correct memory
     // must be set to MMTT_SHM_MAGIC_NUMBER
     int							magicNumber;  
@@ -124,7 +125,7 @@ public:
 	long lastUpdateTime;  // directly from timeGetTime()
 	int active;
 
-    /* End version 1 */
+	// END OF DATA, the rest is method declarations
 
 	char *Data() {
 		return (char*)this + sizeof(MMTT_SharedMemHeader);
@@ -152,7 +153,7 @@ public:
     }
 
 	int addPoint(buff_index b, float x, float y, float z);
-	int addOutline(buff_index b, int region, int sid, float x, float y, float z, int npoints);
+	int addOutline(buff_index b, int region, int sid, float x, float y, float z, float area, int npoints);
 
 	void xinit();
 	void clear_lists(buff_index b);

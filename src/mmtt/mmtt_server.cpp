@@ -654,6 +654,8 @@ MmttServer::shmem_update_outlines(MMTT_SharedMemHeader* h,
 
 		float depth = (float)sess->_depth_normalized;
 
+		float blobarea = float(blobrect.width * blobrect.height) / (regionrect.width*regionrect.height);
+
 		CBlobContour* contour = blob->GetExternalContour();
 		if ( ! contour ) {
 			DEBUGPRINT(("HEY!  contour==NULL?  in shmem_update_outlines"));
@@ -666,7 +668,7 @@ MmttServer::shmem_update_outlines(MMTT_SharedMemHeader* h,
 		}
 		int npoints = contourpoints->total;
 
-		h->addOutline(buff,r->id,tuio_sid,blobcenterx,blobcentery,depth,npoints);
+		h->addOutline(buff,r->id,tuio_sid,blobcenterx,blobcentery,depth,blobarea,npoints);
 
 		if ( npoints > 0 ) {
 			for(int i = 0; i < npoints; i++) {
@@ -3162,7 +3164,7 @@ MmttServer::copyRegionRectsToRegionsImage(IplImage* regions, bool reverseColor, 
 					i = (_camWidth-1-x) + y*_camWidth;
 				}
 #endif
-				regions->imageData[i] = region_id;
+				regions->imageData[i] = (unsigned char) region_id;
 			}
 		}
 	}
