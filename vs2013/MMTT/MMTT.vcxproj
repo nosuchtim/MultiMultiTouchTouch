@@ -114,7 +114,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\src\space;..\..\src\nosuch;..\..\src\misclib;..\..\src\mmtt;..\..\other\freeframe;..\..\other\osc\include;..\..\other\cvblobslib;..\..\other\opencv\build\include;..\..\other\cJSON;..\..\other\pthreads-w32-2-9-1-release\Pre-built.2\include;..\..\other\portmidi\porttime;..\..\other\Spout2\SpoutSDK\Source;..\..\other\portmidi\pm_common;c:\Python27\include;c:\Program Files (x86)\Intel\RSSDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src\space;..\..\src\nosuch;..\..\src\misclib;..\..\src\mmtt;..\..\other\freeframe;..\..\other\osc\include;..\..\other\cvblobslib;..\..\other\opencv\build\include;..\..\other\cJSON;..\..\other\pthreads-w32-2-9-1-release\Pre-built.2\include;..\..\other\portmidi\porttime;..\..\other\Spout2\SpoutSDK\Source;..\..\other\portmidi\pm_common;c:\Python27\include;c:\Program Files (x86)\Intel\RSSDK\include;c:\Program Files\Microsoft SDKs\Kinect\v2.0_1409\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>Async</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -130,8 +130,8 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>/ignore:4099</AdditionalOptions>
-      <AdditionalDependencies>opencv_highgui2410d.lib;opencv_core2410d.lib;opencv_flann2410d.lib;opencv_ml2410d.lib;opencv_imgproc2410d.lib;libjpegd.lib;libpngd.lib;libtiffd.lib;libjasperd.lib;IlmImfd.lib;pthreadVC2.lib;winmm.lib;libpxc_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\x64\Debug;..\..\other\opencv\build\x64\vc12\staticlib;..\..\other\pthreads-w32-2-9-1-release\Pre-built.2\lib\x64;C:\Python27\libs;C:\Program Files %28x86%29\Intel\RSSDK\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opencv_highgui2410d.lib;opencv_core2410d.lib;opencv_flann2410d.lib;opencv_ml2410d.lib;opencv_imgproc2410d.lib;libjpegd.lib;libpngd.lib;libtiffd.lib;libjasperd.lib;IlmImfd.lib;pthreadVC2.lib;winmm.lib;libpxc_d.lib;Kinect20.lib;Kinect20.Fusion.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\x64\Debug;..\..\other\opencv\build\x64\vc12\staticlib;..\..\other\pthreads-w32-2-9-1-release\Pre-built.2\lib\x64;C:\Python27\libs;C:\Program Files %28x86%29\Intel\RSSDK\lib\x64;c:\Program Files\Microsoft SDKs\Kinect\v2.0_1409\Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>

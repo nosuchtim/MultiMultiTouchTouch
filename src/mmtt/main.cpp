@@ -289,10 +289,8 @@ int MmttServer::Run(std::string title, HINSTANCE hInstance, int nCmdShow)
 		exit(1);
 	}
 
-	SpoutSender mySender;
-
-	mySender.SetDX9(true);
-	mySender.CreateSender("MMTT", camera->width(), camera->height());
+	_mySender.SetDX9(true);
+	_mySender.CreateSender("MMTT", camera->width(), camera->height());
 
     // Main message loop
 	DWORD tm0 = timeGetTime();

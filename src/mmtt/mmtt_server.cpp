@@ -907,6 +907,10 @@ void MmttServer::draw_depth_image() {
 		glEnd();			
 
 		glPopMatrix();
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		_mySender.SendTexture(texture, GL_TEXTURE_2D, _camWidth, _camHeight, false, 0);
 	}
 
 	glDisable( GL_TEXTURE_2D );

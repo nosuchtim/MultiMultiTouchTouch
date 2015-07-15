@@ -41,7 +41,12 @@ Kinect2DepthCamera::Kinect2DepthCamera(MmttServer* s) {
 	_server = s;
 
     m_pKinectSensor = NULL;
+#ifndef KINECT2_MULTIFRAMEREADER
     m_pDepthFrameReader = NULL;
+#endif
+#ifdef KINECT2_MULTIFRAMEREADER
+    m_pMultiSourceFrameReader = NULL;
+#endif
     m_pDepthRGBX = NULL;
 
     // create heap storage for depth pixel data in RGBX format
@@ -65,6 +70,7 @@ bool Kinect2DepthCamera::InitializeCamera()
 
         hr = m_pKinectSensor->Open();
 
+#ifndef KINECT2_MULTIFRAMEREADER
         if (SUCCEEDED(hr))
         {
             hr = m_pKinectSensor->get_DepthFrameSource(&pDepthFrameSource);
@@ -74,6 +80,16 @@ bool Kinect2DepthCamera::InitializeCamera()
         {
             hr = pDepthFrameSource->OpenReader(&m_pDepthFrameReader);
         }
+#endif
+
+#ifdef KINECT2_MULTIFRAMEREADER
+		if (SUCCEEDED(hr))
+		{
+			hr = m_pKinectSensor->OpenMultiSourceFrameReader(
+				FrameSourceTypes::FrameSourceTypes_Depth | FrameSourceTypes::FrameSourceTypes_Color, &m_pMultiSourceFrameReader);
+			DEBUGPRINT(("opened multisource hr=%d", hr));
+		}
+#endif
 
         SafeRelease(pDepthFrameSource);
     }
@@ -89,19 +105,67 @@ bool Kinect2DepthCamera::InitializeCamera()
 
 void Kinect2DepthCamera::Update()
 {
+#ifdef KINECT2_MULTIFRAMEREADER
+	if (!m_pMultiSourceFrameReader)
+	{
+		return;
+	}
+#endif
+
+#ifndef KINECT2_MULTIFRAMEREADER
     if (!m_pDepthFrameReader)
     {
         return;
     }
+#endif
 
+	IMultiSourceFrame* pMultiSourceFrame = NULL;
     IDepthFrame* pDepthFrame = NULL;
+#ifdef DO_COLOR_FRAME
+    IColorFrame* pColorFrame = NULL;
+#endif
 
+#ifdef KINECT2_MULTIFRAMEREADER
+	HRESULT hr = m_pMultiSourceFrameReader->AcquireLatestFrame(&pMultiSourceFrame);
+
+	if (SUCCEEDED(hr))
+	{
+		IDepthFrameReference* pDepthFrameReference = NULL;
+
+		hr = pMultiSourceFrame->get_DepthFrameReference(&pDepthFrameReference);
+		if (SUCCEEDED(hr))
+		{
+			hr = pDepthFrameReference->AcquireFrame(&pDepthFrame);
+		}
+
+		SafeRelease(pDepthFrameReference);
+	}
+
+#ifndef DO_COLOR_FRAME
+	if (SUCCEEDED(hr))
+	{
+		IColorFrameReference* pColorFrameReference = NULL;
+
+		hr = pMultiSourceFrame->get_ColorFrameReference(&pColorFrameReference);
+		if (SUCCEEDED(hr))
+		{
+			hr = pColorFrameReference->AcquireFrame(&pColorFrame);
+		}
+
+		SafeRelease(pColorFrameReference);
+	}
+#endif
+
+#endif
+
+#ifndef KINECT2_MULTIFRAMEREADER
     HRESULT hr = m_pDepthFrameReader->AcquireLatestFrame(&pDepthFrame);
+#endif
 
     if (SUCCEEDED(hr))
     {
         INT64 nTime = 0;
-        IFrameDescription* pFrameDescription = NULL;
+        IFrameDescription* pFrameDepthDescription = NULL;
         int nWidth = 0;
         int nHeight = 0;
         USHORT nDepthMinReliableDistance = 0;
@@ -113,17 +177,17 @@ void Kinect2DepthCamera::Update()
 
         if (SUCCEEDED(hr))
         {
-            hr = pDepthFrame->get_FrameDescription(&pFrameDescription);
+            hr = pDepthFrame->get_FrameDescription(&pFrameDepthDescription);
         }
 
         if (SUCCEEDED(hr))
         {
-            hr = pFrameDescription->get_Width(&nWidth);
+            hr = pFrameDepthDescription->get_Width(&nWidth);
         }
 
         if (SUCCEEDED(hr))
         {
-            hr = pFrameDescription->get_Height(&nHeight);
+            hr = pFrameDepthDescription->get_Height(&nHeight);
         }
 
         if (SUCCEEDED(hr))
@@ -146,10 +210,13 @@ void Kinect2DepthCamera::Update()
             ProcessDepth(nTime, pBuffer, nWidth, nHeight, nDepthMinReliableDistance, nDepthMaxReliableDistance);
         }
 
-        SafeRelease(pFrameDescription);
+        SafeRelease(pFrameDepthDescription);
     }
 
     SafeRelease(pDepthFrame);
+#ifdef DO_COLOR_FRAME
+    SafeRelease(pColorFrame);
+#endif
 }
 
 /// <summary>

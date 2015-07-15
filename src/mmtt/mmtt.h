@@ -44,6 +44,8 @@
 #include "NosuchHttpServer.h"
 #include "NosuchException.h"
 
+#include "spout.h"
+
 class Cursor;
 
 class UT_SharedMem;
@@ -210,6 +212,8 @@ class MmttServer : public NosuchJsonListener {
 
 	UT_SharedMem *_sharedmem_image;
 	UT_SharedMem *_sharedmem_outlines;
+
+	SpoutSender _mySender;
 
 	DepthCamera* camera;
 
