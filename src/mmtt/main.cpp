@@ -44,6 +44,8 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
+#include "spout.h"
+
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "glu32.lib")
 
@@ -287,10 +289,15 @@ int MmttServer::Run(std::string title, HINSTANCE hInstance, int nCmdShow)
 		exit(1);
 	}
 
+	SpoutSender mySender;
+
+	mySender.SetDX9(true);
+	mySender.CreateSender("MMTT", camera->width(), camera->height());
+
     // Main message loop
 	DWORD tm0 = timeGetTime();
 	int nframes = 0;
-    while (WM_QUIT != msg.message) {
+	while (WM_QUIT != msg.message) {
 
 		camera->Update();
 
@@ -301,22 +308,24 @@ int MmttServer::Run(std::string title, HINSTANCE hInstance, int nCmdShow)
 		draw_color_image();
 		draw_end();
 
-        if (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE)) {
-            // If a dialog message will be taken care of by the dialog proc
-            if ((g.hwnd != NULL) && IsDialogMessageW(g.hwnd, &msg)) {
-                continue;
-            }
+		if (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE)) {
+			// If a dialog message will be taken care of by the dialog proc
+			if ((g.hwnd != NULL) && IsDialogMessageW(g.hwnd, &msg)) {
+				continue;
+			}
 
-            TranslateMessage(&msg);
-            DispatchMessageW(&msg);
-        }
-		nframes++;
-		DWORD tm = timeGetTime();
-		// Put out FPS every 10 seconds
-		if ( (tm - tm0) > 10000 ) {
-			DEBUGPRINT(("FPS = %d   tm=%ld",nframes/10,(long)tm));
-			tm0 = tm;
-			nframes = 0;
+			TranslateMessage(&msg);
+			DispatchMessageW(&msg);
+		}
+		if (_do_showfps) {
+			nframes++;
+			DWORD tm = timeGetTime();
+			// Put out FPS every 10 seconds
+			if ((tm - tm0) > 10000) {
+				DEBUGPRINT(("FPS = %d   tm=%ld", nframes / 10, (long)tm));
+				tm0 = tm;
+				nframes = 0;
+			}
 		}
     }
 

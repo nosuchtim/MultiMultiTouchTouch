@@ -1636,6 +1636,7 @@ MmttServer::LoadGlobalDefaults()
 	// These are default values, which can be overridden by the config file.
 	_jsonport = 4444;
 	_do_sharedmem = false;
+	_do_showfps = false;
 	_sharedmemname = "mmtt_outlines";
 	_do_tuio = true;
 	_do_errorpopup;
@@ -1708,6 +1709,9 @@ MmttServer::LoadConfigDefaultsJson(cJSON* json)
 
 	if ( (j=getNumber(json,"sharedmem")) != NULL ) {
 		_do_sharedmem = (j->valueint != 0);
+	}
+	if ( (j=getNumber(json,"showfps")) != NULL ) {
+		_do_showfps = (j->valueint != 0);
 	}
 	if ( (j=getString(json,"sharedmemname")) != NULL ) {
 		_sharedmemname = std::string(j->valuestring);

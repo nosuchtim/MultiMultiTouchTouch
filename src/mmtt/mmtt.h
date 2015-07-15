@@ -294,6 +294,7 @@ private:
 
 	std::string _configpath;
 	bool _do_sharedmem;
+	bool _do_showfps;
 	std::string _sharedmemname;
 	bool _do_tuio;
 	bool _do_errorpopup;
