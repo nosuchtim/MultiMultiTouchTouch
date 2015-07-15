@@ -44,6 +44,8 @@
 #include "NosuchHttpServer.h"
 #include "NosuchException.h"
 
+#include "spout.h"
+
 class Cursor;
 
 class UT_SharedMem;
@@ -211,6 +213,8 @@ class MmttServer : public NosuchJsonListener {
 	UT_SharedMem *_sharedmem_image;
 	UT_SharedMem *_sharedmem_outlines;
 
+	SpoutSender _mySender;
+
 	DepthCamera* camera;
 
 	MmttValue val_showfps;
@@ -251,7 +255,8 @@ class MmttServer : public NosuchJsonListener {
 
 private:
 
-	void init_values();
+	void init_regular_values();
+	void init_camera_values();
 	std::string LoadGlobalDefaults();
 	void LoadConfigDefaultsJson(cJSON* json);
 	void doRegistration();
@@ -294,6 +299,7 @@ private:
 
 	std::string _configpath;
 	bool _do_sharedmem;
+	bool _do_showfps;
 	std::string _sharedmemname;
 	bool _do_tuio;
 	bool _do_errorpopup;
@@ -316,6 +322,7 @@ private:
 	bool _regionsfilled;
 	bool _regionsDefinedByPatch;
 	CvSize _camSize;
+	int _camSizeInBytes;
 	IplImage* _ffImage;
 	IplImage* _tmpGray;
 	IplImage* _maskImage;

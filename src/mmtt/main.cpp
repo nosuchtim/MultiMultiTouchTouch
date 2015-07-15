@@ -44,6 +44,8 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
+#include "spout.h"
+
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "glu32.lib")
 
@@ -287,36 +289,55 @@ int MmttServer::Run(std::string title, HINSTANCE hInstance, int nCmdShow)
 		exit(1);
 	}
 
+	_mySender.SetDX9(true);
+	_mySender.CreateSender("MMTT Depth", camera->width(), camera->height());
+
     // Main message loop
 	DWORD tm0 = timeGetTime();
 	int nframes = 0;
-    while (WM_QUIT != msg.message) {
+	DWORD lasttm = tm0;
+	while (WM_QUIT != msg.message) {
 
-		camera->Update();
+		DWORD now = timeGetTime();
+		DWORD dt = now - lasttm;
+		if (dt > 30) {
+			DEBUGPRINT(("Message loop excessive delay now=%ld dt=%ld lasttm=%ld", now, dt, lasttm));
+		}
+		lasttm = now;
+
+		bool updateok = camera->Update();
 
 		check_json_and_execute();
+
+		if ( ! updateok ) {
+			DEBUGPRINT1(("Message loop got Update failure, skipping drawing"));
+			continue;
+		}
+
 		analyze_depth_images();
 		draw_begin();
 		draw_depth_image();
 		draw_color_image();
 		draw_end();
 
-        if (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE)) {
-            // If a dialog message will be taken care of by the dialog proc
-            if ((g.hwnd != NULL) && IsDialogMessageW(g.hwnd, &msg)) {
-                continue;
-            }
+		if (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE)) {
+			// If a dialog message will be taken care of by the dialog proc
+			if ((g.hwnd != NULL) && IsDialogMessageW(g.hwnd, &msg)) {
+				continue;
+			}
 
-            TranslateMessage(&msg);
-            DispatchMessageW(&msg);
-        }
-		nframes++;
-		DWORD tm = timeGetTime();
-		// Put out FPS every 10 seconds
-		if ( (tm - tm0) > 10000 ) {
-			DEBUGPRINT(("FPS = %d   tm=%ld",nframes/10,(long)tm));
-			tm0 = tm;
-			nframes = 0;
+			TranslateMessage(&msg);
+			DispatchMessageW(&msg);
+		}
+		if (_do_showfps) {
+			nframes++;
+			DWORD tm = timeGetTime();
+			// Put out FPS every 10 seconds
+			if ((tm - tm0) > 10000) {
+				DEBUGPRINT(("FPS = %d   tm=%ld", nframes / 10, (long)tm));
+				tm0 = tm;
+				nframes = 0;
+			}
 		}
     }
 

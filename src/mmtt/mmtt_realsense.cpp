@@ -43,11 +43,15 @@ RealsenseDepthCamera::RealsenseDepthCamera(MmttServer* s, int camindex) {
 	g_capture = 0;
 	g_device = 0;
 	g_sensemanager = 0;
+#ifdef USE_COLOR
 	g_colorimage = 0;
+	g_coloriplimage = 0;
+#endif
 	g_depthimage = 0;
+#ifdef GENERATE_MAPPED_DEPTH
 	g_projected = 0;
 	g_projection = 0;
-	g_coloriplimage = 0;
+#endif
 }
 
 PXCCapture::Device::StreamProfileSet RealsenseDepthCamera::GetProfileSet() {
@@ -92,6 +96,7 @@ PXCCapture::Device::StreamProfileSet RealsenseDepthCamera::GetProfileSet() {
 		}
 	}
 
+#ifdef USE_COLOR
 	lookfortype =  PXCCapture::STREAM_TYPE_COLOR;
 	nprofiles = g_device->QueryStreamProfileSetNum(lookfortype);
 	for (int n=0;n<nprofiles;n++) {
@@ -107,6 +112,7 @@ PXCCapture::Device::StreamProfileSet RealsenseDepthCamera::GetProfileSet() {
 			break;
 		}
 	}
+#endif
 
 	return profiles;
 }
@@ -267,14 +273,15 @@ RealsenseDepthCamera::processRawDepth(pxcU16 *depth)
 	}
 }
 
-void RealsenseDepthCamera::Update() {
+bool RealsenseDepthCamera::Update() {
 	bool sync = true;
 	pxcStatus status;
+	bool returnok = false;
 	
 	status = g_sensemanager->AcquireFrame(sync);
 	if ( status < PXC_STATUS_NO_ERROR ) {
 		DEBUGPRINT(("AcquireFrame returned error?"));
-		return;
+		return(false);
 	}
 	PXCCapture::Sample *sample = (PXCCapture::Sample*)g_sensemanager->QuerySample();
 
@@ -283,44 +290,65 @@ void RealsenseDepthCamera::Update() {
 		goto getout;
 	}
 
+#ifdef USE_COLOR
 	if ( sample->depth == NULL || sample->color == NULL ) {
 		DEBUGPRINT(("Hey, depth and color weren't both present?"));
 		return;
 	}
+#endif
 
+#ifdef GENERATE_MAPPED_DEPTH
 	if ( !g_projection ) {
 		g_projection = g_device->CreateProjection();
 		if ( !g_projection ) {
 			DEBUGPRINT(("UNABLE TO create Projection!?"));
 		}
 	}
+#endif
 
+#ifdef USE_COLOR
 	if ( g_colorimage ) {
 		g_colorimage->Release();
 		g_colorimage = 0;
 	}
+#endif
 
 	if ( g_depthimage ) {
 		g_depthimage->Release();
 		g_depthimage = 0;
 	}
 
+#ifdef GENERATE_MAPPED_DEPTH
 	if ( g_projected ) {
 		g_projected->Release();
 		g_projected = 0;
 	}
+#endif
 
 	g_depthimage = sample->depth;
 	g_depthimage->AddRef();
 
+#ifdef USE_COLOR
 	g_colorimage = sample->color;
 	g_colorimage->AddRef();
+#endif
+
+	PXCImage::ImageData depthidata;
+	status = g_depthimage->AcquireAccess(PXCImage::ACCESS_READ,&depthidata);
+	if ( status < PXC_STATUS_NO_ERROR ) {
+		DEBUGPRINT(("AcquireAccess returned error?"));
+	} else {
+#ifndef USE_MAPPED_DEPTH
+		processRawDepth((pxcU16*)depthidata.planes[0]);
+#endif
+	}
 
 	if ( g_coloriplimage == NULL ) {
 		// One-time
 		g_coloriplimage = cvCreateImageHeader( cvSize(width(),height()), IPL_DEPTH_8U, 3 );
 	}
 
+#ifdef USE_COLOR
 	PXCImage::ImageData coloridata;
 	status = g_colorimage->AcquireAccess(PXCImage::ACCESS_READ,PXCImage::PIXEL_FORMAT_RGB24,&coloridata);
 	if ( status < PXC_STATUS_NO_ERROR ) {
@@ -333,40 +361,58 @@ void RealsenseDepthCamera::Update() {
 		DEBUGPRINT(("Unable to ExportData from g_colorimage!?"));
 		goto getout;
 	}
+#endif
 
+#ifdef GENERATE_MAPPED_DEPTH
 	// No need to AddRef on g_projected, since we've created it
 
-	// I'd really like to use CreateColorImageMappedToDepth here, but there's a memory leak in the RSSDK.
+	// g_projected = g_projection->CreateColorImageMappedToDepth(g_depthimage,g_colorimage);
 	g_projected = g_projection->CreateDepthImageMappedToColor(g_depthimage,g_colorimage);
 
 	PXCImage::ImageData projecteddata;
 	status = g_projected->AcquireAccess(PXCImage::ACCESS_READ,PXCImage::PIXEL_FORMAT_DEPTH,&projecteddata);
+	// status = g_projected->AcquireAccess(PXCImage::ACCESS_READ,&projecteddata);
 	if ( status < PXC_STATUS_NO_ERROR ) {
 		DEBUGPRINT(("AcquireAccess returned error?"));
 		goto getout;
 	}
+#ifdef USE_MAPPED_DEPTH
 	processRawDepth((pxcU16*)projecteddata.planes[0]);
+#endif
 
 	status = g_projected->ExportData(&projecteddata);
 	if ( status < PXC_STATUS_NO_ERROR ) {
 		DEBUGPRINT(("Unable to ExportData from g_projected!?"));
 		goto getout;
 	}
+#endif
 
+	g_depthimage->ReleaseAccess(&depthidata);
+
+#ifdef USE_COLOR
 	g_coloriplimage->origin = 1;
+	// g_coloriplimage->imageData = (char*)(projecteddata.planes[0]);
 	g_coloriplimage->imageData = (char*)(coloridata.planes[0]);
-
 	g_colorimage->ReleaseAccess(&coloridata);
+#endif
+
+#ifdef GENERATE_MAPPED_DEPTH
 	g_projected->ReleaseAccess(&projecteddata);
+#endif
+
+	returnok = true;
 
 getout:
 	g_sensemanager->ReleaseFrame();
+	return(returnok);
 };
 
+#ifdef USE_COLOR
 IplImage*
 RealsenseDepthCamera::colorimage() {
 	return g_coloriplimage;
 }
+#endif
 
 void RealsenseDepthCamera::Shutdown() {
 	g_session->Release();

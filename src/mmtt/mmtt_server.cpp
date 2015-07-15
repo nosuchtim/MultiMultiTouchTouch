@@ -159,6 +159,8 @@ MmttServer::MmttServer(std::string configpath)
 	json_cond = PTHREAD_COND_INITIALIZER;
 	json_pending = FALSE;
 
+	init_regular_values();
+
 	std::string err = LoadGlobalDefaults();
 	if ( err != "" ) {
 		DEBUGPRINT((err.c_str()));
@@ -178,7 +180,7 @@ MmttServer::MmttServer(std::string configpath)
 		FatalAppExit( NULL, s2ws(msg).c_str());
 	}
 
-	init_values();
+	init_camera_values();
 
 	_camWidth = camera->width();
 	_camHeight = camera->height();
@@ -226,6 +228,7 @@ MmttServer::MmttServer(std::string configpath)
 	mmtt_values["autowindow"] = &val_auto_window;
 
 	_camSize = cvSize(_camWidth,_camHeight);
+	_camSizeInBytes = _camWidth * _camHeight * _camBytesPerPixel;
 	_tmpGray = cvCreateImage( _camSize, 8, 1 ); // allocate a 1 channel byte image
 	_maskImage = cvCreateImage( _camSize, IPL_DEPTH_8U, 1 ); // allocate a 1 channel byte image
 
@@ -282,7 +285,7 @@ MmttServer::StartStuff()
 }
 
 void
-MmttServer::init_values() {
+MmttServer::init_regular_values() {
 
 	// pre-compute cvScalar values, optimization
 	for ( int i=0; i<=MAX_REGION_ID; i++ ) {
@@ -307,9 +310,6 @@ MmttServer::init_values() {
 	val_edge_top = MmttValue(0,0,479);
 	val_edge_bottom = MmttValue(479,0,479);
 	val_depth_front = MmttValue(0,0,3000);         // mm
-	val_depth_detect_top = MmttValue(camera->default_depth_detect_top(),0,3000);    // mm
-	val_depth_detect_bottom = MmttValue(camera->default_depth_detect_top(),0,3000); // mm
-	val_depth_align = MmttValue(camera->default_depth_detect_top(),0,3000); // mm
 	val_auto_window = MmttValue(80,0,400); // mm
 	val_blob_filter = MmttValue(1,0,1);
 	val_blob_param1 = MmttValue(100,0,250.0);
@@ -323,6 +323,14 @@ MmttServer::init_values() {
 	val_expand_ymin = MmttValue(0.0,0.00,1.0);
 	val_expand_ymax = MmttValue(1.0,0.00,1.0);
 	DEBUGPRINT1(("TEMPORARY blob_minsize HACK - used to be 65.0"));
+}
+
+void
+MmttServer::init_camera_values() {
+
+	val_depth_detect_top = MmttValue(camera->default_depth_detect_top(),0,3000);    // mm
+	val_depth_detect_bottom = MmttValue(camera->default_depth_detect_top(),0,3000); // mm
+	val_depth_align = MmttValue(camera->default_depth_detect_top(),0,3000); // mm
 }
 
 void MmttServer::InitOscClientLists() {
@@ -771,12 +779,12 @@ void MmttServer::analyze_depth_images()
 	thresh_front = thresh_mid;
 	thresh_mid = tmp;
 
-	size_t camsz = _camWidth*_camHeight*_camBytesPerPixel;
+	// size_t camsz = _camWidth*_camHeight*_camBytesPerPixel;
 	unsigned char *surfdata = NULL;
 
-	if ( _ffpixels == NULL || _ffpixelsz < camsz ) {
-		_ffpixels = (unsigned char *)malloc(camsz);
-		_ffpixelsz = camsz;
+	if ( _ffpixels == NULL || _ffpixelsz < _camSizeInBytes ) {
+		_ffpixels = (unsigned char *)malloc(_camSizeInBytes);
+		_ffpixelsz = _camSizeInBytes;
 	}
 	if ( depth_front != NULL ) {
 		surfdata = depth_front;
@@ -791,13 +799,13 @@ void MmttServer::analyze_depth_images()
 		_tmpThresh->imageData = (char *)thresh_front;
 
 		if ( surfdata ) {
-			memcpy(_ffpixels,surfdata,camsz);
+			memcpy(_ffpixels,surfdata,_camSizeInBytes);
 			if ( ! val_showrawdepth.value ) {
 				analyzePixels();
 			}
 		} else {
 #if 0
-			memset(_ffpixels,0,camsz);
+			memset(_ffpixels,0,_camSizeInBytes);
 #endif
 		}
 
@@ -805,7 +813,7 @@ void MmttServer::analyze_depth_images()
 
 		if ( surfdata && val_showrawdepth.value ) {
 			// Doesn't seem to be needed...
-			// memcpy(_ffpixels,surfdata,camsz);
+			// memcpy(_ffpixels,surfdata,_camSizeInBytes);
 		}
 
 		if ( val_showregionrects.value ) {
@@ -846,6 +854,7 @@ void MmttServer::analyze_depth_images()
 
 void MmttServer::draw_depth_image() {
 
+// #define DRAW_BOX_TO_DEBUG_THINGS
 #ifdef DRAW_BOX_TO_DEBUG_THINGS
 	glColor4f(0.0,1.0,0.0,0.5);
 	glLineWidth((GLfloat)10.0f);
@@ -907,6 +916,10 @@ void MmttServer::draw_depth_image() {
 		glEnd();			
 
 		glPopMatrix();
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		_mySender.SendTexture(texture, GL_TEXTURE_2D, _camWidth, _camHeight, false, 0);
 	}
 
 	glDisable( GL_TEXTURE_2D );
@@ -1636,6 +1649,7 @@ MmttServer::LoadGlobalDefaults()
 	// These are default values, which can be overridden by the config file.
 	_jsonport = 4444;
 	_do_sharedmem = false;
+	_do_showfps = false;
 	_sharedmemname = "mmtt_outlines";
 	_do_tuio = true;
 	_do_errorpopup;
@@ -1708,6 +1722,15 @@ MmttServer::LoadConfigDefaultsJson(cJSON* json)
 
 	if ( (j=getNumber(json,"sharedmem")) != NULL ) {
 		_do_sharedmem = (j->valueint != 0);
+	}
+	if ( (j=getNumber(json,"showfps")) != NULL ) {
+		_do_showfps = (j->valueint != 0);
+	}
+	if ( (j=getNumber(json,"showregionrects")) != NULL ) {
+		val_showregionrects.set_value( (j->valueint != 0) );
+	}
+	if ( (j=getNumber(json,"showregionhits")) != NULL ) {
+		val_showregionhits.set_value( (j->valueint != 0) );
 	}
 	if ( (j=getString(json,"sharedmemname")) != NULL ) {
 		_sharedmemname = std::string(j->valuestring);
@@ -2129,12 +2152,13 @@ MmttServer::doRegistration()
 	}
 
 	if ( registrationState == 300 ) {
-		DEBUGPRINT1(("State 300"));
+		DEBUGPRINT(("State 300"));
 		// Start auto-poke.  First re-do the depth registration,
 		// then start poking the center of each region
 		currentRegionValue = 1;
 		doDepthRegistration();   // try without, for new file-based autopoke
 		if ( continuousAlign ) {
+			DEBUGPRINT(("registration state 300"));
 			copyRegionsToColorImage(_regionsImage,_ffpixels,FALSE,FALSE,FALSE);
 		}
 		registrationState = 310;
@@ -2253,7 +2277,7 @@ MmttServer::doRegistration()
 void
 MmttServer::doPokeRegistration()
 {
-	DEBUGPRINT1(("doPokeRegistration"));
+	DEBUGPRINT(("doPokeRegistration"));
 	// check _savedpokes
 	std::vector<CvPoint>::const_iterator it;
 	for ( it=_savedpokes.begin(); it!=_savedpokes.end(); it++ ) {

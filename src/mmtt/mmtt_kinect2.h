@@ -28,6 +28,9 @@
 #ifndef MMTT_KINECT2_H
 #define MMTT_KINECT2_H
 
+#define KINECT2_MULTIFRAMEREADER
+// #define DO_COLOR_FRAME
+
 #include <vector>
 #include <map>
 #include <iostream>
@@ -48,8 +51,12 @@ class TOP_SharedMemHeader;
 struct IKinectSensor;
 struct IDepthFrameReader;
 
+struct IMultiSourceFrameReader;
+
 #define _USE_MATH_DEFINES // To get definition of M_PI
 #include <math.h>
+
+// typedef interface IMultiSourceFrameReader IMultiSourceFrameReader;
 
 class Kinect2DepthCamera : public DepthCamera {
 public:
@@ -60,7 +67,7 @@ public:
 	const int default_depth_detect_top() { return 1465; };
 	const int default_depth_detect_bottom() { return 1420; };
 	bool InitializeCamera();
-	void Update();
+	bool Update();
 	void Shutdown();
 	std::string camtype() { return "Kinect2"; }
 
@@ -70,8 +77,8 @@ private:
 	void processRawDepth(const UINT16* depth, int width , int height );
 
     IKinectSensor*          m_pKinectSensor;
-    IDepthFrameReader*      m_pDepthFrameReader;
     RGBQUAD*                m_pDepthRGBX;
+    IMultiSourceFrameReader* m_pMultiSourceFrameReader;
 
 #define MAX_DEPTH_CAMERAS 4
 	int m_nsensors;

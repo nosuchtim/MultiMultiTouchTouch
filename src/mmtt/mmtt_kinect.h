@@ -60,7 +60,7 @@ public:
 	const int default_depth_detect_top() { return 1465; };
 	const int default_depth_detect_bottom() { return 1420; };
 	bool InitializeCamera();
-	void Update();
+	bool Update();
 	void Shutdown();
 	bool Tilt(int degrees);
 	std::string camtype() { return "Kinect (K4W drivers)"; }

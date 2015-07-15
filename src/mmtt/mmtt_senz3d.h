@@ -77,7 +77,7 @@ public:
 	const int default_depth_detect_top() { return 700; };
 	const int default_depth_detect_bottom() { return 700; };
 	bool InitializeCamera();
-	void Update();
+	bool Update();
 	void Shutdown();
 	std::string camtype() {
 		return NosuchSnprintf("Creative Senz3D (index: %d)",_camindex);

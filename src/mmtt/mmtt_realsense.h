@@ -32,6 +32,10 @@
 #include <map>
 #include <iostream>
 
+// #define USE_COLOR
+// #define GENERATE_MAPPED_DEPTH
+// #define USE_MAPPED_DEPTH
+
 #include "pxcprojection.h"
 #include "pxcsensemanager.h"
 #include "pxccapture.h"
@@ -105,12 +109,14 @@ public:
 	const int default_depth_detect_top() { return 700; };
 	const int default_depth_detect_bottom() { return 700; };
 	bool InitializeCamera();
-	void Update();
+	bool Update();
 	void Shutdown();
 	std::string camtype() {
 		return NosuchSnprintf("Realsense camera");
 	}
+#ifdef USE_COLOR
 	IplImage* colorimage();
+#endif
 	IplImage* depthimage();
 
 private:
@@ -126,9 +132,14 @@ private:
 	PXCCapture::Device::StreamProfileSet GetProfileSet();
 
 	PXCImage* g_depthimage;
+#ifdef USE_COLOR
 	PXCImage* g_colorimage;
+#endif
+
+#ifdef GENERATE_MAPPED_DEPTH
 	PXCProjection *g_projection;
 	PXCImage* g_projected;
+#endif
 
 	IplImage* g_coloriplimage;
 
