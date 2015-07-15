@@ -146,7 +146,9 @@ MmttServer::MmttServer(std::string configpath)
 	_oldblobresult = NULL;
 	shutting_down = FALSE;
 	mFirstDraw = TRUE;
+#ifndef NO_DAEMON
 	_httpserver = NULL;
+#endif
 	lastFpsTime = 0.0;
 	doBlob = TRUE;
 	doBW = TRUE;
@@ -226,6 +228,7 @@ MmttServer::MmttServer(std::string configpath)
 	mmtt_values["autowindow"] = &val_auto_window;
 
 	_camSize = cvSize(_camWidth,_camHeight);
+	_camSizeInBytes = _camWidth * _camHeight * _camBytesPerPixel;
 	_tmpGray = cvCreateImage( _camSize, 8, 1 ); // allocate a 1 channel byte image
 	_maskImage = cvCreateImage( _camSize, IPL_DEPTH_8U, 1 ); // allocate a 1 channel byte image
 
@@ -239,7 +242,9 @@ MmttServer::MmttServer(std::string configpath)
 	_ffImage = cvCreateImageHeader( _camSize, IPL_DEPTH_8U, 3 );
 
 	_htmldir = MmttPath("html");
+#ifndef NO_DAEMON
 	_httpserver = NULL;
+#endif
 
 	SetOscClientList(_Tuio1_25_OscClientList,_Tuio1_25_Clients);
 	SetOscClientList(_Tuio1_2_OscClientList,_Tuio1_2_Clients);
@@ -277,8 +282,12 @@ MmttServer::MmttServer(std::string configpath)
 void
 MmttServer::StartStuff()
 {
+#ifndef NO_DAEMON
 	_httpserver = new NosuchDaemon(-1,"",NULL,
 		_jsonport,_htmldir,this);
+#else
+	DEBUGPRINT(("StartStuff is NOT starting NosuchDaemon"));
+#endif
 }
 
 void
@@ -341,7 +350,9 @@ MmttServer::~MmttServer() {
 	shutting_down = TRUE;
 
 	DEBUGPRINT1(("MmttServer destructor!\n"));
+#ifndef NO_DAEMON
 	delete _httpserver;
+#endif
 
 	camera->Shutdown();
 }
@@ -771,12 +782,12 @@ void MmttServer::analyze_depth_images()
 	thresh_front = thresh_mid;
 	thresh_mid = tmp;
 
-	size_t camsz = _camWidth*_camHeight*_camBytesPerPixel;
+	// size_t camsz = _camWidth*_camHeight*_camBytesPerPixel;
 	unsigned char *surfdata = NULL;
 
-	if ( _ffpixels == NULL || _ffpixelsz < camsz ) {
-		_ffpixels = (unsigned char *)malloc(camsz);
-		_ffpixelsz = camsz;
+	if ( _ffpixels == NULL || _ffpixelsz < _camSizeInBytes ) {
+		_ffpixels = (unsigned char *)malloc(_camSizeInBytes);
+		_ffpixelsz = _camSizeInBytes;
 	}
 	if ( depth_front != NULL ) {
 		surfdata = depth_front;
@@ -791,13 +802,13 @@ void MmttServer::analyze_depth_images()
 		_tmpThresh->imageData = (char *)thresh_front;
 
 		if ( surfdata ) {
-			memcpy(_ffpixels,surfdata,camsz);
+			memcpy(_ffpixels,surfdata,_camSizeInBytes);
 			if ( ! val_showrawdepth.value ) {
 				analyzePixels();
 			}
 		} else {
 #if 0
-			memset(_ffpixels,0,camsz);
+			memset(_ffpixels,0,_camSizeInBytes);
 #endif
 		}
 
@@ -805,7 +816,7 @@ void MmttServer::analyze_depth_images()
 
 		if ( surfdata && val_showrawdepth.value ) {
 			// Doesn't seem to be needed...
-			// memcpy(_ffpixels,surfdata,camsz);
+			// memcpy(_ffpixels,surfdata,_camSizeInBytes);
 		}
 
 		if ( val_showregionrects.value ) {
@@ -846,6 +857,7 @@ void MmttServer::analyze_depth_images()
 
 void MmttServer::draw_depth_image() {
 
+// #define DRAW_BOX_TO_DEBUG_THINGS
 #ifdef DRAW_BOX_TO_DEBUG_THINGS
 	glColor4f(0.0,1.0,0.0,0.5);
 	glLineWidth((GLfloat)10.0f);
@@ -1088,9 +1100,11 @@ void
 MmttServer::SendOscToAllWebSocketClients(OscBundle& bundle)
 {
 	std::string msg = OscBundleToJson(bundle);
+#ifndef NO_DAEMON
 	if ( _httpserver ) {
 		_httpserver->SendAllWebSocketClients(msg);
 	}
+#endif
 }
 
 
@@ -2137,12 +2151,13 @@ MmttServer::doRegistration()
 	}
 
 	if ( registrationState == 300 ) {
-		DEBUGPRINT1(("State 300"));
+		DEBUGPRINT(("State 300"));
 		// Start auto-poke.  First re-do the depth registration,
 		// then start poking the center of each region
 		currentRegionValue = 1;
 		doDepthRegistration();   // try without, for new file-based autopoke
 		if ( continuousAlign ) {
+			DEBUGPRINT(("registration state 300"));
 			copyRegionsToColorImage(_regionsImage,_ffpixels,FALSE,FALSE,FALSE);
 		}
 		registrationState = 310;
@@ -2261,7 +2276,7 @@ MmttServer::doRegistration()
 void
 MmttServer::doPokeRegistration()
 {
-	DEBUGPRINT1(("doPokeRegistration"));
+	DEBUGPRINT(("doPokeRegistration"));
 	// check _savedpokes
 	std::vector<CvPoint>::const_iterator it;
 	for ( it=_savedpokes.begin(); it!=_savedpokes.end(); it++ ) {

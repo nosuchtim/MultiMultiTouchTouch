@@ -223,7 +223,7 @@ KinectDepthCamera::processRawDepth(const NUI_DEPTH_IMAGE_PIXEL *depth)
 	}
 }
 
-void KinectDepthCamera::Update() {
+bool KinectDepthCamera::Update() {
 
     hEvents[0] = m_hNextDepthFrameEvent[m_currentSensor];
 
@@ -241,6 +241,7 @@ void KinectDepthCamera::Update() {
 		        ProcessDepth();
 		}
     }
+	return(true);
 }
 
 void KinectDepthCamera::Shutdown() {

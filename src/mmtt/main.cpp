@@ -290,16 +290,30 @@ int MmttServer::Run(std::string title, HINSTANCE hInstance, int nCmdShow)
 	}
 
 	_mySender.SetDX9(true);
-	_mySender.CreateSender("MMTT", camera->width(), camera->height());
+	_mySender.CreateSender("MMTT Depth", camera->width(), camera->height());
 
     // Main message loop
 	DWORD tm0 = timeGetTime();
 	int nframes = 0;
+	DWORD lasttm = tm0;
 	while (WM_QUIT != msg.message) {
 
-		camera->Update();
+		DWORD now = timeGetTime();
+		DWORD dt = now - lasttm;
+		if (dt > 30) {
+			DEBUGPRINT(("Message loop excessive delay now=%ld dt=%ld lasttm=%ld", now, dt, lasttm));
+		}
+		lasttm = now;
+
+		bool updateok = camera->Update();
 
 		check_json_and_execute();
+
+		if ( ! updateok ) {
+			DEBUGPRINT1(("Message loop got Update failure, skipping drawing"));
+			continue;
+		}
+
 		analyze_depth_images();
 		draw_begin();
 		draw_depth_image();

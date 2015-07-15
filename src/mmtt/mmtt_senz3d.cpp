@@ -265,8 +265,9 @@ PcxDepthCamera::processRawDepth(pxcU16 *depth,pxcU16* confidence)
 	}
 }
 
-void PcxDepthCamera::Update() {
+bool PcxDepthCamera::Update() {
 	ProcessDepth();
+	return(true)
 };
 
 void PcxDepthCamera::Shutdown() {

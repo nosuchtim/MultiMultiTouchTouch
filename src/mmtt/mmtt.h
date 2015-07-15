@@ -321,6 +321,7 @@ private:
 	bool _regionsfilled;
 	bool _regionsDefinedByPatch;
 	CvSize _camSize;
+	int _camSizeInBytes;
 	IplImage* _ffImage;
 	IplImage* _tmpGray;
 	IplImage* _maskImage;
@@ -332,7 +333,9 @@ private:
 	unsigned char *_ffpixels;
 	size_t _ffpixelsz;
 
+#ifndef NO_DAEMON
 	NosuchDaemon*	_httpserver;
+#endif
 
 	int _tuio_fseq;
 	int _tuio_last_sent;

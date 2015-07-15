@@ -273,14 +273,15 @@ RealsenseDepthCamera::processRawDepth(pxcU16 *depth)
 	}
 }
 
-void RealsenseDepthCamera::Update() {
+bool RealsenseDepthCamera::Update() {
 	bool sync = true;
 	pxcStatus status;
+	bool returnok = false;
 	
 	status = g_sensemanager->AcquireFrame(sync);
 	if ( status < PXC_STATUS_NO_ERROR ) {
 		DEBUGPRINT(("AcquireFrame returned error?"));
-		return;
+		return(false);
 	}
 	PXCCapture::Sample *sample = (PXCCapture::Sample*)g_sensemanager->QuerySample();
 
@@ -399,8 +400,11 @@ void RealsenseDepthCamera::Update() {
 	g_projected->ReleaseAccess(&projecteddata);
 #endif
 
+	returnok = true;
+
 getout:
 	g_sensemanager->ReleaseFrame();
+	return(returnok);
 };
 
 #ifdef USE_COLOR

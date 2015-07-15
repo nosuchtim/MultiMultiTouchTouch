@@ -28,8 +28,9 @@
 #ifndef MMTT_KINECT2_H
 #define MMTT_KINECT2_H
 
-// #define KINECT2_MULTIFRAMEREADER
+#define KINECT2_MULTIFRAMEREADER
 // #define DO_COLOR_FRAME
+#define NO_DAEMON
 
 #include <vector>
 #include <map>
@@ -69,7 +70,7 @@ public:
 	const int default_depth_detect_top() { return 1465; };
 	const int default_depth_detect_bottom() { return 1420; };
 	bool InitializeCamera();
-	void Update();
+	bool Update();
 	void Shutdown();
 	std::string camtype() { return "Kinect2"; }
 
