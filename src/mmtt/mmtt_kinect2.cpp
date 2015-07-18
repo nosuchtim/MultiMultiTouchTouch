@@ -153,6 +153,7 @@ bool Kinect2DepthCamera::Update(uint16_t *depthmm, uint8_t *depthbytes, uint8_t 
 
 #else
 	IMultiSourceFrame* pMultiSourceFrame = NULL;
+	IDepthFrame* pDepthFrame = NULL;
 	HRESULT hr = m_pMultiSourceFrameReader->AcquireLatestFrame(&pMultiSourceFrame);
 
 	if (SUCCEEDED(hr))

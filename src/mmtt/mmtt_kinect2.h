@@ -29,7 +29,7 @@
 #define MMTT_KINECT2_H
 
 #define KINECT2_MULTIFRAMEREADER
-// #define DO_MULTISOURCE
+#define DO_MULTISOURCE
 // #define DO_COLOR_FRAME
 // #define USE_COLOR_FRAME
 // #define DO_MAP_COLOR_FRAME
