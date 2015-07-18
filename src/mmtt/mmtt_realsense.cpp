@@ -293,7 +293,7 @@ bool RealsenseDepthCamera::Update() {
 #ifdef USE_COLOR
 	if ( sample->depth == NULL || sample->color == NULL ) {
 		DEBUGPRINT(("Hey, depth and color weren't both present?"));
-		return;
+		return(false);
 	}
 #endif
 

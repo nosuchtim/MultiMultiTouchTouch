@@ -32,9 +32,9 @@
 #include <map>
 #include <iostream>
 
-// #define USE_COLOR
-// #define GENERATE_MAPPED_DEPTH
-// #define USE_MAPPED_DEPTH
+#define USE_COLOR
+#define GENERATE_MAPPED_DEPTH
+#define USE_MAPPED_DEPTH
 
 #include "pxcprojection.h"
 #include "pxcsensemanager.h"

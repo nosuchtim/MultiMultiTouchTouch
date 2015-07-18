@@ -1024,7 +1024,7 @@ void MmttServer::draw_color_image() {
 
 		glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB,
 			_camWidth, _camHeight,
-			0, GL_RGB, GL_UNSIGNED_BYTE, pix);
+			0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pix);
 
 		if ( _do_sharedmem ) {
 			shmem_lock_and_update_image(pix);

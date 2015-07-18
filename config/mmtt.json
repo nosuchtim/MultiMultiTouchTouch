@@ -8,9 +8,9 @@
 
   "port": 4444,               # The HTTP port for the browser interface
 
-  "camera": "kinect2",        # Possible values: kinect, kinect2, realsense
+  "camera": "realsense",        # Possible values: kinect, kinect2, realsense
 
-  "patch": "fullscreen_kinect2",   # Name a file in the config/mmtt directory
+  "patch": "fullscreen_realsense",   # Name a file in the config/mmtt directory
 
   "initialalign": 0,          # If initialalign is 1, an auto-alignment
                               # will be done at startup.  This is only
