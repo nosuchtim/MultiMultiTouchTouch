@@ -254,9 +254,7 @@ class MmttServer : public NosuchJsonListener {
 private:
 
 	SpoutSender _spoutDepthSender;
-#ifdef DO_COLOR_FRAME
 	SpoutSender _spoutColorSender;
-#endif
 
 	void init_regular_values();
 	void init_camera_values();

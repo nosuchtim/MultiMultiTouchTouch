@@ -1039,7 +1039,7 @@ void MmttServer::draw_color_image() {
 	glColor4f(1.0,1.0,1.0,1.0);
 #endif
 
-	glPixelStorei (GL_UNPACK_ROW_LENGTH, cimage->widthStep);
+	glPixelStorei (GL_UNPACK_ROW_LENGTH, _camWidth);
  
 	unsigned char *pix = (unsigned char *)(cimage->imageData);
 
@@ -1066,14 +1066,9 @@ void MmttServer::draw_color_image() {
 
 		// The use of GL_BGR_EXT here is suspect - the Realsense camera SDK seems to put out BGR format.
 		// See the comment in pxcimage.h about PIXEL_FORMAT_RGB24 (it says it uses BGR on little-endian machines)
-#ifdef ORIGINAL_WORKING_VERSION
 		glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB,
-			cimage->width, cimage->height,
+			_camWidth, _camHeight,
 			0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pix);
-#endif
-		glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB,
-			256, 256,
-			0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, pix);
 
 		if ( _do_sharedmem ) {
 			shmem_lock_and_update_image(pix);
@@ -1100,9 +1095,7 @@ void MmttServer::draw_color_image() {
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-#ifdef DO_COLOR_FRAME
-		_spoutColorSender.SendTexture(colorTextureId, GL_TEXTURE_2D, cimage->width, cimage->height, false, 0);
-#endif
+		_spoutColorSender.SendTexture(colorTextureId, GL_TEXTURE_2D, _camWidth, _camHeight, false, 0);
 	}
 
 	glDisable( GL_TEXTURE_2D );
