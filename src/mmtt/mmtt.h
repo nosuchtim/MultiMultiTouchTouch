@@ -163,12 +163,14 @@ class MmttServer : public NosuchJsonListener {
 		int nactive, int numblobs, std::vector<int> &blob_sid, std::vector<MmttRegion*> &blob_region, std::vector<CvPoint> &blob_center);
 	void shutdown();
 	void check_json_and_execute();
+	void flip_images();
 	void analyze_depth_images();
-	void draw_depth_image();
+	void draw_depth_image(unsigned char* pix);
 	void draw_color_image();
 	void draw_begin();
 	void draw_end();
 	void swap_buffers();
+	int get_flip_mode();
 
 	LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam ); 
 
@@ -213,15 +215,16 @@ class MmttServer : public NosuchJsonListener {
 	UT_SharedMem *_sharedmem_image;
 	UT_SharedMem *_sharedmem_outlines;
 
-	SpoutSender _mySender;
-
 	DepthCamera* camera;
 
 	MmttValue val_showfps;
+	MmttValue val_flipx;
+	MmttValue val_flipy;
 	MmttValue val_showrawdepth;
 	MmttValue val_showregionhits;
 	MmttValue val_showregionmap;
 	MmttValue val_showregionrects;
+	MmttValue val_showgreyscaledepth;
 	MmttValue val_showmask;
 	MmttValue val_usemask;
 	MmttValue val_tilt;
@@ -246,14 +249,14 @@ class MmttServer : public NosuchJsonListener {
 	MmttValue val_expand_ymin;
 	MmttValue val_expand_ymax;
 
-	uint16_t *depthmm_plane;
-	uint16_t *depthmm_mid;
-	uint8_t *thresh_mid;
-	uint8_t *depth_mid;
-
 	bool continuousAlign;
 
 private:
+
+	SpoutSender _spoutDepthSender;
+#ifdef DO_COLOR_FRAME
+	SpoutSender _spoutColorSender;
+#endif
 
 	void init_regular_values();
 	void init_camera_values();
@@ -299,7 +302,6 @@ private:
 
 	std::string _configpath;
 	bool _do_sharedmem;
-	bool _do_showfps;
 	std::string _sharedmemname;
 	bool _do_tuio;
 	bool _do_errorpopup;
@@ -329,7 +331,6 @@ private:
 	IplImage* _regionsImage;
 	IplImage* _tmpRegionsColor;
 	IplImage* _tmpThresh;
-	// CvMemStorage* _tmpStorage;
 
 	unsigned char *_ffpixels;
 	size_t _ffpixelsz;
@@ -362,6 +363,10 @@ private:
 	
 	uint8_t *depth_copy;
 	uint8_t *depth_front;
+
+	uint16_t *depthmm_mid;
+	uint8_t *thresh_mid;
+	uint8_t *depth_mid;
 
 	uint16_t *depthmm_front;
 	uint8_t *thresh_front;

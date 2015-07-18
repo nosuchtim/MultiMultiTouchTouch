@@ -32,9 +32,9 @@
 #include <map>
 #include <iostream>
 
-// #define USE_COLOR
-// #define GENERATE_MAPPED_DEPTH
-// #define USE_MAPPED_DEPTH
+#define USE_COLOR
+#define GENERATE_MAPPED_DEPTH
+#define USE_MAPPED_DEPTH
 
 #include "pxcprojection.h"
 #include "pxcsensemanager.h"
@@ -55,8 +55,6 @@
 class UT_SharedMem;
 class MMTT_SharedMemHeader;
 class TOP_SharedMemHeader;
-
-#define MAX_SENZ3D_CAMERAS 2
 
 #define _USE_MATH_DEFINES // To get definition of M_PI
 #include <math.h>
@@ -109,7 +107,7 @@ public:
 	const int default_depth_detect_top() { return 700; };
 	const int default_depth_detect_bottom() { return 700; };
 	bool InitializeCamera();
-	bool Update();
+	bool Update(uint16_t *depthmm, uint8_t *depthbytes, uint8_t *threshbytes);
 	void Shutdown();
 	std::string camtype() {
 		return NosuchSnprintf("Realsense camera");
@@ -146,7 +144,7 @@ private:
 	int _nactive;
 	int _nstreams;
 
-	void processRawDepth(pxcU16* depth);
+	void _processDepth(pxcU16* depth,uint16_t *depthmm, uint8_t *depthbytes, uint8_t *threshbytes);
 };
 
 #endif

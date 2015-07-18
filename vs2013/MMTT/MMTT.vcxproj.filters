@@ -240,9 +240,6 @@
     <ClCompile Include="..\..\src\mmtt\mmtt_realsense.cpp">
       <Filter>Source Files\mmtt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\mmtt\mmtt_senz3d.cpp">
-      <Filter>Source Files\mmtt</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\other\Spout2\SpoutSDK\Source\SpoutSDK.cpp">
       <Filter>Source Files\Spout2</Filter>
     </ClCompile>
@@ -313,9 +310,6 @@
       <Filter>Header Files\mmtt</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\mmtt\mmtt_realsense.h">
-      <Filter>Header Files\mmtt</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\mmtt\mmtt_senz3d.h">
       <Filter>Header Files\mmtt</Filter>
     </ClInclude>
     <ClInclude Include="..\..\other\Spout2\SpoutSDK\Source\SpoutSharedMemory.h">

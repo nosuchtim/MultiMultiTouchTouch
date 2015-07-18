@@ -60,7 +60,7 @@ public:
 	const int default_depth_detect_top() { return 1465; };
 	const int default_depth_detect_bottom() { return 1420; };
 	bool InitializeCamera();
-	bool Update();
+	bool Update(uint16_t *depthmm, uint8_t *depthbytes, uint8_t *threshbytes);
 	void Shutdown();
 	bool Tilt(int degrees);
 	std::string camtype() { return "Kinect (K4W drivers)"; }
@@ -77,7 +77,6 @@ private:
     HANDLE      m_hNextDepthFrameEvent[MAX_DEPTH_CAMERAS];
     HANDLE		m_pDepthStreamHandle[MAX_DEPTH_CAMERAS];
     HWND        m_hWnd;
-    static const int        cStatusMessageMaxLen = MAX_PATH*2;
 
 	static const int eventCount = 1;
 	HANDLE hEvents[eventCount];

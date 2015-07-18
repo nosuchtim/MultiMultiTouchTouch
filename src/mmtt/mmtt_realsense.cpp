@@ -210,19 +210,13 @@ bool RealsenseDepthCamera::InitializeCamera()
 }
 
 void
-RealsenseDepthCamera::processRawDepth(pxcU16 *depth)
-{
-	uint16_t *depthmm = server()->depthmm_mid;
-	uint8_t *depthbytes = server()->depth_mid;
-	uint8_t *threshbytes = server()->thresh_mid;
+RealsenseDepthCamera::_processDepth(pxcU16 *depth, uint16_t *depthmm, uint8_t *depthbytes, uint8_t *threshbytes) {
 
 	int i = 0;
 
 	bool filterbydepth = ! server()->val_showrawdepth.value;
 
 	// XXX - THIS NEEDS OPTIMIZATION!
-
-	const pxcU16 *pdepth = depth;
 
 	int h = height();
 	int w = width();
@@ -273,7 +267,8 @@ RealsenseDepthCamera::processRawDepth(pxcU16 *depth)
 	}
 }
 
-bool RealsenseDepthCamera::Update() {
+bool RealsenseDepthCamera::Update(uint16_t *depthmm, uint8_t *depthbytes, uint8_t *threshbytes) {
+
 	bool sync = true;
 	pxcStatus status;
 	bool returnok = false;
@@ -293,7 +288,7 @@ bool RealsenseDepthCamera::Update() {
 #ifdef USE_COLOR
 	if ( sample->depth == NULL || sample->color == NULL ) {
 		DEBUGPRINT(("Hey, depth and color weren't both present?"));
-		return;
+		return(false);
 	}
 #endif
 
@@ -339,7 +334,7 @@ bool RealsenseDepthCamera::Update() {
 		DEBUGPRINT(("AcquireAccess returned error?"));
 	} else {
 #ifndef USE_MAPPED_DEPTH
-		processRawDepth((pxcU16*)depthidata.planes[0]);
+		_processDepth((pxcU16*)depthidata.planes[0], depthmm, depthbytes, threshbytes);
 #endif
 	}
 
@@ -377,7 +372,7 @@ bool RealsenseDepthCamera::Update() {
 		goto getout;
 	}
 #ifdef USE_MAPPED_DEPTH
-	processRawDepth((pxcU16*)projecteddata.planes[0]);
+	_processDepth((pxcU16*)projecteddata.planes[0], depthmm, depthbytes, threshbytes);
 #endif
 
 	status = g_projected->ExportData(&projecteddata);

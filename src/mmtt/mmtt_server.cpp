@@ -191,7 +191,6 @@ MmttServer::MmttServer(std::string configpath)
 	depth_mid = (uint8_t*)malloc(_camWidth*_camHeight*_camBytesPerPixel);
 	depth_front = (uint8_t*)malloc(_camWidth*_camHeight*_camBytesPerPixel);
 
-	depthmm_plane = (uint16_t*)malloc(_camWidth*_camHeight*sizeof(uint16_t));
 	depthmm_mid = (uint16_t*)malloc(_camWidth*_camHeight*sizeof(uint16_t));
 	depthmm_front = (uint16_t*)malloc(_camWidth*_camHeight*sizeof(uint16_t));
 
@@ -200,10 +199,13 @@ MmttServer::MmttServer(std::string configpath)
 
 	mmtt_values["showrawdepth"] = &val_showrawdepth;
 	mmtt_values["showfps"] = &val_showfps;
+	mmtt_values["flipx"] = &val_flipx;
+	mmtt_values["flipy"] = &val_flipy;
 	mmtt_values["showregionhits"] = &val_showregionhits;
 	mmtt_values["showmask"] = &val_showmask;
 	mmtt_values["showregionmap"] = &val_showregionmap;
 	mmtt_values["showregionrects"] = &val_showregionrects;
+	mmtt_values["showgreyscaledepth"] = &val_showgreyscaledepth;
 	mmtt_values["usemask"] = &val_usemask;
 	mmtt_values["tilt"] = &val_tilt;
 	mmtt_values["edge_left"] = &val_edge_left;
@@ -300,6 +302,7 @@ MmttServer::init_regular_values() {
 	val_showfps = MmttValue(0,0,1,false);
 	val_showregionhits = MmttValue(1,0,1,false);
 	val_showregionmap = MmttValue(0,0,1,false);
+	val_showgreyscaledepth = MmttValue(0,0,1,false);
 	val_showmask = MmttValue(0,0,1,false);
 	val_usemask = MmttValue(1,0,1,false);
 
@@ -322,6 +325,9 @@ MmttServer::init_regular_values() {
 	val_expand_xmax = MmttValue(1.0,0.00,1.0);
 	val_expand_ymin = MmttValue(0.0,0.00,1.0);
 	val_expand_ymax = MmttValue(1.0,0.00,1.0);
+	val_flipx = MmttValue(0,0,1);
+	val_flipy = MmttValue(0,0,1);
+
 	DEBUGPRINT1(("TEMPORARY blob_minsize HACK - used to be 65.0"));
 }
 
@@ -755,6 +761,46 @@ void MmttServer::check_json_and_execute()
 	pthread_mutex_unlock(&json_mutex);
 }
 
+#define NO_FLIP 99
+
+int MmttServer::get_flip_mode() {
+	int flip_mode = NO_FLIP;
+	if (val_flipx.value && val_flipy.value) {
+		flip_mode = -1;
+	} else if (val_flipx.value) {
+		flip_mode = 1;
+	} else if (val_flipx.value) {
+		flip_mode = 0;
+	}
+	return flip_mode;
+}
+
+void MmttServer::flip_images() {
+	int flip_mode = get_flip_mode();
+	if (flip_mode != NO_FLIP) {
+		// Flip the image in depth_mid
+		IplImage* image_depth_mid = cvCreateImageHeader( _camSize, IPL_DEPTH_8U, _camBytesPerPixel );
+		image_depth_mid->origin = 1;
+		image_depth_mid->imageData = (char*)depth_mid;
+		cvFlip(image_depth_mid,image_depth_mid,flip_mode);
+		cvReleaseImageHeader(&image_depth_mid);
+
+		// Flip the image in thresh_mid, which is a one-byte (black/white) image
+		IplImage* image_thresh_mid = cvCreateImageHeader( _camSize, IPL_DEPTH_8U, 1 );
+		image_thresh_mid->origin = 1;
+		image_thresh_mid->imageData = (char*)thresh_mid;
+		cvFlip(image_thresh_mid,image_thresh_mid,flip_mode);
+		cvReleaseImageHeader(&image_thresh_mid);
+
+		// Flip the image in depthmm_mid, which is UINT16 values
+		IplImage* image_depthmm_mid = cvCreateImageHeader( _camSize, IPL_DEPTH_16U, 1 );
+		image_depthmm_mid->origin = 1;
+		image_depthmm_mid->imageData = (char*)depthmm_mid;
+		cvFlip(image_depthmm_mid,image_depthmm_mid,flip_mode);
+		cvReleaseImageHeader(&image_depthmm_mid);
+	}
+}
+
 void MmttServer::analyze_depth_images()
 {
 	// pthread_mutex_lock(&gl_backbuf_mutex);
@@ -779,7 +825,6 @@ void MmttServer::analyze_depth_images()
 	thresh_front = thresh_mid;
 	thresh_mid = tmp;
 
-	// size_t camsz = _camWidth*_camHeight*_camBytesPerPixel;
 	unsigned char *surfdata = NULL;
 
 	if ( _ffpixels == NULL || _ffpixelsz < _camSizeInBytes ) {
@@ -839,20 +884,9 @@ void MmttServer::analyze_depth_images()
 			}
 		}
 	}
-
-	long tm = timeGetTime();
-	double curFrameTime = tm / 1000.0;
-
-	if ( curFrameTime > (lastFpsTime+1.0) ) {
-		if ( val_showfps.value ) {
-			DEBUGPRINT(("Analyzed FPS = %d\n",_fpscount));
-		}
-		lastFpsTime = curFrameTime;
-		_fpscount = 0;
-	}
 }
 
-void MmttServer::draw_depth_image() {
+void MmttServer::draw_depth_image(unsigned char *pix) {
 
 // #define DRAW_BOX_TO_DEBUG_THINGS
 #ifdef DRAW_BOX_TO_DEBUG_THINGS
@@ -870,14 +904,11 @@ void MmttServer::draw_depth_image() {
 
 	glPixelStorei (GL_UNPACK_ROW_LENGTH, _camWidth);
  
-	unsigned char *pix = ffpixels();
-	// unsigned char *pix = depth_mid;
-
 	static bool initialized = false;
-	static GLuint texture;
+	static GLuint depthTextureId;
 	if ( ! initialized ) {
 		initialized = true;
-	    glGenTextures( 1, &texture );
+	    glGenTextures( 1, &depthTextureId );
 	}
 
 	glEnable( GL_TEXTURE_2D );
@@ -892,7 +923,14 @@ void MmttServer::draw_depth_image() {
 
 	if ( pix != NULL ) {
 
-	    glBindTexture( GL_TEXTURE_2D, texture );
+	    glBindTexture( GL_TEXTURE_2D, depthTextureId );
+
+		// The image we sent to Spout is horizontally flipped.  This is an attempt to fix that
+		// XXX - should be flipping pix
+		IplImage* pixflipped = cvCreateImageHeader( _camSize, IPL_DEPTH_8U, 3 );
+		pixflipped->origin = 1;
+		pixflipped->imageData = (char*)pix;
+		cvFlip(pixflipped,pixflipped,1);
 
 		glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB,
 			_camWidth, _camHeight,
@@ -909,17 +947,19 @@ void MmttServer::draw_depth_image() {
 
 		glColor4f(1.0,1.0,1.0,0.5);
 		glBegin(GL_QUADS);
-		glTexCoord2d(1.0,0.0); glVertex3f( 1.0f, 1.0f, 0.0f);	// Top Left
-		glTexCoord2d(0.0,0.0); glVertex3f(-1.0f, 1.0f, 0.0f);	// Top Right
-		glTexCoord2d(0.0,1.0); glVertex3f(-1.0f,-1.0f, 0.0f);	// Bottom Right
-		glTexCoord2d(1.0,1.0); glVertex3f( 1.0f,-1.0f, 0.0f);	// Bottom Left
+		glTexCoord2d(0.0,0.0); glVertex3f(-1.0f, 1.0f, 0.0f);	// Top Left
+		glTexCoord2d(1.0,0.0); glVertex3f( 1.0f, 1.0f, 0.0f);	// Top Right
+		glTexCoord2d(1.0,1.0); glVertex3f( 1.0f,-1.0f, 0.0f);	// Bottom Right
+		glTexCoord2d(0.0,1.0); glVertex3f(-1.0f,-1.0f, 0.0f);	// Bottom Left
 		glEnd();			
 
 		glPopMatrix();
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-		_mySender.SendTexture(texture, GL_TEXTURE_2D, _camWidth, _camHeight, false, 0);
+		_spoutDepthSender.SendTexture(depthTextureId, GL_TEXTURE_2D, _camWidth, _camHeight, false, 0);
+
+		cvReleaseImageHeader(&pixflipped);
 	}
 
 	glDisable( GL_TEXTURE_2D );
@@ -981,8 +1021,13 @@ void MmttServer::draw_color_image() {
 		return;
 	}
 
+	int flip_mode = get_flip_mode();
+	if (flip_mode != NO_FLIP) {
+		cvFlip(cimage,cimage,flip_mode);
+	}
+
 #ifdef DEBUG_COLOR
-	glColor4f(1.0,1.0,0.0,0.5);
+	glColor4f(1.0,0.0,0.0,0.5);
 	glLineWidth((GLfloat)10.0f);
 	glBegin(GL_LINE_LOOP);
 	glVertex3f(-0.8f, 0.8f, 0.0f);	// Top Left
@@ -994,15 +1039,15 @@ void MmttServer::draw_color_image() {
 	glColor4f(1.0,1.0,1.0,1.0);
 #endif
 
-	glPixelStorei (GL_UNPACK_ROW_LENGTH, _camWidth);
+	glPixelStorei (GL_UNPACK_ROW_LENGTH, cimage->widthStep);
  
 	unsigned char *pix = (unsigned char *)(cimage->imageData);
 
 	static bool initialized = false;
-	static GLuint texture;
+	static GLuint colorTextureId;
 	if ( ! initialized ) {
 		initialized = true;
-	    glGenTextures( 1, &texture );
+	    glGenTextures( 1, &colorTextureId );
 	}
 
 	glEnable( GL_TEXTURE_2D );
@@ -1017,11 +1062,18 @@ void MmttServer::draw_color_image() {
 
 	if ( pix != NULL ) {
 
-	    glBindTexture( GL_TEXTURE_2D, texture );
+	    glBindTexture( GL_TEXTURE_2D, colorTextureId );
 
+		// The use of GL_BGR_EXT here is suspect - the Realsense camera SDK seems to put out BGR format.
+		// See the comment in pxcimage.h about PIXEL_FORMAT_RGB24 (it says it uses BGR on little-endian machines)
+#ifdef ORIGINAL_WORKING_VERSION
 		glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB,
-			_camWidth, _camHeight,
-			0, GL_RGB, GL_UNSIGNED_BYTE, pix);
+			cimage->width, cimage->height,
+			0, GL_BGR_EXT, GL_UNSIGNED_BYTE, pix);
+#endif
+		glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB,
+			256, 256,
+			0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, pix);
 
 		if ( _do_sharedmem ) {
 			shmem_lock_and_update_image(pix);
@@ -1038,13 +1090,19 @@ void MmttServer::draw_color_image() {
 		GLfloat y0 = 1.0f;
 		GLfloat x1 = 1.0f;
 		GLfloat y1 = -1.0f;
-		glTexCoord2d(1.0,0.0); glVertex3f( x0, y0, 0.0f);	// Top Left
-		glTexCoord2d(0.0,0.0); glVertex3f( x1, y0, 0.0f);	// Top Right
-		glTexCoord2d(0.0,1.0); glVertex3f( x1, y1, 0.0f);	// Bottom Right
-		glTexCoord2d(1.0,1.0); glVertex3f( x0, y1, 0.0f);	// Bottom Left
+		glTexCoord2d(0.0,0.0); glVertex3f( x0, y0, 0.0f);	// Top Left
+		glTexCoord2d(1.0,0.0); glVertex3f( x1, y0, 0.0f);	// Top Right
+		glTexCoord2d(1.0,1.0); glVertex3f( x1, y1, 0.0f);	// Bottom Right
+		glTexCoord2d(0.0,1.0); glVertex3f( x0, y1, 0.0f);	// Bottom Left
 		glEnd();			
 
 		glPopMatrix();
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+#ifdef DO_COLOR_FRAME
+		_spoutColorSender.SendTexture(colorTextureId, GL_TEXTURE_2D, cimage->width, cimage->height, false, 0);
+#endif
 	}
 
 	glDisable( GL_TEXTURE_2D );
@@ -1649,7 +1707,6 @@ MmttServer::LoadGlobalDefaults()
 	// These are default values, which can be overridden by the config file.
 	_jsonport = 4444;
 	_do_sharedmem = false;
-	_do_showfps = false;
 	_sharedmemname = "mmtt_outlines";
 	_do_tuio = true;
 	_do_errorpopup;
@@ -1724,13 +1781,22 @@ MmttServer::LoadConfigDefaultsJson(cJSON* json)
 		_do_sharedmem = (j->valueint != 0);
 	}
 	if ( (j=getNumber(json,"showfps")) != NULL ) {
-		_do_showfps = (j->valueint != 0);
+		val_showfps.set_value( j->valueint != 0 );
+	}
+	if ( (j=getNumber(json,"flipx")) != NULL ) {
+		val_flipx.set_value( j->valueint != 0 );
+	}
+	if ( (j=getNumber(json,"flipy")) != NULL ) {
+		val_flipy.set_value( j->valueint != 0 );
 	}
 	if ( (j=getNumber(json,"showregionrects")) != NULL ) {
-		val_showregionrects.set_value( (j->valueint != 0) );
+		val_showregionrects.set_value( j->valueint != 0 );
 	}
 	if ( (j=getNumber(json,"showregionhits")) != NULL ) {
-		val_showregionhits.set_value( (j->valueint != 0) );
+		val_showregionhits.set_value( j->valueint != 0 );
+	}
+	if ( (j=getNumber(json,"showgreyscaledepth")) != NULL ) {
+		val_showgreyscaledepth.set_value( j->valueint != 0 );
 	}
 	if ( (j=getString(json,"sharedmemname")) != NULL ) {
 		_sharedmemname = std::string(j->valuestring);

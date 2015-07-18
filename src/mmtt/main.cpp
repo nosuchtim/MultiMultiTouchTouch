@@ -289,8 +289,13 @@ int MmttServer::Run(std::string title, HINSTANCE hInstance, int nCmdShow)
 		exit(1);
 	}
 
-	_mySender.SetDX9(true);
-	_mySender.CreateSender("MMTT Depth", camera->width(), camera->height());
+	_spoutDepthSender.SetDX9(true);
+	_spoutDepthSender.CreateSender("MMTT Depth", camera->width(), camera->height());
+
+#ifdef DO_COLOR_FRAME
+	_spoutColorSender.SetDX9(true);
+	_spoutColorSender.CreateSender("MMTT Color", camera->width(), camera->height());
+#endif
 
     // Main message loop
 	DWORD tm0 = timeGetTime();
@@ -300,12 +305,12 @@ int MmttServer::Run(std::string title, HINSTANCE hInstance, int nCmdShow)
 
 		DWORD now = timeGetTime();
 		DWORD dt = now - lasttm;
-		if (dt > 30) {
+		if (dt > 100) {
 			DEBUGPRINT(("Message loop excessive delay now=%ld dt=%ld lasttm=%ld", now, dt, lasttm));
 		}
 		lasttm = now;
 
-		bool updateok = camera->Update();
+		bool updateok = camera->Update(depthmm_mid, depth_mid, thresh_mid);
 
 		check_json_and_execute();
 
@@ -314,9 +319,13 @@ int MmttServer::Run(std::string title, HINSTANCE hInstance, int nCmdShow)
 			continue;
 		}
 
+		// This will flip the stuff in depthmm_mid, depth_mid, and thresh_mid
+		flip_images();
+
 		analyze_depth_images();
+
 		draw_begin();
-		draw_depth_image();
+		draw_depth_image(ffpixels());
 		draw_color_image();
 		draw_end();
 
@@ -329,7 +338,7 @@ int MmttServer::Run(std::string title, HINSTANCE hInstance, int nCmdShow)
 			TranslateMessage(&msg);
 			DispatchMessageW(&msg);
 		}
-		if (_do_showfps) {
+		if (val_showfps.value) {
 			nframes++;
 			DWORD tm = timeGetTime();
 			// Put out FPS every 10 seconds

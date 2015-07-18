@@ -33,11 +33,6 @@ DepthCamera* DepthCamera::makeDepthCamera(MmttServer* s, std::string camtype, in
 		return new RealsenseDepthCamera(s,camnum);
 	}
 #endif
-#ifdef SENZ3D_CAMERA
-	if ( camtype == "pcx" || camtype == "pxc" || camtype == "senz3d" ) {
-		return new PcxDepthCamera(s,camnum);
-	}
-#endif
 #ifdef KINECT_CAMERA
 	if ( camtype == "kinect" ) {
 		return new KinectDepthCamera(s);

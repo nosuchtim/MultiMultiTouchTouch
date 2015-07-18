@@ -19,12 +19,6 @@
   "expand_ymax": 1,
   "expand_ymin": 0,
   "expandfactor": 2,
-  "showfps": 0,
-  "showmask": 0,
-  "showrawdepth": 0,
-  "showregionhits": 1,
-  "showregionmap": 0,
-  "showregionrects": 0,
   "tilt": 0,
   "usemask": 0,
   "regions": [

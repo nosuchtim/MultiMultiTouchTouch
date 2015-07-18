@@ -29,11 +29,16 @@
 #define MMTT_KINECT2_H
 
 #define KINECT2_MULTIFRAMEREADER
+// #define DO_MULTISOURCE
 // #define DO_COLOR_FRAME
+// #define USE_COLOR_FRAME
+// #define DO_MAP_COLOR_FRAME
 
 #include <vector>
 #include <map>
 #include <iostream>
+
+#include "Kinect.h"
 
 #include "ip/NetworkingUtils.h"
 
@@ -51,12 +56,15 @@ class TOP_SharedMemHeader;
 struct IKinectSensor;
 struct IDepthFrameReader;
 
+#ifdef DO_MULTISOURCE
 struct IMultiSourceFrameReader;
+#else
+struct IDepthFrameReader;
+#endif
+struct ICoordinateMapper;
 
 #define _USE_MATH_DEFINES // To get definition of M_PI
 #include <math.h>
-
-// typedef interface IMultiSourceFrameReader IMultiSourceFrameReader;
 
 class Kinect2DepthCamera : public DepthCamera {
 public:
@@ -67,30 +75,42 @@ public:
 	const int default_depth_detect_top() { return 1465; };
 	const int default_depth_detect_bottom() { return 1420; };
 	bool InitializeCamera();
-	bool Update();
+	bool Update(uint16_t *depthmm, uint8_t *depthbytes, uint8_t *threshbytes);
 	void Shutdown();
 	std::string camtype() { return "Kinect2"; }
+	IplImage* colorimage();
 
 private:
 
-	void ProcessDepth(INT64 nTime, const UINT16* pBuffer, int nWidth, int nHeight, USHORT nMinDepth, USHORT nMaxDepth);
-	void processRawDepth(const UINT16* depth, int width , int height );
+	void _processFrame(const UINT16* depth, int width , int height, uint16_t *depthmm, uint8_t *depthbytes, uint8_t *threshbytes
+#ifdef DO_COLOR_FRAME
+		, RGBQUAD * colorbytes, int colorwidth , int colorheight
+#endif
+		);
 
     IKinectSensor*          m_pKinectSensor;
-    RGBQUAD*                m_pDepthRGBX;
+    ICoordinateMapper*      m_pCoordinateMapper;
+#ifdef DO_MULTISOURCE
     IMultiSourceFrameReader* m_pMultiSourceFrameReader;
+#else
+    IDepthFrameReader* m_pDepthFrameReader;
+#endif
+
+#ifdef DO_COLOR_FRAME
+	IplImage*				m_colorImage;
+	RGBQUAD*				m_colorbytes;
+	int						m_colorWidth;
+	int						m_colorHeight;
+	ColorSpacePoint*		m_colorCoordinates;
+	DepthSpacePoint*		m_depthCoordinates;
+#endif
 
 #define MAX_DEPTH_CAMERAS 4
 	int m_nsensors;
 	int m_currentSensor;
-	// INuiSensor* m_pNuiSensor[MAX_DEPTH_CAMERAS];
     HANDLE      m_hNextDepthFrameEvent[MAX_DEPTH_CAMERAS];
     HANDLE		m_pDepthStreamHandle[MAX_DEPTH_CAMERAS];
     HWND        m_hWnd;
-    static const int        cStatusMessageMaxLen = MAX_PATH*2;
-
-	static const int eventCount = 1;
-	HANDLE hEvents[eventCount];
 };
 
 
