@@ -25,6 +25,7 @@
 	WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#include "mmtt_camera.h"
 #include "mmtt.h"
 
 DepthCamera* DepthCamera::makeDepthCamera(MmttServer* s, std::string camtype, int camnum) {

@@ -43,8 +43,9 @@ public:
 	virtual const int default_depth_detect_top() = 0;
 	virtual const int default_depth_detect_bottom() = 0;
 	virtual bool InitializeCamera() = 0;
+	// virtual bool Update(uint16_t *depthmm, uint8_t *depthbytes, uint8_t *threshbytes) = 0;
+	virtual bool Update(unsigned short *depthmm, uint8_t *depthbytes, uint8_t *threshbytes) = 0;
 	virtual void Shutdown() = 0;
-	virtual bool Update(uint16_t *depthmm, uint8_t *depthbytes, uint8_t *threshbytes) = 0;
 	virtual std::string camtype() = 0;
 
 	// These don't have to defined by all cameras

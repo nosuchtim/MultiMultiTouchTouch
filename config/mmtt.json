@@ -8,11 +8,11 @@
 
   "port": 4444,               # The HTTP port for the browser interface
 
-  "camera": "realsense",        # Possible values: kinect, kinect2, realsense
+  "camera": "kinect2",        # Possible values: kinect, kinect2, realsense
 
-  "patch": "fullscreen_realsense",   # Name a file in the config/mmtt directory
+  "patch": "fullscreen_kinect2",   # Name a file in the config/mmtt directory
 
-  "flipx": 0,                 # If 1, flip camera image horizontally
+  "flipx": 1,                 # If 1, flip camera image horizontally
   "flipy": 0,                 # If 1, flip camera image horizontally
 
   "initialalign": 0,          # If initialalign is 1, an auto-alignment
@@ -24,8 +24,8 @@
                               # to which TUIO/osc messages are sent.
 
   "showfps": 1,               # If 1, show FPS in debug messages
-  "showregionhits": 0,        # If 1, show region hits
-  "showregionrects": 0,       # If 1, show region outlines
+  "showregionhits": 1,        # If 1, show region hits
+  "showregionrects": 1,       # If 1, show region outlines
 
   "debugtoconsole": 1,        # If 1, send debug messages to the console
   "debugtolog": 1             # If 1, send debug messages to the log directory

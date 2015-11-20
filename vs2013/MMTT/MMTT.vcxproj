@@ -130,7 +130,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>/ignore:4099</AdditionalOptions>
-      <AdditionalDependencies>opencv_highgui2410d.lib;opencv_core2410d.lib;opencv_flann2410d.lib;opencv_ml2410d.lib;opencv_imgproc2410d.lib;libjpegd.lib;libpngd.lib;libtiffd.lib;libjasperd.lib;IlmImfd.lib;pthreadVC2.lib;winmm.lib;libpxc_d.lib;Kinect20.lib;Kinect20.Fusion.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_highgui2410d.lib;opencv_core2410d.lib;opencv_flann2410d.lib;opencv_ml2410d.lib;opencv_imgproc2410d.lib;libjpegd.lib;libpngd.lib;libtiffd.lib;libjasperd.lib;IlmImfd.lib;pthreadVC2.lib;winmm.lib;Kinect20.lib;Kinect20.Fusion.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\x64\Debug;..\..\other\opencv\build\x64\vc12\staticlib;..\..\other\pthreads-w32-2-9-1-release\Pre-built.2\lib\x64;C:\Python27\libs;C:\Program Files %28x86%29\Intel\RSSDK\lib\x64;c:\Program Files\Microsoft SDKs\Kinect\v2.0_1409\Lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -272,6 +272,7 @@
     <ClCompile Include="..\..\src\nosuch\NosuchUtil.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="mmtt.ico" />
   </ItemGroup>
   <ItemGroup>

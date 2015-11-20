@@ -26,11 +26,12 @@
 */
 
 #include "stdafx.h"
-#include "NosuchDebug.h"
-#include "mmtt.h"
-#include "mmtt_kinect.h"
+#include "mmtt_camera.h"
 
 #ifdef KINECT_CAMERA
+
+#include "mmtt.h"
+#include "mmtt_kinect.h"
 
 using namespace std;
 

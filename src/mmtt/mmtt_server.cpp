@@ -2939,7 +2939,7 @@ MmttServer::doTuio1_25D( int nactive, int numblobs, std::vector<int> &blob_sid, 
 	OscBundle bundle;
 	OscMessage msg;
 
-	long tm = timeGetTime();
+	unsigned long tm = timeGetTime();
 	if ( nactive == 0 ) {
 		if ( (tm - _tuio_last_sent) > 100 ) {
 			msg.clear();

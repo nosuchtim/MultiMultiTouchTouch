@@ -28,6 +28,8 @@
 #ifndef MMTT_H
 #define MMTT_H
 
+#include <opencv/cv.h>
+#include "mmtt_depth.h"
 #include "mmtt_camera.h"
 
 #include <vector>
@@ -336,7 +338,7 @@ private:
 	NosuchDaemon*	_httpserver;
 
 	int _tuio_fseq;
-	int _tuio_last_sent;
+	unsigned long _tuio_last_sent;
 
 	bool do_setnextregion;
 	std::map<std::string, MmttValue*> mmtt_values;

@@ -26,9 +26,11 @@
 */
 
 #include "NosuchDebug.h"
-#include "mmtt.h"
+#include "mmtt_camera.h"
 
 #ifdef REALSENSE_CAMERA
+
+#include "mmtt.h"
 
 using namespace std;
 

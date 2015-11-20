@@ -66,6 +66,8 @@ struct ICoordinateMapper;
 #define _USE_MATH_DEFINES // To get definition of M_PI
 #include <math.h>
 
+#include "mmtt_depth.h"
+
 class Kinect2DepthCamera : public DepthCamera {
 public:
 	Kinect2DepthCamera(MmttServer* s);
