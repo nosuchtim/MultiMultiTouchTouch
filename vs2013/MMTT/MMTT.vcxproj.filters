@@ -120,9 +120,6 @@
     <ClCompile Include="..\..\src\mmtt\mmtt_camera.cpp">
       <Filter>Source Files\mmtt</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\mmtt\mmtt_kinect.cpp">
-      <Filter>Source Files\mmtt</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\mmtt\mmtt_kinect2.cpp">
       <Filter>Source Files\mmtt</Filter>
     </ClCompile>
@@ -269,6 +266,7 @@
     <None Include="mmtt.ico">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mmtt.rc">
@@ -304,9 +302,6 @@
       <Filter>Header Files\mmtt</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\mmtt\mmtt_depth.h">
-      <Filter>Header Files\mmtt</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\mmtt\mmtt_kinect.h">
       <Filter>Header Files\mmtt</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\mmtt\mmtt_realsense.h">

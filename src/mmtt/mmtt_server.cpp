@@ -61,8 +61,6 @@
 #include "UT_Mutex.h"
 #include "mmtt_sharedmem.h"
 
-#include "NuiApi.h"
-
 MmttServer* ThisServer;
 
 using namespace std;
