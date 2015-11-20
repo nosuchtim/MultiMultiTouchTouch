@@ -289,11 +289,13 @@ int MmttServer::Run(std::string title, HINSTANCE hInstance, int nCmdShow)
 		exit(1);
 	}
 
+#ifdef USE_SPOUT
 	_spoutDepthSender.SetDX9(true);
 	_spoutDepthSender.CreateSender("MMTT Depth", camera->width(), camera->height());
 
 	_spoutDepthSender.SetDX9(true);
 	_spoutColorSender.CreateSender("MMTT Color", camera->width(), camera->height());
+#endif
 
     // Main message loop
 	DWORD tm0 = timeGetTime();

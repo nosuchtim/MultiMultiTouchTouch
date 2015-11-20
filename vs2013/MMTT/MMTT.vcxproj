@@ -271,7 +271,6 @@
     <ClCompile Include="..\..\src\nosuch\NosuchUtil.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram.cd" />
     <None Include="mmtt.ico" />
   </ItemGroup>
   <ItemGroup>

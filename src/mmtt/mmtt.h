@@ -46,7 +46,9 @@
 #include "NosuchHttpServer.h"
 #include "NosuchException.h"
 
+#ifdef USE_SPOUT
 #include "spout.h"
+#endif
 
 class Cursor;
 
@@ -255,8 +257,10 @@ class MmttServer : public NosuchJsonListener {
 
 private:
 
+#ifdef USE_SPOUT
 	SpoutSender _spoutDepthSender;
 	SpoutSender _spoutColorSender;
+#endif
 
 	void init_regular_values();
 	void init_camera_values();

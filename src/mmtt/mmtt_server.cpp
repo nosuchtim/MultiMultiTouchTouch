@@ -955,7 +955,9 @@ void MmttServer::draw_depth_image(unsigned char *pix) {
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 
+#ifdef USE_SPOUT
 		_spoutDepthSender.SendTexture(depthTextureId, GL_TEXTURE_2D, _camWidth, _camHeight, false, 0);
+#endif
 
 		cvReleaseImageHeader(&pixflipped);
 	}
@@ -1093,7 +1095,9 @@ void MmttServer::draw_color_image() {
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 
+#ifdef USE_SPOUT
 		_spoutColorSender.SendTexture(colorTextureId, GL_TEXTURE_2D, _camWidth, _camHeight, false, 0);
+#endif
 	}
 
 	glDisable( GL_TEXTURE_2D );
