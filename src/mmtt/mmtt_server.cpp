@@ -3032,6 +3032,8 @@ MmttServer::doTuio1_25D( int nactive, int numblobs, std::vector<int> &blob_sid, 
 			// float depth = (float)(val_depth_detect_top.value - sess->_depth_mm) / (float)val_depth_detect_top.value;
 			float depth = (float)sess->_depth_normalized;
 			float f = (float)(blobrect.width*blobrect.height) / (float)(regionrect.width*regionrect.height);
+			float bw = (float)(blobrect.width) / (float)(regionrect.width);
+			float bh = (float)(blobrect.height) / (float)(regionrect.height);
 
 			// Take into account some factors that can be used to adjust for differences due
 			// to different palettes (e.g. the depth value in smaller palettes is small, so depthfactor
@@ -3043,19 +3045,19 @@ MmttServer::doTuio1_25D( int nactive, int numblobs, std::vector<int> &blob_sid, 
 			msg.setAddress("/tuio/25Dblb");
 			msg.addStringArg("set");
 			msg.addIntArg(tuio_sid);
-			msg.addFloatArg(x);      // x (position)
-			msg.addFloatArg(y);      // y (position)
-			msg.addFloatArg(depth);        // z (position)
-			msg.addFloatArg(0.0);          // a (angle)
-			msg.addFloatArg((float)blobrect.width);   // w (width)
-			msg.addFloatArg((float)blobrect.height);  // h (height)
-			msg.addFloatArg(f);			   // f (area)
-			msg.addFloatArg(0.0);          // X (velocity)
-			msg.addFloatArg(0.0);          // Y (velocity)
-			msg.addFloatArg(0.0);          // Z (velocity)
-			msg.addFloatArg(0.0);          // A (rotational velocity)
-			msg.addFloatArg(0.0);          // m (motion acceleration)
-			msg.addFloatArg(0.0);          // r (rotation acceleration)
+			msg.addFloatArg(x);          // x (position)
+			msg.addFloatArg(y);          // y (position)
+			msg.addFloatArg(depth);      // z (position)
+			msg.addFloatArg(0.0);        // a (angle)
+			msg.addFloatArg(bw);         // w (width)
+			msg.addFloatArg(bh);         // h (height)
+			msg.addFloatArg(f);          // f (area)
+			msg.addFloatArg(0.0);        // X (velocity)
+			msg.addFloatArg(0.0);        // Y (velocity)
+			msg.addFloatArg(0.0);        // Z (velocity)
+			msg.addFloatArg(0.0);        // A (rotational velocity)
+			msg.addFloatArg(0.0);        // m (motion acceleration)
+			msg.addFloatArg(0.0);        // r (rotation acceleration)
 			bundle.addMessage(msg);
 		}
 
