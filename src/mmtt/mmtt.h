@@ -155,6 +155,9 @@ class MmttServer : public NosuchJsonListener {
 	static void ErrorPopup(LPCWSTR msg);
 	static void ErrorPopup(const char* msg);
 
+	int cameraIndex() { return _cameraIndex; };
+	std::string cameraName() { return NosuchSnprintf("%s#%d", _cameraType.c_str(), _cameraIndex); };
+
 	void InitOscClientLists();
 	void SetOscClientList(std::string& clientlist,std::vector<OscSender*>& clientvector);
 	void SendOscToClients();
@@ -174,14 +177,14 @@ class MmttServer : public NosuchJsonListener {
 	void draw_begin();
 	void draw_end();
 	void swap_buffers();
-	int get_flip_mode();
+	int get_cvflip_mode();
 
 	LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam ); 
 
 	Globals g;
 
 	void Update();
-    int Run(std::string title, HINSTANCE hInstance, int nCmdShow);
+    int Run(HINSTANCE hInstance, int nCmdShow);
     LRESULT CALLBACK        DlgProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
     void   SetStatusMessage(WCHAR* szMessage);
 
@@ -224,6 +227,8 @@ class MmttServer : public NosuchJsonListener {
 	MmttValue val_showfps;
 	MmttValue val_flipx;
 	MmttValue val_flipy;
+	MmttValue val_fliptuiox;
+	MmttValue val_fliptuioy;
 	MmttValue val_showrawdepth;
 	MmttValue val_showregionhits;
 	MmttValue val_showregionmap;

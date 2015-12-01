@@ -97,8 +97,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
 		MessageBoxA(NULL,msg.c_str(),"Mmtt_creative",MB_OK);
 		exit(1);
 	}
-	std::string title = NosuchSnprintf("MMTT (%s)",config.c_str());
-    return server->Run(title,hInstance, nCmdShow);
+    return server->Run(hInstance, nCmdShow);
 }
 
 LRESULT CALLBACK ThisWndProc(   HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam ) 
@@ -194,7 +193,7 @@ LRESULT CALLBACK MmttServer::WndProc(   HWND hwnd, UINT message, WPARAM wparam, 
     return DefWindowProc( hwnd, message, wparam, lparam );
 }
 
-int MmttServer::Run(std::string title, HINSTANCE hInstance, int nCmdShow)
+int MmttServer::Run(HINSTANCE hInstance, int nCmdShow)
 {
     MSG       msg = {0};
 
@@ -232,9 +231,9 @@ int MmttServer::Run(std::string title, HINSTANCE hInstance, int nCmdShow)
     
     AdjustWindowRect( &rect, WS_OVERLAPPEDWINDOW, false );
 
-	std::wstring wtitle = s2ws(title);
+	std::string wname = NosuchSnprintf("MMTT for %s",cameraName().c_str());
     g.hwnd = CreateWindow(TEXT("MMTT"),
-                          wtitle.c_str(),
+                          s2ws(wname).c_str(),
                           WS_OVERLAPPEDWINDOW,
                           rect.left, rect.top,  // adjusted x, y positions
                           rect.right - rect.left, rect.bottom - rect.top,  // adjusted width and height

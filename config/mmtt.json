@@ -12,8 +12,11 @@
 
   "patch": "fullscreen_kinect2",   # Name a file in the config/mmtt directory
 
-  "flipx": 1,                 # If 1, flip camera image horizontally
-  "flipy": 0,                 # If 1, flip camera image horizontally
+  "flipx": 0,                 # If 1, flip camera image horizontally
+  "flipy": 1,                 # If 1, flip camera image horizontally
+
+  "fliptuiox": 1,             # If 1, flip output TUIO x value
+  "fliptuioy": 0,             # If 1, flip output TUIO y value
 
   "initialalign": 0,          # If initialalign is 1, an auto-alignment
                               # will be done at startup.  This is only

@@ -199,6 +199,8 @@ MmttServer::MmttServer(std::string configpath)
 	mmtt_values["showfps"] = &val_showfps;
 	mmtt_values["flipx"] = &val_flipx;
 	mmtt_values["flipy"] = &val_flipy;
+	mmtt_values["fliptuiox"] = &val_fliptuiox;
+	mmtt_values["fliptuioy"] = &val_fliptuioy;
 	mmtt_values["showregionhits"] = &val_showregionhits;
 	mmtt_values["showmask"] = &val_showmask;
 	mmtt_values["showregionmap"] = &val_showregionmap;
@@ -325,6 +327,8 @@ MmttServer::init_regular_values() {
 	val_expand_ymax = MmttValue(1.0,0.00,1.0);
 	val_flipx = MmttValue(0,0,1);
 	val_flipy = MmttValue(0,0,1);
+	val_fliptuiox = MmttValue(0,0,1);
+	val_fliptuioy = MmttValue(0,0,1);
 
 	DEBUGPRINT1(("TEMPORARY blob_minsize HACK - used to be 65.0"));
 }
@@ -761,11 +765,12 @@ void MmttServer::check_json_and_execute()
 
 #define NO_FLIP 99
 
-int MmttServer::get_flip_mode() {
+// Compute the appropriate value for cvFlip
+int MmttServer::get_cvflip_mode() {
 	int flip_mode = NO_FLIP;
 	if (val_flipx.value && val_flipy.value) {
 		flip_mode = -1;
-	} else if (val_flipx.value) {
+	} else if (val_flipy.value) {
 		flip_mode = 1;
 	} else if (val_flipx.value) {
 		flip_mode = 0;
@@ -774,7 +779,7 @@ int MmttServer::get_flip_mode() {
 }
 
 void MmttServer::flip_images() {
-	int flip_mode = get_flip_mode();
+	int flip_mode = get_cvflip_mode();
 	if (flip_mode != NO_FLIP) {
 		// Flip the image in depth_mid
 		IplImage* image_depth_mid = cvCreateImageHeader( _camSize, IPL_DEPTH_8U, _camBytesPerPixel );
@@ -1021,7 +1026,7 @@ void MmttServer::draw_color_image() {
 		return;
 	}
 
-	int flip_mode = get_flip_mode();
+	int flip_mode = get_cvflip_mode();
 	if (flip_mode != NO_FLIP) {
 		cvFlip(cimage,cimage,flip_mode);
 	}
@@ -1783,6 +1788,12 @@ MmttServer::LoadConfigDefaultsJson(cJSON* json)
 	}
 	if ( (j=getNumber(json,"flipy")) != NULL ) {
 		val_flipy.set_value( j->valueint != 0 );
+	}
+	if ( (j=getNumber(json,"fliptuiox")) != NULL ) {
+		val_fliptuiox.set_value( j->valueint != 0 );
+	}
+	if ( (j=getNumber(json,"fliptuioy")) != NULL ) {
+		val_fliptuioy.set_value( j->valueint != 0 );
 	}
 	if ( (j=getNumber(json,"showregionrects")) != NULL ) {
 		val_showregionrects.set_value( j->valueint != 0 );
@@ -2941,6 +2952,15 @@ MmttServer::doTuio1_25D( int nactive, int numblobs, std::vector<int> &blob_sid, 
 	OscBundle bundle;
 	OscMessage msg;
 
+	bundle.clear();
+
+	// First the source message to identify who we are
+	msg.clear();
+	msg.setAddress("/tuio/25Dblb");
+	msg.addStringArg("source");
+	msg.addStringArg(NosuchSnprintf("mmtt_%s@127.0.0.1", cameraName().c_str()));
+	bundle.addMessage(msg);
+
 	unsigned long tm = timeGetTime();
 	if ( nactive == 0 ) {
 		if ( (tm - _tuio_last_sent) > 100 ) {
@@ -2960,12 +2980,11 @@ MmttServer::doTuio1_25D( int nactive, int numblobs, std::vector<int> &blob_sid, 
 	} else {
 		// Put out the TUIO messages
 
-		bundle.clear();
-
 		// First the "alive" message that lists all the active sessions
 		msg.clear();
 		msg.setAddress("/tuio/25Dblb");
 		msg.addStringArg("alive");
+
 		for ( int i=0; i<numblobs; i++ ) {
 			MmttRegion* r = blob_region[i];
 			int sid = blob_sid[i];
@@ -2999,6 +3018,13 @@ MmttServer::doTuio1_25D( int nactive, int numblobs, std::vector<int> &blob_sid, 
 			float e_ymin = (float)(mmtt_values["expand_ymin"]->value);
 			float e_ymax = (float)(mmtt_values["expand_ymax"]->value);
 			normalize_region_xy(x,y,regionrect,efactor,e_xmin,e_xmax,e_ymin,e_ymax);
+
+			if (val_fliptuiox.value) {
+				x = 1.0f - x;
+			}
+			if (val_fliptuioy.value) {
+				y = 1.0f - y;
+			}
 
 			int tuio_sid = tuioSessionId(r,sid);
 
