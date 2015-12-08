@@ -6,11 +6,21 @@
 
 {
 
-  "port": 4444,               # The HTTP port for the browser interface
+  "port": 4444,			# The HTTP port for the browser interface
 
-  "camera": "kinect2",        # Possible values: kinect, kinect2, realsense
-
+  "camera": "kinect2",	# Possible values: kinect, kinect2, realsense
   "patch": "fullscreen_kinect2",   # Name a file in the config/mmtt directory
+
+  # "camera": "realsense",	# Possible values: kinect, kinect2, realsense
+  # "patch": "fullscreen_realsense",
+  # "camerawidth": 320,
+  # "cameraheight": 240,
+  # "patch": "fullscreen_f200",
+  # "camerawidth": 640,
+  # "cameraheight": 480,
+  # "patch": "fullscreen_r200",
+  # "camerawidth": 628,
+  # "cameraheight": 468,
 
   "flipx": 0,                 # If 1, flip camera image horizontally
   "flipy": 1,                 # If 1, flip camera image horizontally

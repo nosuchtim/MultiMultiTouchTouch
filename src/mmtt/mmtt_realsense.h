@@ -32,9 +32,9 @@
 #include <map>
 #include <iostream>
 
-#define USE_COLOR
-#define GENERATE_MAPPED_DEPTH
-#define USE_MAPPED_DEPTH
+// #define USE_COLOR
+// #define GENERATE_MAPPED_DEPTH
+// #define USE_MAPPED_DEPTH
 
 #include "pxcprojection.h"
 #include "pxcsensemanager.h"
@@ -99,10 +99,10 @@ protected:
 
 class RealsenseDepthCamera : public DepthCamera {
 public:
-	RealsenseDepthCamera(MmttServer* s, int num);
+	RealsenseDepthCamera(MmttServer* s, int num, int camwidth, int camheight);
 	~RealsenseDepthCamera();
-	const int width() { return 640; }
-	const int height() { return 480; }
+	const int width() { return _camWidth; }
+	const int height() { return _camHeight; }
 	const int fps() { return 30; }
 	const int default_depth_detect_top() { return 700; };
 	const int default_depth_detect_bottom() { return 700; };
@@ -143,8 +143,12 @@ private:
 
 	int _nactive;
 	int _nstreams;
+	int _camWidth;
+	int _camHeight;
 
-	void _processDepth(pxcU16* depth,uint16_t *depthmm, uint8_t *depthbytes, uint8_t *threshbytes);
+	// void _processDepth(pxcU16* depth,uint16_t *depthmm, uint8_t *depthbytes, uint8_t *threshbytes);
+	void _processDepth(PXCImage* depthimage, PXCImage::ImageData depthidata,uint16_t *depthmm, uint8_t *depthbytes, uint8_t *threshbytes);
+	PXCImage::ImageData depthidata;
 };
 
 #endif

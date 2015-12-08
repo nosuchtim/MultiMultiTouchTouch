@@ -304,7 +304,7 @@ int MmttServer::Run(HINSTANCE hInstance, int nCmdShow)
 
 		DWORD now = timeGetTime();
 		DWORD dt = now - lasttm;
-		if (dt > 100) {
+		if (dt > 400) {
 			DEBUGPRINT(("Message loop excessive delay now=%ld dt=%ld lasttm=%ld", now, dt, lasttm));
 		}
 		lasttm = now;

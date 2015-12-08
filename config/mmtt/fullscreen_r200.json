@@ -1,9 +1,9 @@
 {
   "autowindow": 80,
 
-  "depth_detect_bottom": 1000,
-  "depth_detect_top": 1000,
-  "depth_align": 1000,
+  "depth_detect_bottom": 1520,
+  "depth_detect_top": 1515,
+  "depth_align": 1540,
 
   "blob_filter": 1,
   "blob_maxsize": 100000,
@@ -18,7 +18,7 @@
   "edge_top": 0,
   "usemask": 0,
   "regions": [
-    { "first_sid": 1000, "x": 0, "y": 0, "width": 320, "height": 240}
+    { "first_sid": 1000, "x": 0, "y": 0, "width": 628, "height": 468}
   ]
 
 }

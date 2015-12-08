@@ -28,10 +28,10 @@
 #include "mmtt_camera.h"
 #include "mmtt.h"
 
-DepthCamera* DepthCamera::makeDepthCamera(MmttServer* s, std::string camtype, int camnum) {
+DepthCamera* DepthCamera::makeDepthCamera(MmttServer* s, std::string camtype, int camnum, int camwidth, int camheight) {
 #ifdef REALSENSE_CAMERA
 	if ( camtype == "realsense" ) {
-		return new RealsenseDepthCamera(s,camnum);
+		return new RealsenseDepthCamera(s,camnum,camwidth,camheight);
 	}
 #endif
 #ifdef KINECT2_CAMERA

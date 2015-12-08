@@ -171,7 +171,7 @@ MmttServer::MmttServer(std::string configpath)
 		NosuchErrorPopup = NULL;
 	}
 
-	camera = DepthCamera::makeDepthCamera(this,_cameraType,_cameraIndex);
+	camera = DepthCamera::makeDepthCamera(this,_cameraType,_cameraIndex,_camWidth,_camHeight);
 	if ( ! camera ) {
 		std::string msg = NosuchSnprintf("Unrecognized depth camera type '%s'",_cameraType.c_str());
 		DEBUGPRINT((msg.c_str()));
@@ -1716,6 +1716,8 @@ MmttServer::LoadGlobalDefaults()
 	_cameraType = "kinect";
 	_cameraIndex = 0;
 	_tempDir = "c:/windows/temp";
+	_camWidth = -1;
+	_camHeight = -1;
 	NosuchDebugToConsole = false;
 	NosuchDebugToLog = true;
 	NosuchDebugSetLogDirFile(MmttLogDir(),"mmtt.debug");
@@ -1838,6 +1840,12 @@ MmttServer::LoadConfigDefaultsJson(cJSON* json)
 	}
 	if ( (j=getNumber(json,"cameraindex")) != NULL ) {
 		_cameraIndex = j->valueint;
+	}
+	if ( (j=getNumber(json,"camerawidth")) != NULL ) {
+		_camWidth = j->valueint;
+	}
+	if ( (j=getNumber(json,"cameraheight")) != NULL ) {
+		_camHeight = j->valueint;
 	}
 	if ( (j=getString(json,"patch")) != NULL ) {
 		_patchFile = std::string(j->valuestring);

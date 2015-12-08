@@ -38,13 +38,15 @@ static std::map<int /*ctrl*/,pxcUID /*iuid*/> g_devices;
 
 /* Checking if sensor device connect or not */
 
-RealsenseDepthCamera::RealsenseDepthCamera(MmttServer* s, int camindex) {
+RealsenseDepthCamera::RealsenseDepthCamera(MmttServer* s, int camindex, int camwidth, int camheight) {
 	_server = s;
 	_camindex = camindex;
 	g_session = 0;
 	g_capture = 0;
 	g_device = 0;
 	g_sensemanager = 0;
+	_camWidth = camwidth;
+	_camHeight = camheight;
 #ifdef USE_COLOR
 	g_colorimage = 0;
 	g_coloriplimage = 0;
@@ -78,8 +80,21 @@ PXCCapture::Device::StreamProfileSet RealsenseDepthCamera::GetProfileSet() {
 	int nprofiles;
 	PXCCapture::StreamType lookfortype;
 	int needfps = fps();
-	int needwidth = width(); // 320;
-	int needheight = height(); // 240;
+
+	int needwidth;
+	int needheight;
+	if (_camWidth > 0) {
+		// Defaults
+		needwidth = _camWidth;
+		needheight = _camHeight;
+	}
+	else {
+		DEBUGPRINT(("\"camerawidth\" and \"cameraheight\" aren't in mmtt.json?"));
+		needwidth = 628;
+		needheight = 468;
+		// needwidth = 640;
+		// needheight = 480;
+	}
 	
 	lookfortype =  PXCCapture::STREAM_TYPE_DEPTH;
 	nprofiles = g_device->QueryStreamProfileSetNum(lookfortype);
@@ -87,6 +102,11 @@ PXCCapture::Device::StreamProfileSet RealsenseDepthCamera::GetProfileSet() {
 		PXCCapture::Device::StreamProfileSet pset={};
 		g_device->QueryStreamProfileSet(lookfortype, n, &pset);
 
+		DEBUGPRINT(("PROFILE n=%d w=%d h=%d",
+			n,
+			pset[lookfortype].imageInfo.width,
+			pset[lookfortype].imageInfo.height
+			));
 		if ( (pset[lookfortype].imageInfo.width == needwidth)
 			&& (pset[lookfortype].imageInfo.height == needheight)
 			&& (pset[lookfortype].frameRate.max >= needfps)
@@ -212,16 +232,21 @@ bool RealsenseDepthCamera::InitializeCamera()
 }
 
 void
-RealsenseDepthCamera::_processDepth(pxcU16 *depth, uint16_t *depthmm, uint8_t *depthbytes, uint8_t *threshbytes) {
+RealsenseDepthCamera::_processDepth(PXCImage* depthimage, PXCImage::ImageData depthidata, uint16_t *depthmm, uint8_t *depthbytes, uint8_t *threshbytes) {
+
+	PXCImage::ImageInfo info;
+	info = depthimage->QueryInfo();
+
+	pxcU16 *depth = (pxcU16*)(depthidata.planes[0]);
 
 	int i = 0;
 
 	bool filterbydepth = ! server()->val_showrawdepth.value;
-
 	// XXX - THIS NEEDS OPTIMIZATION!
 
 	int h = height();
 	int w = width();
+
 	for (int y=0; y<h; y++) {
 		float backval;
 		if ( server()->continuousAlign == true ) {
@@ -232,15 +257,38 @@ RealsenseDepthCamera::_processDepth(pxcU16 *depth, uint16_t *depthmm, uint8_t *d
 				* (float(y)/h));
 		}
 
-	  pxcU16* lastpixel = depth + (y+1)*w - 1;
+	  // pxcU16* lastpixel = depth + (y+1)*w - 1;
+
+		int rowsize = info.width;
+		if (w == 628) {
+			// rowsize = depthidata.pitches[0];   // doesn't work, pitches says its 1280!?
+			rowsize = 640;
+		}
+
+	// int rowsize = info.width;
+	  pxcI16* xstart = (pxcI16*)(depth + (y*rowsize)  );
+
+	// DEBUGPRINT(("y=%d",y));
+
 	  for (int x=0; x<w; x++,i++) {
-		uint16_t mm = *(lastpixel--);
+
+		  uint16_t mm = 0;
+		  // if (y < (h / 2)) {
+			  mm = xstart[x];
+		  // }
+		  // else {
+			//   mm = 0;
+		  // }
+
 		depthmm[i] = mm;
+
 #define OUT_OF_BOUNDS 99999
 		int deltamm;
 		int pval = 0;
 		if ( filterbydepth ) {
-			if ( mm == 0 || mm < server()->val_depth_front.value || mm > backval ) {
+			if (mm == 0) {
+				pval = OUT_OF_BOUNDS;
+			} else if ( mm < server()->val_depth_front.value || mm > backval ) {
 				pval = OUT_OF_BOUNDS;
 			} else if ( x < server()->val_edge_left.value || x > server()->val_edge_right.value || y < server()->val_edge_top.value || y > server()->val_edge_bottom.value ) {
 				pval = OUT_OF_BOUNDS;
@@ -331,12 +379,14 @@ bool RealsenseDepthCamera::Update(uint16_t *depthmm, uint8_t *depthbytes, uint8_
 #endif
 
 	PXCImage::ImageData depthidata;
-	status = g_depthimage->AcquireAccess(PXCImage::ACCESS_READ,&depthidata);
+
+	status = g_depthimage->AcquireAccess(PXCImage::ACCESS_READ, PXCImage::PIXEL_FORMAT_DEPTH, &depthidata);
 	if ( status < PXC_STATUS_NO_ERROR ) {
 		DEBUGPRINT(("AcquireAccess returned error?"));
 	} else {
 #ifndef USE_MAPPED_DEPTH
-		_processDepth((pxcU16*)depthidata.planes[0], depthmm, depthbytes, threshbytes);
+		// _processDepth((pxcU16*)depthidata.planes[0], depthmm, depthbytes, threshbytes);
+		_processDepth(g_depthimage,depthidata, depthmm, depthbytes, threshbytes);
 #endif
 	}
 

@@ -34,7 +34,7 @@ class MmttServer;
 
 class DepthCamera {
 public:
-	static DepthCamera* makeDepthCamera(MmttServer* s, std::string camtype, int camnum);
+	static DepthCamera* makeDepthCamera(MmttServer* s, std::string camtype, int camnum, int camwidth, int camheight);
 
 	MmttServer* server() { return _server; }
 
