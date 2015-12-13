@@ -20,6 +20,9 @@
                               # A comma-separated list of destinations
                               # to which TUIO/osc messages are sent.
 
+  "sharedmem": 1,             # If 1, enabled shared memory
+  "sharedmemname": "mmtt_outlines",
+
   "debugtoconsole": 1,        # If 1, send debug messages to the console
   "showfps": 1,               # If 1, show FPS in debug messages
   "debugtolog": 1             # If 1, send debug messages to the log directory

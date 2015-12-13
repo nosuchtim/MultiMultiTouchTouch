@@ -44,8 +44,6 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
-#include "spout.h"
-
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "glu32.lib")
 
@@ -289,8 +287,10 @@ int MmttServer::Run(std::string title, HINSTANCE hInstance, int nCmdShow)
 		exit(1);
 	}
 
+#ifdef USE_SPOUT
 	_mySender.SetDX9(true);
 	_mySender.CreateSender("MMTT Depth", camera->width(), camera->height());
+#endif
 
     // Main message loop
 	DWORD tm0 = timeGetTime();

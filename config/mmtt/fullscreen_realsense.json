@@ -1,9 +1,9 @@
 {
   "autowindow": 80,
 
-  "depth_detect_bottom": 520,
-  "depth_detect_top": 515,
-  "depth_align": 540,
+  "depth_detect_bottom": 320,
+  "depth_detect_top": 315,
+  "depth_align": 340,
 
   "blob_filter": 1,
   "blob_maxsize": 100000,

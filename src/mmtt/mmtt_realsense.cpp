@@ -153,8 +153,9 @@ bool RealsenseDepthCamera::InitializeCamera()
 			std::string name = ws2s(g_dinfo.name);
 
 			DEBUGPRINT(("g_dinfo.name = %s",name.c_str()));
-			std::size_t b = name.find("RealSense");
-			if ( b != std::string::npos ) {
+			std::size_t b1 = name.find("RealSense");
+			std::size_t b2 = name.find("Depth");
+			if ( b1 != std::string::npos && b2 != std::string::npos ) {
 				foundit = true;
 				break;
 			}
@@ -165,7 +166,7 @@ bool RealsenseDepthCamera::InitializeCamera()
 		// g_capture->Release();
 	}
 
-	g_device = g_capture->CreateDevice(0);
+	g_device = g_capture->CreateDevice(2);  // was 0, trying 2
 	if (!g_device) {
 		DEBUGPRINT(("DID NOT FIND RealSense!"));
 		g_device->Release();

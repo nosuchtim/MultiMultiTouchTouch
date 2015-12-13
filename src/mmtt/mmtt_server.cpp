@@ -922,7 +922,9 @@ void MmttServer::draw_depth_image() {
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 
+#ifdef USE_SPOUT
 		_mySender.SendTexture(texture, GL_TEXTURE_2D, _camWidth, _camHeight, false, 0);
+#endif
 	}
 
 	glDisable( GL_TEXTURE_2D );

@@ -44,7 +44,11 @@
 #include "NosuchHttpServer.h"
 #include "NosuchException.h"
 
+// #define USE_SPOUT
+
+#ifdef USE_SPOUT
 #include "spout.h"
+#endif
 
 class Cursor;
 
@@ -213,7 +217,9 @@ class MmttServer : public NosuchJsonListener {
 	UT_SharedMem *_sharedmem_image;
 	UT_SharedMem *_sharedmem_outlines;
 
+#ifdef USE_SPOUT
 	SpoutSender _mySender;
+#endif
 
 	DepthCamera* camera;
 

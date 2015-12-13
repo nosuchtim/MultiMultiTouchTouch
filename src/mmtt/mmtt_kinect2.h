@@ -30,7 +30,7 @@
 
 #define KINECT2_MULTIFRAMEREADER
 // #define DO_COLOR_FRAME
-#define NO_DAEMON
+// #define NO_DAEMON
 
 #include <vector>
 #include <map>
