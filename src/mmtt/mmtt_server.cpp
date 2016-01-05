@@ -228,6 +228,8 @@ MmttServer::MmttServer(std::string configpath)
 	mmtt_values["expand_ymin"] = &val_expand_ymin;
 	mmtt_values["expand_ymax"] = &val_expand_ymax;
 	mmtt_values["autowindow"] = &val_auto_window;
+	mmtt_values["shiftx"] = &val_shiftx;
+	mmtt_values["shifty"] = &val_shifty;
 
 	_camSize = cvSize(_camWidth,_camHeight);
 	_camSizeInBytes = _camWidth * _camHeight * _camBytesPerPixel;
@@ -329,6 +331,8 @@ MmttServer::init_regular_values() {
 	val_flipy = MmttValue(0,0,1);
 	val_fliptuiox = MmttValue(0,0,1);
 	val_fliptuioy = MmttValue(0,0,1);
+	val_shiftx = MmttValue(0, -639, 639);
+	val_shifty = MmttValue(0, -479, 479);
 
 	DEBUGPRINT1(("TEMPORARY blob_minsize HACK - used to be 65.0"));
 }
@@ -1690,6 +1694,22 @@ MmttServer::LoadPatchJson(std::string jstr)
 			if ( y >= _camHeight ) {
 				return("The y position of a region is larger than the camera height!?  Wrong config for this camera?");
 			}
+
+			x += (int)val_shiftx.value;
+			y += (int)val_shifty.value;
+			if (x < 0) {
+				x = 0;
+			}
+			else if (x >(_camWidth - 1 - c_width->valueint)) {
+				x = _camWidth - 1 - c_width->valueint;
+			}
+			if (y < 0) {
+				y = 0;
+			}
+			else if (y >(_camHeight - 1 - c_height->valueint)) {
+				y = _camHeight - 1 - c_height->valueint;
+			}
+
 			CvRect rect = cvRect(x, y, c_width->valueint, c_height->valueint);
 			int first_sid = c_first_sid->valueint;
 			_new_regions.push_back(new MmttRegion(regionid,first_sid,rect));

@@ -257,6 +257,8 @@ class MmttServer : public NosuchJsonListener {
 	MmttValue val_expand_xmax;
 	MmttValue val_expand_ymin;
 	MmttValue val_expand_ymax;
+	MmttValue val_shifty;
+	MmttValue val_shiftx;
 
 	bool continuousAlign;
 

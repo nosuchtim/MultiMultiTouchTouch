@@ -28,7 +28,7 @@
 #ifndef MMTT_CAMERA_H
 #define MMTT_CAMERA_H
 
-#define REALSENSE_CAMERA
+// #define REALSENSE_CAMERA
 #define KINECT2_CAMERA
 
 #ifdef REALSENSE_CAMERA
