@@ -674,6 +674,12 @@ MmttServer::shmem_update_outlines(MMTT_SharedMemHeader* h,
 
 		float depth = (float)sess->_depth_normalized;
 
+		// Take into account some factors that can be used to adjust for differences due
+		// to different palettes (e.g. the depth value in smaller palettes is small, so depthfactor
+		// can be used to expand it.
+		float dfactor = (float)(mmtt_values["depthfactor"]->value);
+		depth = depth * dfactor;
+
 		float blobarea = float(blobrect.width * blobrect.height) / (regionrect.width*regionrect.height);
 
 		CBlobContour* contour = blob->GetExternalContour();
@@ -1817,6 +1823,9 @@ MmttServer::LoadConfigDefaultsJson(cJSON* json)
 	if ( (j=getNumber(json,"fliptuioy")) != NULL ) {
 		val_fliptuioy.set_value( j->valueint != 0 );
 	}
+	if ( (j=getNumber(json,"depthfactor")) != NULL ) {
+		val_depthfactor.set_value( j->valuedouble );
+	}
 	if ( (j=getNumber(json,"showregionrects")) != NULL ) {
 		val_showregionrects.set_value( j->valueint != 0 );
 	}
@@ -2141,9 +2150,14 @@ MmttServer::SavePatch(std::string patchname)
 		if ( r->_first_sid == 0 ) {
 			continue;
 		}
+
+		// Undo shift applied when reading in
+		int xinfile = r->_rect.x - (int)(val_shiftx.value);
+		int yinfile = r->_rect.y - (int)(val_shifty.value);
+
 		f_json << sep2 << "    { \"first_sid\": " << (r->_first_sid)
-			<< ", \"x\": " << r->_rect.x
-			<< ", \"y\": " << r->_rect.y
+			<< ", \"x\": " << xinfile
+			<< ", \"y\": " << yinfile
 			<< ", \"width\": " << r->_rect.width
 			<< ", \"height\": " << r->_rect.height
 			<< "}";
