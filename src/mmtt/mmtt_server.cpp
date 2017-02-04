@@ -474,10 +474,10 @@ MmttServer::setup_shmem_for_image() {
 	Image_SharedMemHeader* h = (Image_SharedMemHeader*)data;
 
     // Magic number to make sure we are looking at the correct memory
-    // must be set to TOP_SHM_MAGIC_NUMBER (0xe95df673)
-    h->magicNumber = TOP_SHM_MAGIC_NUMBER; 
-    // header, must be set to TOP_SHM_VERSION_NUMBER
-    h->version = TOP_SHM_VERSION_NUMBER;
+    // must be set to MMTT_SHM_MAGIC_NUMBER
+    h->magicNumber = MMTT_SHM_MAGIC_NUMBER; 
+    // header, must be set to MMTT_SHM_VERSION_NUMBER
+    h->version = MMTT_SHM_VERSION_NUMBER;
     h->width = shmemWidth;
     h->height = shmemHeight;
     // X aspect of the image

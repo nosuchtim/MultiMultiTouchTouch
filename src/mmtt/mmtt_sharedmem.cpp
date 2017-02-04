@@ -472,9 +472,9 @@ void
 Outlines_SharedMemHeader::xinit()
 {
 	// Magic number to make sure we are looking at the correct memory
-	// must be set to TOP_SHM_MAGIC_NUMBER (0xe95df673)
+	// must be set to MMTT_SHM_MAGIC_NUMBER
 	magicNumber = MMTT_SHM_MAGIC_NUMBER;
-	// header, must be set to TOP_SHM_VERSION_NUMBER
+	// header, must be set to MMTT_SHM_VERSION_NUMBER
 	version = MMTT_SHM_VERSION_NUMBER;
 
 	for (buff_index b = 0; b<NUM_BUFFS; b++) {

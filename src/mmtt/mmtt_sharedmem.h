@@ -148,14 +148,6 @@ private:
 	bool				mySupportInfo;
 
 };
-#ifndef TOP_SHARED_MEM_HEADER_H
-#define TOP_SHARED_MEM_HEADER_H
-
-// #include "NosuchDebug.h"
-// #include "NosuchGraphics.h"
-
-#define TOP_SHM_MAGIC_NUMBER 	0xe95df673
-#define TOP_SHM_VERSION_NUMBER 	2
 
 #define MMTT_SHM_MAGIC_NUMBER 	0xe95df674
 // Version 2 got rid of cursors in favor of outlines
@@ -172,10 +164,10 @@ class Image_SharedMemHeader {
 public:
 	/* Begin version 1 */
 	// Magic number to make sure we are looking at the correct memory
-	// must be set to TOP_SHM_MAGIC_NUMBER (0xe95df673)
+	// must be set to MMTT_SHM_MAGIC_NUMBER
 	int							magicNumber;
 
-	// version number of this header, must be set to TOP_SHM_VERSION_NUMBER
+	// version number of this header, must be set to MMTT_SHM_VERSION_NUMBER
 	int							version;
 
 	// image width
@@ -318,7 +310,5 @@ public:
 };
 
 void print_buff_info(char *prefix, Outlines_SharedMemHeader* h);
-
-#endif 
 
 #endif
