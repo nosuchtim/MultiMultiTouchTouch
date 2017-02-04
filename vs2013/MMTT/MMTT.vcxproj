@@ -114,7 +114,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\src\space;..\..\src\nosuch;..\..\src\misclib;..\..\src\mmtt;..\..\other\freeframe;..\..\other\osc\include;..\..\other\cvblobslib;..\..\other\opencv\build\include;..\..\other\cJSON;..\..\other\pthreads-w32-2-9-1-release\Pre-built.2\include;..\..\other\portmidi\porttime;..\..\other\Spout2\SpoutSDK\Source;..\..\other\portmidi\pm_common;c:\Python27\include;c:\Program Files (x86)\Intel\RSSDK\include;c:\Program Files\Microsoft SDKs\Kinect\v2.0_1409\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\src\nosuch;..\..\src\mmtt;..\..\other\osc\include;..\..\other\cvblobslib;..\..\other\opencv\build\include;..\..\other\cJSON;..\..\other\pthreads-w32-2-9-1-release\Pre-built.2\include;..\..\other\portmidi\porttime;..\..\other\Spout2\SPOUTSDK\SpoutSDK;..\..\other\portmidi\pm_common;c:\Program Files (x86)\Intel\RSSDK\include;c:\Program Files\Microsoft SDKs\Kinect\v2.0_1409\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>Async</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -137,10 +137,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <Profile>false</Profile>
-      <OutputFile>..\..\bin\mmtt.exe</OutputFile>
     </Link>
     <PostBuildEvent />
     <PostBuildEvent />
+    <PostBuildEvent>
+      <Command>copy $(OutDir)$(TargetName)$(TargetExt) ..\..\bin</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -223,14 +225,14 @@
     <ClCompile Include="..\..\other\osc\src\OscMessage.cpp" />
     <ClCompile Include="..\..\other\osc\src\OscSender.cpp" />
     <ClCompile Include="..\..\other\portmidi\porttime\ptwinmm.c" />
-    <ClCompile Include="..\..\other\Spout2\SpoutSDK\Source\SpoutDirectX.cpp" />
-    <ClCompile Include="..\..\other\Spout2\SpoutSDK\Source\SpoutGLDXinterop.cpp" />
-    <ClCompile Include="..\..\other\Spout2\SpoutSDK\Source\SpoutGLextensions.cpp" />
-    <ClCompile Include="..\..\other\Spout2\SpoutSDK\Source\SpoutMemoryShare.cpp" />
-    <ClCompile Include="..\..\other\Spout2\SpoutSDK\Source\SpoutSDK.cpp" />
-    <ClCompile Include="..\..\other\Spout2\SpoutSDK\Source\SpoutSender.cpp" />
-    <ClCompile Include="..\..\other\Spout2\SpoutSDK\Source\SpoutSenderNames.cpp" />
-    <ClCompile Include="..\..\other\Spout2\SpoutSDK\Source\SpoutSharedMemory.cpp" />
+    <ClCompile Include="..\..\other\Spout2\SPOUTSDK\SpoutSDK\SpoutDirectX.cpp" />
+    <ClCompile Include="..\..\other\Spout2\SPOUTSDK\SpoutSDK\SpoutGLDXinterop.cpp" />
+    <ClCompile Include="..\..\other\Spout2\SPOUTSDK\SpoutSDK\SpoutGLextensions.cpp" />
+    <ClCompile Include="..\..\other\Spout2\SPOUTSDK\SpoutSDK\SpoutMemoryShare.cpp" />
+    <ClCompile Include="..\..\other\Spout2\SPOUTSDK\SpoutSDK\SpoutSDK.cpp" />
+    <ClCompile Include="..\..\other\Spout2\SPOUTSDK\SpoutSDK\SpoutSender.cpp" />
+    <ClCompile Include="..\..\other\Spout2\SPOUTSDK\SpoutSDK\SpoutSenderNames.cpp" />
+    <ClCompile Include="..\..\other\Spout2\SPOUTSDK\SpoutSDK\SpoutSharedMemory.cpp" />
     <ClCompile Include="..\..\other\zlib\adler32.c" />
     <ClCompile Include="..\..\other\zlib\compress.c" />
     <ClCompile Include="..\..\other\zlib\crc32.c" />
@@ -246,9 +248,6 @@
     <ClCompile Include="..\..\other\zlib\trees.c" />
     <ClCompile Include="..\..\other\zlib\uncompr.c" />
     <ClCompile Include="..\..\other\zlib\zutil.c" />
-    <ClCompile Include="..\..\src\misclib\sha1.c" />
-    <ClCompile Include="..\..\src\misclib\UT_Mutex.cpp" />
-    <ClCompile Include="..\..\src\misclib\UT_SharedMem.cpp" />
     <ClCompile Include="..\..\src\mmtt\main.cpp" />
     <ClCompile Include="..\..\src\mmtt\mmtt_camera.cpp" />
     <ClCompile Include="..\..\src\mmtt\mmtt_kinect2.cpp" />
@@ -269,6 +268,7 @@
     <ClCompile Include="..\..\src\nosuch\NosuchOscUdpInput.cpp" />
     <ClCompile Include="..\..\src\nosuch\NosuchSocket.cpp" />
     <ClCompile Include="..\..\src\nosuch\NosuchUtil.cpp" />
+    <ClCompile Include="..\..\src\nosuch\sha1.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="mmtt.ico" />
@@ -293,12 +293,14 @@
     <ClInclude Include="..\..\src\mmtt\mmtt_depth.h" />
     <ClInclude Include="..\..\src\mmtt\mmtt_kinect2.h" />
     <ClInclude Include="..\..\src\mmtt\mmtt_realsense.h" />
+    <ClInclude Include="..\..\src\mmtt\mmtt_sharedmem.h" />
     <ClInclude Include="..\..\src\mmtt\Resource.h" />
     <ClInclude Include="..\..\src\mmtt\stdafx.h" />
     <ClInclude Include="..\..\src\nosuch\NosuchDebug.h" />
     <ClInclude Include="..\..\src\nosuch\NosuchException.h" />
     <ClInclude Include="..\..\src\nosuch\NosuchJSON.h" />
     <ClInclude Include="..\..\src\nosuch\NosuchSocket.h" />
+    <ClInclude Include="..\..\src\nosuch\sha1.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

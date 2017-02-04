@@ -50,9 +50,6 @@
 #include "NosuchHttpServer.h"
 #include "NosuchException.h"
 
-class UT_SharedMem;
-class MMTT_SharedMemHeader;
-class TOP_SharedMemHeader;
 struct IKinectSensor;
 struct IDepthFrameReader;
 

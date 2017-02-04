@@ -52,9 +52,9 @@
 
 class Cursor;
 
-class UT_SharedMem;
-class MMTT_SharedMemHeader;
-class TOP_SharedMemHeader;
+class MMTT_SharedMem;
+class Outlines_SharedMemHeader;
+class Image_SharedMemHeader;
 
 #define _USE_MATH_DEFINES // To get definition of M_PI
 #include <math.h>
@@ -161,12 +161,12 @@ class MmttServer : public NosuchJsonListener {
 	void InitOscClientLists();
 	void SetOscClientList(std::string& clientlist,std::vector<OscSender*>& clientvector);
 	void SendOscToClients();
-	UT_SharedMem* setup_shmem_for_image();
-	UT_SharedMem* setup_shmem_for_outlines();
+	MMTT_SharedMem* setup_shmem_for_image();
+	MMTT_SharedMem* setup_shmem_for_outlines();
 	void shmem_lock_and_update_image(unsigned char* pix);
-	void shmem_update_image(TOP_SharedMemHeader* h, unsigned char* pix);
+	void shmem_update_image(Image_SharedMemHeader* h, unsigned char* pix);
 	void shmem_lock_and_update_outlines(int nactive, int numblobs, std::vector<int> &blob_sid, std::vector<MmttRegion*> &blob_region, std::vector<CvPoint> &blob_center);
-	void shmem_update_outlines(MMTT_SharedMemHeader* h,
+	void shmem_update_outlines(Outlines_SharedMemHeader* h,
 		int nactive, int numblobs, std::vector<int> &blob_sid, std::vector<MmttRegion*> &blob_region, std::vector<CvPoint> &blob_center);
 	void shutdown();
 	void check_json_and_execute();
@@ -219,8 +219,8 @@ class MmttServer : public NosuchJsonListener {
 
 	unsigned char *ffpixels() { return _ffpixels; }
 
-	UT_SharedMem *_sharedmem_image;
-	UT_SharedMem *_sharedmem_outlines;
+	MMTT_SharedMem *_sharedmem_image;
+	MMTT_SharedMem *_sharedmem_outlines;
 
 	DepthCamera* camera;
 

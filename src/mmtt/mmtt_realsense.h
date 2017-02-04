@@ -52,10 +52,6 @@
 
 #include "mmtt_depth.h"
 
-class UT_SharedMem;
-class MMTT_SharedMemHeader;
-class TOP_SharedMemHeader;
-
 #define _USE_MATH_DEFINES // To get definition of M_PI
 #include <math.h>
 

@@ -57,9 +57,7 @@
 #include <sstream>
 #include <fstream>
 
-#include "UT_SharedMem.h"
-#include "UT_Mutex.h"
-#include "mmtt_sharedmem.h"
+#include "MMTT_SharedMem.h"
 
 MmttServer* ThisServer;
 
@@ -415,21 +413,21 @@ void MmttServer::SetOscClientList(std::string& clientlist,std::vector<OscSender*
 
 }
 
-UT_SharedMem*
+MMTT_SharedMem*
 MmttServer::setup_shmem_for_outlines() {
 
 	// Create Shared memory
-	unsigned int headersize = sizeof(MMTT_SharedMemHeader);
+	unsigned int headersize = sizeof(Outlines_SharedMemHeader);
 	unsigned int outlinesize = NUM_BUFFS * MMTT_OUTLINES_MAX * sizeof(OutlineMem);
 	unsigned int pointsize =   NUM_BUFFS * MMTT_POINTS_MAX * sizeof(PointMem);
 	unsigned int totalsize = headersize + outlinesize + pointsize;
 
-	UT_SharedMem* mem = new UT_SharedMem(_sharedmemname.c_str(), totalsize); // figure out the size based on the OP
+	MMTT_SharedMem* mem = new MMTT_SharedMem(_sharedmemname.c_str(), totalsize); // figure out the size based on the OP
 
 	DEBUGPRINT(("Shared Memory created, name=%s size=%d",_sharedmemname.c_str(),totalsize));
 
-	UT_SharedMemError shmerr = mem->getErrorState();
-	if (shmerr != UT_SHM_ERR_NONE) { 
+	MMTT_SharedMemError shmerr = mem->getErrorState();
+	if (shmerr != MMTT_SHM_ERR_NONE) { 
 		DEBUGPRINT(("Error when creating SharedMem?? err=%d",shmerr));
 		return NULL;
 	}
@@ -440,29 +438,29 @@ MmttServer::setup_shmem_for_outlines() {
 		DEBUGPRINT(("NULL returned from getMemory of Shared Memory!?  Disabling shmem"));
 		return NULL;
 	}
-	MMTT_SharedMemHeader* h = (MMTT_SharedMemHeader*)data;
+	Outlines_SharedMemHeader* h = (Outlines_SharedMemHeader*)data;
 	h->xinit();
 
 	mem->unlock();
 	return mem;
 }
 
-UT_SharedMem*
+MMTT_SharedMem*
 MmttServer::setup_shmem_for_image() {
 
 	unsigned int shmemWidth = _camWidth;
 	unsigned int shmemHeight = _camHeight;
 	// Create Shared memory
-	unsigned int headersize = sizeof(TOP_SharedMemHeader);
+	unsigned int headersize = sizeof(Image_SharedMemHeader);
 	unsigned int bytes_per_channel = 1;  // GL_UNSIGNED_BYTE
 	unsigned int nchannels = 3;  // GL_RGB
 	unsigned int imagesize = shmemWidth * shmemHeight * nchannels * bytes_per_channel;
 	DEBUGPRINT1(("headersize=%d imagesize=%d",headersize,imagesize));
 	unsigned int totalsize = headersize + imagesize;
 
-	UT_SharedMem* mem = new UT_SharedMem("mmtt", totalsize); // figure out the size based on the OP
-	UT_SharedMemError shmerr = mem->getErrorState();
-	if (shmerr != UT_SHM_ERR_NONE) { 
+	MMTT_SharedMem* mem = new MMTT_SharedMem("mmtt", totalsize); // figure out the size based on the OP
+	MMTT_SharedMemError shmerr = mem->getErrorState();
+	if (shmerr != MMTT_SHM_ERR_NONE) { 
 		DEBUGPRINT(("Error when creating SharedMem for image?? err=%d",shmerr));
 		return NULL;
 	}
@@ -473,7 +471,7 @@ MmttServer::setup_shmem_for_image() {
 		DEBUGPRINT(("NULL returned from getMemory of Shared Memory!?  Disabling shmem"));
 		return NULL;
 	}
-	TOP_SharedMemHeader* h = (TOP_SharedMemHeader*)data;
+	Image_SharedMemHeader* h = (Image_SharedMemHeader*)data;
 
     // Magic number to make sure we are looking at the correct memory
     // must be set to TOP_SHM_MAGIC_NUMBER (0xe95df673)
@@ -528,7 +526,7 @@ MmttServer::shmem_lock_and_update_outlines(int nactive, int numblobs, std::vecto
 		_sharedmem_outlines = NULL;
 		return;
 	}
-	MMTT_SharedMemHeader* h = (MMTT_SharedMemHeader*) data;
+	Outlines_SharedMemHeader* h = (Outlines_SharedMemHeader*) data;
 
 	if ( h->buff_being_constructed != BUFF_UNSET ) {
 		if ( h->buff_to_display_next != BUFF_UNSET ) {
@@ -643,7 +641,7 @@ normalize_outline_xy(float& x, float& y, float& blobcenterx, float& blobcentery,
 }
 
 void
-MmttServer::shmem_update_outlines(MMTT_SharedMemHeader* h,
+MmttServer::shmem_update_outlines(Outlines_SharedMemHeader* h,
 	int nactive, int numblobs, std::vector<int> &blob_sid,
 	std::vector<MmttRegion*> &blob_region, std::vector<CvPoint> &blob_center)
 {
@@ -728,7 +726,7 @@ MmttServer::shmem_lock_and_update_image(unsigned char* psource) {
 		_sharedmem_image = NULL;
 		return;
 	}
-	TOP_SharedMemHeader* h = (TOP_SharedMemHeader*)data;
+	Image_SharedMemHeader* h = (Image_SharedMemHeader*)data;
 
 	shmem_update_image(h,psource);
 
@@ -736,7 +734,7 @@ MmttServer::shmem_lock_and_update_image(unsigned char* psource) {
 }
 
 void
-MmttServer::shmem_update_image(TOP_SharedMemHeader* h, unsigned char* psource) {
+MmttServer::shmem_update_image(Image_SharedMemHeader* h, unsigned char* psource) {
 
 	unsigned char* pdest = (unsigned char*) h->getImage();
 	for ( int y=0; y<h->height; y++ ) {

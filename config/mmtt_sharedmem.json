@@ -8,9 +8,9 @@
 
   "port": 4444,               # The HTTP port for the browser interface
 
-  "camera": "senz3d",         # Other possible values: kinect, kinect2
+  "camera": "kinect2",         # Other possible values: kinect, kinect2
 
-  "patch": "quadrants_senz3d",   # Name a file in the config/mmtt directory
+  "patch": "fullscreen_kinect2",   # Name a file in the config/mmtt directory
 
   "initialalign": 0,          # If initialalign is 1, an auto-alignment
                               # will be done at startup.  If you don't want
