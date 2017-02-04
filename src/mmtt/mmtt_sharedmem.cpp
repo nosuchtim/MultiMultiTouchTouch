@@ -449,8 +449,6 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "NosuchException.h"
 #include "NosuchUtil.h"
 #include "mmtt_sharedmem.h"
-#include "blob.h"
-#include "BlobContour.h"
 
 buff_index
 Outlines_SharedMemHeader::grab_unused_buffer()
@@ -494,7 +492,6 @@ Outlines_SharedMemHeader::xinit()
 
 	lastUpdateTime = timeGetTime();
 	active = 0;
-	DEBUGPRINT(("MMTT - Setting active to 0 in xinit"));
 
 	seqnum = -1;
 
@@ -567,7 +564,6 @@ Outlines_SharedMemHeader::clear_lists(buff_index buffnum) {
 
 void
 Outlines_SharedMemHeader::check_sanity() {
-	DEBUGPRINT(("Outlines_SharedMemHeader::check_sanity()"));
 	int nused = 0;
 	if (buff_inuse[0])
 		nused++;
