@@ -1,5 +1,5 @@
 /*
- * This code is derived from sample code in Touch Designer, for
+ * Some of this code is derived from sample code in Touch Designer, for
  * sharing textures in shared memory.
  */
 #ifndef __MMTT_SharedMem__
@@ -14,7 +14,6 @@
 	typedef int mutexId;
 #endif
 
-	// Needed so people can compile this outside the Touch build environement
 #ifndef DLLEXP
 #define DLLEXP
 #endif 
@@ -34,6 +33,7 @@ class DLLEXP MMTT_Mutex
 	private:
 		mutexId       myMutex;
 };
+
 
 #define MMTT_SHM_INFO_MAGIC_NUMBER 0x56ed34ba
 
@@ -152,7 +152,7 @@ private:
 #define TOP_SHARED_MEM_HEADER_H
 
 // #include "NosuchDebug.h"
-#include "NosuchGraphics.h"
+// #include "NosuchGraphics.h"
 
 #define TOP_SHM_MAGIC_NUMBER 	0xe95df673
 #define TOP_SHM_VERSION_NUMBER 	2
@@ -225,6 +225,12 @@ public:
 	}
 
 };
+
+typedef struct PointMem {
+	float x;
+	float y;
+	float z;
+} PointMem;
 
 typedef struct OutlineMem {
 	int region;
